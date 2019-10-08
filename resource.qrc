@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/css/blue.css</file>
+        <file>resource/css/blue/add_bottom.png</file>
+        <file>resource/css/blue/add_left.png</file>
+        <file>resource/css/blue/add_right.png</file>
+        <file>resource/css/blue/add_top.png</file>
+        <file>resource/css/blue/branch_close.png</file>
+        <file>resource/css/blue/branch_open.png</file>
+        <file>resource/css/blue/calendar_nextmonth.png</file>
+        <file>resource/css/blue/calendar_prevmonth.png</file>
+        <file>resource/css/blue/checkbox_checked_disable.png</file>
+        <file>resource/css/blue/checkbox_checked.png</file>
+        <file>resource/css/blue/checkbox_parcial_disable.png</file>
+        <file>resource/css/blue/checkbox_parcial.png</file>
+        <file>resource/css/blue/checkbox_unchecked_disable.png</file>
+        <file>resource/css/blue/checkbox_unchecked.png</file>
+        <file>resource/css/blue/radiobutton_checked_disable.png</file>
+        <file>resource/css/blue/radiobutton_checked.png</file>
+        <file>resource/css/blue/radiobutton_unchecked_disable.png</file>
+        <file>resource/css/blue/radiobutton_unchecked.png</file>
+        <file>resource/header.jpg</file>
+        <file>resource/home.png</file>
+    </qresource>
+</RCC>
