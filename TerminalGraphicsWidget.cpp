@@ -36,6 +36,8 @@ void TerminalGraphicsWidget::init(proConcentrator *o)
         this->resize(monitorNum * (LineSize.width() + ConnSize.width()) - ConnSize.width() + LeftMargin * 2, parentWidget()->height());
         this->move(0, 0);
     }
+
+    update();
 }
 
 void TerminalGraphicsWidget::paintEvent(QPaintEvent *)

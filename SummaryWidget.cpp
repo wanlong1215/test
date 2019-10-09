@@ -83,9 +83,6 @@ void SummaryWidget::init()
 
     ui->rbAutoQuery->setChecked(true);
     onAutoQueryToggled(true);
-
-    // TODO: temp init
-    //onRealtimePage();
 }
 void SummaryWidget::onAutoQueryToggled(bool b)
 {
@@ -94,7 +91,15 @@ void SummaryWidget::onAutoQueryToggled(bool b)
     ui->dteEnd->setEnabled(!b);
 
     // clear data, show first concentrator
-    proConcentrator *concentrator = DatabaseProxy::instance().firstConcentrator();
+    while (0 != ui->tawHistoryDetail->rowCount())
+    {
+        ui->tawHistoryDetail->removeRow(0);
+    }
+    _currentConcentrator = DatabaseProxy::instance().firstConcentrator();
+    // TODO: set item selected
+
+    ui->wgtHistoryGraphics->init(_currentConcentrator);
+    onHistoryQuery();
 }
 void SummaryWidget::onQuickQueryToggled(bool b)
 {
@@ -103,6 +108,13 @@ void SummaryWidget::onQuickQueryToggled(bool b)
     ui->dteEnd->setEnabled(!b);
 
     // clear data
+    while (0 != ui->tawHistoryDetail->rowCount())
+    {
+        ui->tawHistoryDetail->removeRow(0);
+    }
+
+    ui->wgtHistoryGraphics->init(_currentConcentrator);
+    onHistoryQuery();
 }
 void SummaryWidget::onAbsoluteQueryToggled(bool b)
 {
@@ -111,53 +123,87 @@ void SummaryWidget::onAbsoluteQueryToggled(bool b)
     ui->dteEnd->setEnabled(b);
 
     // clear data
+    while (0 != ui->tawHistoryDetail->rowCount())
+    {
+        ui->tawHistoryDetail->removeRow(0);
+    }
+    ui->wgtHistoryGraphics->init(_currentConcentrator);
+    onHistoryQuery();
 }
 
 void SummaryWidget::onHistoryQuery()
 {
+    if (NULL == _currentConcentrator)
+    {
+        ui->scrollAreaWidgetContents_2->setFixedWidth(ui->scrollArea_2->width());
+        ui->wgtHistoryGraphics->init(_currentConcentrator);
+    }
+    else
+    {
+        ui->wgtHistoryGraphics->init(_currentConcentrator);
+        ui->scrollAreaWidgetContents_2->setFixedWidth(ui->wgtHistoryGraphics->width());
+    }
+
     QStringList lstHeader;
 
-    ui->tawHistoryDetail->setColumnCount(8);
-    lstHeader << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("A电流值") << QString("B电流值") << QString("C电流值") << QString("采集时间");
+    ui->tawHistoryDetail->setColumnCount(11);
+    lstHeader << QString("公司") << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("线段") << QString("监测点") << QString("A相电流") << QString("B相电流") << QString("C相电流") << QString("采集时间");
     ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
+    ui->tawHistoryDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
+    ui->tawHistoryDetail->setColumnWidth(10, 200);
     if (NULL == _currentConcentrator)
     {
         return;
     }
 
-    QList<proData> lst = DatabaseProxy::instance().historyData(1, QDateTime(), QDateTime());
+    // TODO: begin & end time
+    QList<proData> lst = DatabaseProxy::instance().historyData(_currentConcentrator->id, QDateTime(), QDateTime());
     ui->tawHistoryDetail->setRowCount(lst.count());
     ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     for (int i = 0; i < lst.count(); i++)
     {
         proData data = lst.at(i);
-        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->name));
-        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(QString::number(data.iValueA)));
-        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QString::number(data.iValueB)));
-        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QString::number(data.iValueC)));
-        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
+        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->parent->name));
+        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
+        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
+        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->name));
+        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->name));
+        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QString("归属线段")));
+        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QString("归属监测点")));
+        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
+        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
+        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
+        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
     }
 }
 
-void SummaryWidget::onRealtimePage()
+void SummaryWidget::onRealtimeQuery()
 {
-    ui->wgtGraphics->init(_currentConcentrator);
-    ui->scrollAreaWidgetContents->setMinimumWidth(ui->wgtGraphics->width());
+    if (NULL == _currentConcentrator)
+    {
+        ui->scrollAreaWidgetContents->setFixedWidth(ui->scrollArea->width());
+        ui->wgtGraphics->init(_currentConcentrator);
+    }
+    else
+    {
+        ui->wgtGraphics->init(_currentConcentrator);
+        ui->scrollAreaWidgetContents->setFixedWidth(ui->wgtGraphics->width());
+    }
 
     QStringList lstHeader;
 
-    ui->tawRealTimeDetail->setColumnCount(8);
-    lstHeader << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("A电流值") << QString("B电流值") << QString("C电流值") << QString("采集时间");
-    ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
+    ui->tawHistoryDetail->setColumnCount(11);
+    lstHeader << QString("公司") << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("线段") << QString("监测点") << QString("A相电流") << QString("B相电流") << QString("C相电流") << QString("采集时间");
+    ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
+    ui->tawHistoryDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
+    ui->tawHistoryDetail->setColumnWidth(10, 200);
     if (NULL == _currentConcentrator)
     {
         return;
     }
 
+    // TODO: begin & end time
     QList<proData> lst = DatabaseProxy::instance().historyData(1, QDateTime(), QDateTime());
     ui->tawRealTimeDetail->setRowCount(lst.count());
     ui->tawRealTimeDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -165,14 +211,17 @@ void SummaryWidget::onRealtimePage()
     for (int i = 0; i < lst.count(); i++)
     {
         proData data = lst.at(i);
-        ui->tawRealTimeDetail->setItem(i, 0, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawRealTimeDetail->setItem(i, 4, new QTableWidgetItem(QString::number(data.iValueA)));
-        ui->tawRealTimeDetail->setItem(i, 5, new QTableWidgetItem(QString::number(data.iValueB)));
-        ui->tawRealTimeDetail->setItem(i, 6, new QTableWidgetItem(QString::number(data.iValueC)));
-        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
+        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->parent->name));
+        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
+        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
+        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->name));
+        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->name));
+        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QString("归属线段")));
+        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QString("归属监测点")));
+        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
+        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
+        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
+        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
     }
 }
 
@@ -219,7 +268,8 @@ bool SummaryWidget::eventFilter(QObject*obj, QEvent*e)
                 }
             }
 
-            onRealtimePage();
+            onHistoryQuery();
+            onRealtimeQuery();
         }
     }
 

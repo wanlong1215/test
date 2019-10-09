@@ -93,7 +93,7 @@
             <height>198</height>
            </rect>
           </property>
-          <widget class="QWidget" name="wgtHistoryGraphics" native="true">
+          <widget class="TerminalGraphicsWidget" name="wgtHistoryGraphics" native="true">
            <property name="geometry">
             <rect>
              <x>100</x>

@@ -23,7 +23,7 @@ private slots:
     void onQuickQueryToggled(bool b);
     void onAbsoluteQueryToggled(bool b);
     void onHistoryQuery();
-    void onRealtimePage();
+    void onRealtimeQuery();
 
 private:
     bool eventFilter(QObject *obj, QEvent *e);
