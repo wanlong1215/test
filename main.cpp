@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
             for (int k = 0; k < 3; k++)
             {
                 auto t1 = new proTerminal(m1);
-                t1->highPressureValue = j * 5 + k;
-                t1->lowPressureValue = 10 + k;
+                t1->highPressureValue = 5 + 0.01 * (qrand() % 100);
                 DatabaseProxy::instance().addTerminal(t1, m1->id);
             }
         }

@@ -467,18 +467,20 @@ proConcentrator *DatabaseProxy::firstConcentrator()
 
     return NULL;
 }
-
+#include <QDebug>
 QList<proData> DatabaseProxy::historyData(int ConcentratorId, QDateTime begin, QDateTime end)
 {
     QList<proData> lst;
 
     for (int i = 0; i < 20; i++)
     {
+        qsrand(QTime::currentTime().msecsSinceStartOfDay());
+
         proData data;
         data.CollectTime = QDateTime::currentDateTime().toSecsSinceEpoch(); // 采集时间
-        data.iValueA = 5 + i;//采集电流值
-        data.iValueB = 5 + i * 2;//采集电流值
-        data.iValueC = 55 + i;//采集电流值
+        data.iValueA = 5 + i + 0.01 * (qrand() % 99);//采集电流值
+        data.iValueB = 5 + i * 2 + 0.01 * (qrand() % 99);//采集电流值
+        data.iValueC = 55 + i + 0.01 * (qrand() % 99);//采集电流值
         lst.append(data);
     }
 

@@ -109,8 +109,9 @@ void TerminalGraphicsWidget::drawConnectorPath(QPainter *p, QRect rect)
 {
     QPainterPath path;
 
-    path.addEllipse(QRectF(rect.left(), rect.top() + rect.height() / 2, rect.width() * 2 / 3, rect.height() * 0.4));
-    path.addEllipse(QRectF(rect.left() + rect.width() * 1 / 3, rect.top() + rect.height() / 2, rect.width() * 2 / 3, rect.height() * 0.4));
+    double width = rect.width() * 2.0 / 3;
+    path.addEllipse(QRectF(rect.left(), rect.top() + rect.height() *0.7 - width/2, width, width));
+    path.addEllipse(QRectF(rect.left() + width / 2, rect.top() + rect.height() *0.7 - width/2, width, width));
 
     p->setPen(QPen(Qt::black));
     p->setBrush(QBrush(Qt::transparent));
@@ -149,8 +150,8 @@ void TerminalGraphicsWidget::drawSimpleLine(QPainter *p, QRect rect, proMonitor 
 
     p->setPen(QPen(Qt::red));
     p->setBrush(QBrush(Qt::red));
-    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.2), monitor->pressureValueA());
-    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.4), monitor->pressureValueB());
+    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.4), monitor->pressureValueA());
+    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.5), monitor->pressureValueB());
     p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.6), monitor->pressureValueC());
 
     // draw title

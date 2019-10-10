@@ -28,7 +28,7 @@ public:
     int RouteState5;//路由节点5
     int RouteState6;//路由节点6
 
-    int highPressureValue;//变比参数
+    double highPressureValue;//变比参数
     float highPressureOffset;
     int highPressureSymbol;//0:+ 1:-
     int lowPressureValue;
@@ -194,9 +194,9 @@ struct proData
     int intRev5;
     int intRev6;
 
-    int iValueA;// 界面展示三个电流值
-    int iValueB;
-    int iValueC;
+    double iValueA;// 界面展示三个电流值
+    double iValueB;
+    double iValueC;
 };
 
 class DatabaseProxy

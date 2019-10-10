@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>防窃电管理系统</string>
+   <string>配电网防窃电智能管理系统</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog#FarsiLoginDlg{

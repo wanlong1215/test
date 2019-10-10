@@ -149,8 +149,11 @@ void SummaryWidget::onHistoryQuery()
     ui->tawHistoryDetail->setColumnCount(11);
     lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
     ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
-    ui->tawHistoryDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
-    ui->tawHistoryDetail->setColumnWidth(10, 200);
+    ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
+    for (int i = 0; i < 11; i++)
+    {
+        ui->tawHistoryDetail->setColumnWidth(i, 150);
+    }
     if (NULL == _currentConcentrator)
     {
         return;
@@ -196,9 +199,11 @@ void SummaryWidget::onRealtimeQuery()
     ui->tawRealTimeDetail->setColumnCount(12);
     lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
     ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
-    ui->tawRealTimeDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
-    ui->tawRealTimeDetail->setColumnWidth(0, 50);
-    ui->tawRealTimeDetail->setColumnWidth(11, 200);
+    ui->tawRealTimeDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
+    for (int i = 0; i < 11; i++)
+    {
+        ui->tawRealTimeDetail->setColumnWidth(i, i==0?50:150);
+    }
     if (NULL == _currentConcentrator)
     {
         return;
