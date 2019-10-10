@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Elec</string>
+   <string>防窃电管理系统</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog#FarsiLoginDlg{

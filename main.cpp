@@ -15,25 +15,25 @@ int main(int argc, char *argv[])
 
     // build data
     auto com = new proCompany();
-    com->name = "公司";
+    com->name = QStringLiteral("公司");
     DatabaseProxy::instance().addCompany(com);
     auto subCom = new proSubCompany(com);
-    subCom->name = "分公司";
+    subCom->name = QStringLiteral("分公司");
     DatabaseProxy::instance().addSubCompany(subCom, com->id);
     auto amso = new proAmso(subCom);
-    amso->name = "供电所";
+    amso->name = QStringLiteral("供电所");
     DatabaseProxy::instance().addAmso(amso, subCom->id);
     auto route = new proRoute(amso);
-    route->name = "线路";
+    route->name = QStringLiteral("线路");
     DatabaseProxy::instance().addRoute(route, amso->id);
     auto con = new proConcentrator(route);
-    con->name = "集中器";
+    con->name = QStringLiteral("集中器");
     DatabaseProxy::instance().addConcentrator(con, route->id);
     for (int i = 0; i < 8; i++)
     {
         // add line
         auto l3 = new proLine(con);
-        l3->name = QString("线段%1").arg(i + 1);
+        l3->name = QString("%1%2").arg(QStringLiteral("线段")).arg(i + 1);
         l3->preAddr = 1;
         if (i == 3 || i == 5)
         {

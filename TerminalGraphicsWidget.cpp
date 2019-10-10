@@ -126,7 +126,7 @@ void TerminalGraphicsWidget::drawDefaultText(QPainter *p)
 
     p->setPen(QPen(Qt::red));
     p->setBrush(QBrush(Qt::red));
-    p->drawText(this->rect(), Qt::AlignCenter, QString("当前集中器下暂无数据信息"));
+    p->drawText(this->rect(), Qt::AlignCenter, QStringLiteral("当前集中器下暂无数据信息"));
 }
 
 void TerminalGraphicsWidget::drawSimpleLine(QPainter *p, QRect rect, proMonitor *monitor)

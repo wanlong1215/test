@@ -55,7 +55,7 @@ QString OrganizationTreeWidgetItem::delMenuText()
     QStringList lst;
 
     //lst << QString::fromLocal8Bit("删除公司") << QString::fromLocal8Bit("删除分公司") << QString::fromLocal8Bit("删除供电所") << QString::fromLocal8Bit("删除线路") << QString::fromLocal8Bit("删除集中器") << QString::fromLocal8Bit("删除线段");
-    lst << QString("删除公司") << QString("删除分公司") << QString("删除供电所") << QString("删除线路") << QString("删除集中器") << QString("删除线段") << QString("删除终端");
+    lst << QStringLiteral("删除公司") << QStringLiteral("删除分公司") << QStringLiteral("删除供电所") << QStringLiteral("删除线路") << QStringLiteral("删除集中器") << QStringLiteral("删除线段") << QStringLiteral("删除终端");
 
     int l = _level - 1;
     if (l >= 0 && l < lst.count())
@@ -73,7 +73,7 @@ QString OrganizationTreeWidgetItem::addMenuText()
 	QStringList lst;
 
     //lst << QString::fromLocal8Bit("添加公司") << QString::fromLocal8Bit("添加分公司") << QString::fromLocal8Bit("添加供电所") << QString::fromLocal8Bit("添加线路") << QString::fromLocal8Bit("添加集中器") << QString::fromLocal8Bit("添加线段");
-    lst << QString("添加公司") << QString("添加分公司") << QString("添加供电所") << QString("添加线路") << QString("添加集中器") << QString("添加线段") << QString("添加终端");
+    lst << QStringLiteral("添加公司") << QStringLiteral("添加分公司") << QStringLiteral("添加供电所") << QStringLiteral("添加线路") << QStringLiteral("添加集中器") << QStringLiteral("添加线段") << QStringLiteral("添加终端");
 
     if (_level > 0 && _level < lst.count())
     {
@@ -90,7 +90,7 @@ QString OrganizationTreeWidgetItem::modifyMenuText()
     QStringList lst;
 
     //lst << QString::fromLocal8Bit("修改公司") << QString::fromLocal8Bit("修改分公司") << QString::fromLocal8Bit("修改供电所") << QString::fromLocal8Bit("修改线路") << QString::fromLocal8Bit("修改集中器") << QString::fromLocal8Bit("修改线段");
-    lst << QString("修改公司") << QString("修改分公司") << QString("修改供电所") << QString("修改线路") << QString("修改集中器") << QString("修改线段") << QString("修改终端");
+    lst << QStringLiteral("修改公司") << QStringLiteral("修改分公司") << QStringLiteral("修改供电所") << QStringLiteral("修改线路") << QStringLiteral("修改集中器") << QStringLiteral("修改线段") << QStringLiteral("修改终端");
 
     int l = _level - 1;
     if (l >= 0 && l < lst.count())

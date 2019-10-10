@@ -147,7 +147,7 @@ void SummaryWidget::onHistoryQuery()
     QStringList lstHeader;
 
     ui->tawHistoryDetail->setColumnCount(11);
-    lstHeader << QString("公司") << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("线段") << QString("监测点") << QString("A相电流") << QString("B相电流") << QString("C相电流") << QString("采集时间");
+    lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
     ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
     ui->tawHistoryDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
     ui->tawHistoryDetail->setColumnWidth(10, 200);
@@ -169,8 +169,8 @@ void SummaryWidget::onHistoryQuery()
         ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
         ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->name));
         ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QString("归属线段")));
-        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QString("归属监测点")));
+        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QStringLiteral("归属线段")));
+        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QStringLiteral("归属监测点")));
         ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
         ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
         ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
@@ -194,7 +194,7 @@ void SummaryWidget::onRealtimeQuery()
     QStringList lstHeader;
 
     ui->tawRealTimeDetail->setColumnCount(12);
-    lstHeader << QString("选择") << QString("公司") << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("线段") << QString("监测点") << QString("A相电流") << QString("B相电流") << QString("C相电流") << QString("采集时间");
+    lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
     ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
     ui->tawRealTimeDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
     ui->tawRealTimeDetail->setColumnWidth(0, 50);
@@ -220,8 +220,8 @@ void SummaryWidget::onRealtimeQuery()
         ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
         ui->tawRealTimeDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->parent->name));
         ui->tawRealTimeDetail->setItem(i, 5, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawRealTimeDetail->setItem(i, 6, new QTableWidgetItem(QString("归属线段")));
-        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QString("归属监测点")));
+        ui->tawRealTimeDetail->setItem(i, 6, new QTableWidgetItem(QStringLiteral("归属线段")));
+        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QStringLiteral("归属监测点")));
 //        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
 //        ui->tawRealTimeDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
 //        ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
