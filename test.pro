@@ -43,7 +43,8 @@ SOURCES += \
     UserConfigDlg.cpp \
     ServerConfigDlg.cpp \
     PopupInformation.cpp \
-    ConcentratorConfigDlg.cpp
+    ConcentratorConfigDlg.cpp \
+    AlarmConfigDlg.cpp
 
 HEADERS += \
     TerminalGraphicsWidget.h \
@@ -64,7 +65,8 @@ HEADERS += \
     UserConfigDlg.h \
     ServerConfigDlg.h \
     PopupInformation.h \
-    ConcentratorConfigDlg.h
+    ConcentratorConfigDlg.h \
+    AlarmConfigDlg.h
 
 FORMS += \
     Elec.ui \
@@ -81,7 +83,8 @@ FORMS += \
     UserConfigDlg.ui \
     ServerConfigDlg.ui \
     PopupInformation.ui \
-    ConcentratorConfigDlg.ui
+    ConcentratorConfigDlg.ui \
+    AlarmConfigDlg.ui
 
 RESOURCES += \
     resource.qrc

@@ -6,6 +6,7 @@
 #include "PopupInformation.h"
 #include <QPropertyAnimation>
 #include <QFile>
+#include "AlarmConfigDlg.h"
 
 Elec::Elec(QWidget *parent)
     : QMainWindow(parent)
@@ -106,4 +107,11 @@ void Elec::updateCheckStatus(QPushButton *btn)
     {
         _lstMenuButton.at(i)->setChecked(_lstMenuButton.at(i) == btn);
     }
+}
+
+void Elec::on_btnAlarm_clicked()
+{
+    AlarmConfigDlg *dlg = new AlarmConfigDlg(this);
+
+    dlg->exec();
 }

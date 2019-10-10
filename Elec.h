@@ -31,6 +31,8 @@ private slots:
 
     void onRemovePopupWidget(QWidget *obj);
 
+    void on_btnAlarm_clicked();
+
 private:
     void updateCheckStatus(QPushButton *btn);
 

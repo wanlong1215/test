@@ -6,18 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>439</height>
+    <width>541</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QToolButton" name="toolButton">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>添加</string>
        </property>
@@ -25,6 +30,11 @@
      </item>
      <item>
       <widget class="QToolButton" name="toolButton_2">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>删除</string>
        </property>
@@ -42,6 +52,16 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>姓名筛选</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit"/>
      </item>
     </layout>
    </item>
@@ -64,17 +84,22 @@
      </row>
      <column>
       <property name="text">
-       <string>员工编号</string>
+       <string>接警员编号</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>员工姓名</string>
+       <string>接警员姓名</string>
       </property>
      </column>
      <column>
       <property name="text">
        <string>联系电话</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>归属供电所</string>
       </property>
      </column>
      <column>
@@ -97,6 +122,11 @@
        <string>13699098888</string>
       </property>
      </item>
+     <item row="0" column="3">
+      <property name="text">
+       <string>五道口15供电所</string>
+      </property>
+     </item>
      <item row="1" column="0">
       <property name="text">
        <string>10002</string>
@@ -112,6 +142,11 @@
        <string>13245665544</string>
       </property>
      </item>
+     <item row="1" column="3">
+      <property name="text">
+       <string>五道口15供电所</string>
+      </property>
+     </item>
      <item row="2" column="0">
       <property name="text">
        <string>10003</string>
@@ -125,6 +160,11 @@
      <item row="2" column="2">
       <property name="text">
        <string>17098990987</string>
+      </property>
+     </item>
+     <item row="2" column="3">
+      <property name="text">
+       <string>五道口15供电所</string>
       </property>
      </item>
     </widget>
