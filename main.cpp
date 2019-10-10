@@ -35,9 +35,6 @@ int main(int argc, char *argv[])
         auto l3 = new proLine(con);
         l3->name = QString("线段%1").arg(i + 1);
         l3->preAddr = 1;
-        l3->iValueA = 10;
-        l3->iValueB = 11;
-        l3->iValueC = 18;
         if (i == 3 || i == 5)
         {
             l3->type = 2;
@@ -48,7 +45,7 @@ int main(int argc, char *argv[])
         {
             // add monitor
             auto m1 = new proMonitor(l3);
-            m1->name = QString("监视器%1").arg(j + 1);
+            m1->name = QString("L%1M%2").arg(i + 1).arg(j + 1);
             DatabaseProxy::instance().addMonitor(m1, l3->id);
 
             for (int k = 0; k < 3; k++)
