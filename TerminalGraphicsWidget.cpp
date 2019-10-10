@@ -2,8 +2,8 @@
 #include <QPainter>
 
 #define LeftMargin 30
-#define LineSize QSize(50, 150)
-#define ConnSize QSize(30, 150)
+#define LineSize QSize(10, 150)
+#define ConnSize QSize(50, 150)
 
 TerminalGraphicsWidget::TerminalGraphicsWidget(QWidget *parent) : QWidget(parent), _o(NULL)
 {
@@ -33,7 +33,7 @@ void TerminalGraphicsWidget::init(proConcentrator *o)
             }
         }
 
-        this->resize(monitorNum * (LineSize.width() + ConnSize.width()) - ConnSize.width() + LeftMargin * 2, parentWidget()->height());
+        this->resize(monitorNum * (LineSize.width() + ConnSize.width()) - ConnSize.width() + LeftMargin * 6, parentWidget()->height());
         this->move(0, 0);
     }
 
@@ -102,8 +102,8 @@ void TerminalGraphicsWidget::drawConnectorPath(QPainter *p, QRect rect)
 {
     QPainterPath path;
 
-    path.addEllipse(QRectF(rect.left(), rect.top(), rect.width() * 2 / 3, rect.height()));
-    path.addEllipse(QRectF(rect.left() + rect.width() * 1 / 3, rect.top(), rect.width() * 2 / 3, rect.height()));
+    path.addEllipse(QRectF(rect.left(), rect.top() + rect.height() / 2, rect.width() * 2 / 3, rect.height() * 0.4));
+    path.addEllipse(QRectF(rect.left() + rect.width() * 1 / 3, rect.top() + rect.height() / 2, rect.width() * 2 / 3, rect.height() * 0.4));
 //    path.moveTo(rect.topLeft());
 //    path.lineTo(rect.topRight());
 //    path.moveTo(rect.left(), rect.top() + rect.height() / 2);
@@ -171,42 +171,74 @@ void TerminalGraphicsWidget::drawDefaultText(QPainter *p)
     QFont font;
 
     font.setFamily("微软雅黑");
-    font.setPixelSize(20);
+    font.setPixelSize(24);
 
     p->setPen(QPen(Qt::red));
     p->setBrush(QBrush(Qt::red));
-    p->drawText(this->rect(), Qt::AlignCenter, QString("当前集中器下暂无线段"));
+    p->drawText(this->rect(), Qt::AlignCenter, QString("当前集中器下暂无数据信息"));
 }
 
 void TerminalGraphicsWidget::drawSimpleLine(QPainter *p, QRect rect, proMonitor *monitor)
 {
-    // draw rect
-    p->setPen(QPen(Qt::black));
-    p->setBrush(QBrush(Qt::transparent));
-    //p->drawRect(rect);
+    if (0)
+    {
+        // draw rect
+        p->setPen(QPen(Qt::black));
+        p->setBrush(QBrush(Qt::transparent));
+        //p->drawRect(rect);
 
-    // draw 3 points
-    p->setBrush(QBrush(Qt::black));
-    p->drawEllipse(QPoint(rect.center().x(), rect.top() + rect.height() * 0.2), 2, 2);
-    p->drawEllipse(rect.center(), 2, 2);
-    p->drawEllipse(QPoint(rect.center().x(), rect.top() + rect.height() * 0.8), 2, 2);
+        // draw 3 points
+        p->setBrush(QBrush(Qt::black));
+        p->drawEllipse(QPoint(rect.center().x(), rect.top() + rect.height() * 0.2), 2, 2);
+        p->drawEllipse(rect.center(), 2, 2);
+        p->drawEllipse(QPoint(rect.center().x(), rect.top() + rect.height() * 0.8), 2, 2);
 
-    // draw text
-    QFont font;
+        // draw text
+        QFont font;
 
-    font.setFamily("微软雅黑");
-    font.setPixelSize(10);
-    int offsetX = 5;
-    int offsetY = -5;
+        font.setFamily("微软雅黑");
+        font.setPixelSize(10);
+        int offsetX = -15;
+        int offsetY = 0;
 
-    p->setPen(QPen(Qt::red));
-    p->setBrush(QBrush(Qt::red));
-    p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.2 + offsetY), monitor->pressureValueA());
-    p->drawText(QPoint(rect.center().x() + offsetX, rect.center().y() + offsetY), monitor->pressureValueB());
-    p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.8 + offsetY), monitor->pressureValueC());
+        p->setPen(QPen(Qt::red));
+        p->setBrush(QBrush(Qt::red));
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.2 + offsetY), monitor->pressureValueA());
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.center().y() + offsetY), monitor->pressureValueB());
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.8 + offsetY), monitor->pressureValueC());
 
-    // draw title
-    p->drawText(QPoint(rect.left() + offsetX, rect.top() + offsetY), monitor->name);
+        // draw title
+        p->drawText(QPoint(rect.left() + offsetX, rect.top() + offsetY), monitor->name);
+    }
+    else
+    {
+        // draw point
+        p->setPen(QPen(Qt::black));
+        p->setBrush(QBrush(Qt::transparent));
+
+        p->drawEllipse(QPoint(rect.center().x(), rect.top() + rect.height() * 0.7), 5, 5);
+
+        p->setBrush(QBrush(Qt::black));
+        p->drawLine(QPoint(rect.center().x() - 3, rect.top() + rect.height() * 0.7 - 3), QPoint(rect.center().x() + 3, rect.top() + rect.height() * 0.7 + 3));
+        p->drawLine(QPoint(rect.center().x() - 3, rect.top() + rect.height() * 0.7 + 3), QPoint(rect.center().x() + 3, rect.top() + rect.height() * 0.7 - 3));
+
+        // draw text
+        QFont font;
+
+        font.setFamily("微软雅黑");
+        font.setPixelSize(10);
+        int offsetX = 5;
+        int offsetY = -5;
+
+        p->setPen(QPen(Qt::red));
+        p->setBrush(QBrush(Qt::red));
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.1 + offsetY), monitor->pressureValueA());
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.3 + offsetY), monitor->pressureValueB());
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.5 + offsetY), monitor->pressureValueC());
+
+        // draw title
+        p->drawText(QPoint(rect.center().x() + offsetX, rect.top() + rect.height() * 0.8), monitor->name);
+    }
 }
 
 void TerminalGraphicsWidget::drawConnectLine(QPainter *p, QRect rect)
@@ -215,7 +247,14 @@ void TerminalGraphicsWidget::drawConnectLine(QPainter *p, QRect rect)
     p->setPen(QPen(Qt::black));
     p->setBrush(QBrush(Qt::black));
 
-    p->drawLine(QPoint(rect.left(), rect.top() + rect.height() * 0.2), QPoint(rect.right(), rect.top() + rect.height() * 0.2));
-    p->drawLine(QPoint(rect.left(), rect.center().y()), QPoint(rect.right(), rect.center().y()));
-    p->drawLine(QPoint(rect.left(), rect.top() + rect.height() * 0.8), QPoint(rect.right(), rect.top() + rect.height() * 0.8));
+    if (0)
+    {
+        p->drawLine(QPoint(rect.left(), rect.top() + rect.height() * 0.2), QPoint(rect.right(), rect.top() + rect.height() * 0.2));
+        p->drawLine(QPoint(rect.left(), rect.center().y()), QPoint(rect.right(), rect.center().y()));
+        p->drawLine(QPoint(rect.left(), rect.top() + rect.height() * 0.8), QPoint(rect.right(), rect.top() + rect.height() * 0.8));
+    }
+    else
+    {
+        p->drawLine(QPoint(rect.left(), rect.top() + rect.height() * 0.7), QPoint(rect.right(), rect.top() + rect.height() * 0.7));
+    }
 }

@@ -193,11 +193,12 @@ void SummaryWidget::onRealtimeQuery()
 
     QStringList lstHeader;
 
-    ui->tawHistoryDetail->setColumnCount(11);
-    lstHeader << QString("公司") << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("线段") << QString("监测点") << QString("A相电流") << QString("B相电流") << QString("C相电流") << QString("采集时间");
-    ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
-    ui->tawHistoryDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
-    ui->tawHistoryDetail->setColumnWidth(10, 200);
+    ui->tawRealTimeDetail->setColumnCount(12);
+    lstHeader << QString("选择") << QString("公司") << QString("供电分公司") << QString("供电所") << QString("线路") << QString("集中器") << QString("线段") << QString("监测点") << QString("A相电流") << QString("B相电流") << QString("C相电流") << QString("采集时间");
+    ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
+    ui->tawRealTimeDetail->horizontalHeader()->setFont(QFont("Microsoft YaHei", 24, 500));
+    ui->tawRealTimeDetail->setColumnWidth(0, 50);
+    ui->tawRealTimeDetail->setColumnWidth(11, 200);
     if (NULL == _currentConcentrator)
     {
         return;
@@ -211,17 +212,23 @@ void SummaryWidget::onRealtimeQuery()
     for (int i = 0; i < lst.count(); i++)
     {
         proData data = lst.at(i);
-        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->name));
-        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QString("归属线段")));
-        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QString("归属监测点")));
-        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
-        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
-        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
-        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
+        QTableWidgetItem *item = new QTableWidgetItem("");
+        item->setCheckState(Qt::Unchecked);
+        ui->tawRealTimeDetail->setItem(i, 0, item);
+        ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->parent->name));
+        ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
+        ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
+        ui->tawRealTimeDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->parent->name));
+        ui->tawRealTimeDetail->setItem(i, 5, new QTableWidgetItem(_currentConcentrator->name));
+        ui->tawRealTimeDetail->setItem(i, 6, new QTableWidgetItem(QString("归属线段")));
+        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QString("归属监测点")));
+//        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
+//        ui->tawRealTimeDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
+//        ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
+        ui->tawRealTimeDetail->setItem(i, 8, new QTableWidgetItem(QString("")));
+        ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString("")));
+        ui->tawRealTimeDetail->setItem(i, 10, new QTableWidgetItem(QString("")));
+        ui->tawRealTimeDetail->setItem(i, 11, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
     }
 }
 
@@ -276,11 +283,19 @@ bool SummaryWidget::eventFilter(QObject*obj, QEvent*e)
     return QWidget::eventFilter(obj, e);
 }
 
-void SummaryWidget::resizeEvent(QResizeEvent*/*e*/)
+void SummaryWidget::on_btnReadRealtime_clicked()
 {
-//    int w = ui->tabWidget->width();
-//    QTabBar *bar = ui->tabWidget->tabBar();
+    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++)
+    {
+        auto item = ui->tawRealTimeDetail->item(i, 0);
+        if (nullptr == item)
+        {
+            continue;
+        }
 
-//    bar->setMinimumSize(w, 50);
-//    bar->setMaximumSize(w, 50);
+        if (Qt::Checked == item->checkState())
+        {
+            // TODO: 调用后端接口，获得数据
+        }
+    }
 }

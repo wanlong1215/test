@@ -29,8 +29,6 @@ void ModifyTerminalDlg::init()
     }
     ui->groupBox->setVisible(2 == _o->type);
 
-    ui->leName1->setText(_o->name);
-    ui->sbIndex1->setValue(_o->index);
     ui->deDate1->setDate(QDate::fromJulianDay(_o->installTime));
     ui->leAddr1->setText(QString::number(_o->addr));
     ui->lePreAddr1->setText(QString::number(_o->preAddr));
@@ -49,8 +47,6 @@ void ModifyTerminalDlg::init()
 
 void ModifyTerminalDlg::on_btnOK_clicked()
 {
-    _o->name = ui->leName1->text();
-    _o->index = ui->sbIndex1->value();
     _o->installTime = ui->deDate1->date().toJulianDay();
     _o->addr = ui->leAddr1->text().toInt();
     _o->preAddr = ui->lePreAddr1->text().toInt();

@@ -25,9 +25,10 @@ private slots:
     void onHistoryQuery();
     void onRealtimeQuery();
 
+    void on_btnReadRealtime_clicked();
+
 private:
     bool eventFilter(QObject *obj, QEvent *e);
-    void resizeEvent(QResizeEvent *event);
 
 private:
     Ui::SummaryWidget *ui;

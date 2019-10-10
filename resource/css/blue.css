@@ -477,8 +477,6 @@ QTabBar::tab{
 border:1px solid #7F9AB8;
 color:#324C6C;
 margin:0px;
-width:600px;
-height:50px;
 background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #D2E3F5,stop:1 #CADDF3);
 }
 

@@ -6,14 +6,41 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>504</width>
-    <height>465</height>
+    <width>498</width>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>检测点名称</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="leMonitorName"/>
+     </item>
+    </layout>
+   </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -24,129 +51,105 @@
        <string>A</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>名称</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="leName1"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_16">
-         <property name="text">
-          <string>索引</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QSpinBox" name="sbIndex1">
-         <property name="maximum">
-          <number>6</number>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_18">
-         <property name="text">
-          <string>地址编号</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="leAddr1"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>安装日期</string>
-         </property>
-        </widget>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="leRoute11"/>
        </item>
        <item row="1" column="3">
-        <widget class="QDateEdit" name="deDate1"/>
+        <widget class="QLineEdit" name="leNextAddr1"/>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_26">
-         <property name="text">
-          <string>前一个终端编号</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
+       <item row="1" column="1">
         <widget class="QLineEdit" name="lePreAddr1"/>
        </item>
-       <item row="2" column="2">
+       <item row="1" column="2">
         <widget class="QLabel" name="label_25">
          <property name="text">
           <string>后一个终端编号</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="3">
-        <widget class="QLineEdit" name="leNextAddr1"/>
-       </item>
-       <item row="3" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_19">
          <property name="text">
           <string>节点1</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="leRoute11"/>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>地址编号</string>
+         </property>
+        </widget>
        </item>
-       <item row="3" column="2">
+       <item row="2" column="2">
         <widget class="QLabel" name="label_20">
          <property name="text">
           <string>节点2</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="3">
+       <item row="2" column="3">
         <widget class="QLineEdit" name="leRoute21"/>
        </item>
-       <item row="4" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_21">
          <property name="text">
           <string>节点3</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="leRoute31"/>
+       <item row="0" column="3">
+        <widget class="QDateEdit" name="deDate1"/>
        </item>
-       <item row="4" column="2">
-        <widget class="QLabel" name="label_22">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_26">
          <property name="text">
-          <string>节点4</string>
+          <string>前一个终端编号</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="3">
-        <widget class="QLineEdit" name="leRoute41"/>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="leAddr1"/>
        </item>
-       <item row="5" column="0">
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>安装日期</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
           <string>节点5</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="3" column="3">
+        <widget class="QLineEdit" name="leRoute41"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="leRoute31"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string>节点4</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
         <widget class="QLineEdit" name="leRoute51"/>
        </item>
-       <item row="5" column="2">
+       <item row="4" column="3">
+        <widget class="QLineEdit" name="leRoute61"/>
+       </item>
+       <item row="4" column="2">
         <widget class="QLabel" name="label_24">
          <property name="text">
           <string>节点6</string>
          </property>
         </widget>
-       </item>
-       <item row="5" column="3">
-        <widget class="QLineEdit" name="leRoute61"/>
        </item>
       </layout>
      </widget>
@@ -155,129 +158,105 @@
        <string>B</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_27">
-         <property name="text">
-          <string>名称</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="leName2"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_29">
-         <property name="text">
-          <string>索引</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="3">
-        <widget class="QSpinBox" name="sbIndex2">
-         <property name="maximum">
-          <number>6</number>
-         </property>
-        </widget>
+        <widget class="QDateEdit" name="deDate2"/>
        </item>
-       <item row="1" column="0">
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lePreAddr2"/>
+       </item>
+       <item row="0" column="0">
         <widget class="QLabel" name="label_31">
          <property name="text">
           <string>地址编号</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="leAddr2"/>
-       </item>
        <item row="1" column="2">
-        <widget class="QLabel" name="label_30">
-         <property name="text">
-          <string>安装日期</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QDateEdit" name="deDate2"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_39">
-         <property name="text">
-          <string>前一个终端编号</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="lePreAddr2"/>
-       </item>
-       <item row="2" column="2">
         <widget class="QLabel" name="label_38">
          <property name="text">
           <string>后一个终端编号</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="3">
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>安装日期</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_39">
+         <property name="text">
+          <string>前一个终端编号</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="leAddr2"/>
+       </item>
+       <item row="1" column="3">
         <widget class="QLineEdit" name="leNextAddr2"/>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_32">
-         <property name="text">
-          <string>节点1</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="leRoute12"/>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLabel" name="label_33">
-         <property name="text">
-          <string>节点2</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QLineEdit" name="leRoute22"/>
-       </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label_34">
-         <property name="text">
-          <string>节点3</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="leRoute32"/>
-       </item>
-       <item row="4" column="2">
-        <widget class="QLabel" name="label_35">
-         <property name="text">
-          <string>节点4</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="3">
-        <widget class="QLineEdit" name="leRoute42"/>
-       </item>
-       <item row="5" column="0">
         <widget class="QLabel" name="label_36">
          <property name="text">
           <string>节点5</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="leRoute52"/>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="leRoute12"/>
        </item>
-       <item row="5" column="2">
+       <item row="4" column="2">
         <widget class="QLabel" name="label_37">
          <property name="text">
           <string>节点6</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="3">
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="leRoute32"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="leRoute52"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="label_35">
+         <property name="text">
+          <string>节点4</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_34">
+         <property name="text">
+          <string>节点3</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_32">
+         <property name="text">
+          <string>节点1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="3">
         <widget class="QLineEdit" name="leRoute62"/>
+       </item>
+       <item row="3" column="3">
+        <widget class="QLineEdit" name="leRoute42"/>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLineEdit" name="leRoute22"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="label_33">
+         <property name="text">
+          <string>节点2</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -304,31 +283,60 @@
           <string>基础信息</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_40">
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="leRoute53"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_49">
             <property name="text">
-             <string>名称</string>
+             <string>节点5</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="leName3"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_42">
+          <item row="3" column="2">
+           <widget class="QLabel" name="label_48">
             <property name="text">
-             <string>索引</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QSpinBox" name="sbIndex3">
-            <property name="maximum">
-             <number>6</number>
+             <string>节点4</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
+           <widget class="QLabel" name="label_52">
+            <property name="text">
+             <string>前一个终端编号</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLineEdit" name="leRoute23"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>节点3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="leRoute43"/>
+          </item>
+          <item row="4" column="3">
+           <widget class="QLineEdit" name="leRoute63"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leAddr3"/>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="label_50">
+            <property name="text">
+             <string>节点6</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="leRoute13"/>
+          </item>
+          <item row="0" column="0">
            <widget class="QLabel" name="label_44">
             <property name="text">
              <string>地址编号</string>
@@ -336,97 +344,44 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="leAddr3"/>
+           <widget class="QLineEdit" name="lePreAddr3"/>
           </item>
-          <item row="1" column="2">
+          <item row="0" column="2">
            <widget class="QLabel" name="label_43">
             <property name="text">
              <string>安装日期</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QDateEdit" name="deDate3"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_52">
-            <property name="text">
-             <string>前一个终端编号</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="lePreAddr3"/>
-          </item>
           <item row="2" column="2">
-           <widget class="QLabel" name="label_51">
-            <property name="text">
-             <string>后一个终端编号</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QLineEdit" name="leNextAddr3"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_45">
-            <property name="text">
-             <string>节点1</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="leRoute13"/>
-          </item>
-          <item row="3" column="2">
            <widget class="QLabel" name="label_46">
             <property name="text">
              <string>节点2</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="3">
-           <widget class="QLineEdit" name="leRoute23"/>
+          <item row="0" column="3">
+           <widget class="QDateEdit" name="deDate3"/>
           </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_47">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_45">
             <property name="text">
-             <string>节点3</string>
+             <string>节点1</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_51">
+            <property name="text">
+             <string>后一个终端编号</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="leNextAddr3"/>
+          </item>
+          <item row="3" column="1">
            <widget class="QLineEdit" name="leRoute33"/>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_48">
-            <property name="text">
-             <string>节点4</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QLineEdit" name="leRoute43"/>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_49">
-            <property name="text">
-             <string>节点5</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="leRoute53"/>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLabel" name="label_50">
-            <property name="text">
-             <string>节点6</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QLineEdit" name="leRoute63"/>
           </item>
          </layout>
         </widget>
