@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include "DatabaseConfigDlg.h"
+#include <QDir>
 
 FarsiLoginDlg::FarsiLoginDlg(QWidget *parent) :
     QDialog(parent),
@@ -19,7 +20,7 @@ FarsiLoginDlg::~FarsiLoginDlg()
 {
     delete ui;
 }
-#include <QDir>
+
 void FarsiLoginDlg::initUsersFromXml()
 {
     QFile file(QDir::currentPath() + QString("/loginRecord.xml"));

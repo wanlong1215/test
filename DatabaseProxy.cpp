@@ -12,10 +12,45 @@ DatabaseProxy &DatabaseProxy::instance()
     return instance;
 }
 
-bool DatabaseProxy::connectDB()
+/***************************************************************************************************************/
+// TODO: 胖子，这块是你的
+bool DatabaseProxy::connectDB(const QString &ip, const QString &usr, const QString &pwd)
 {
+    string csIP = ip.toStdString();
+
     return m_db2.DB2Connect("127.0.0.1", "Administrator", "123");
 }
+
+bool DatabaseProxy::isDBConnected()
+{
+    return true;
+}
+
+bool DatabaseProxy::testDB(const QString &ip, const QString &usr, const QString &pwd)
+{
+    return true;
+}
+
+int DatabaseProxy::userId(const QString &usr, const QString &pwd)
+{
+    return 1;
+}
+
+int DatabaseProxy::addUser(const QString &usr, const QString &pwd, int level)
+{
+    return 1;
+}
+
+bool DatabaseProxy::modifyUser(int id, const QString &usr, const QString &pwd, int level)
+{
+    return true;
+}
+
+bool DatabaseProxy::delUser(int id)
+{
+    return true;
+}
+/***************************************************************************************************************/
 
 void DatabaseProxy::clearOrganizations()
 {
