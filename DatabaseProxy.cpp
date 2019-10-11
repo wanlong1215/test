@@ -36,6 +36,11 @@ int DatabaseProxy::userId(const QString &usr, const QString &pwd)
     return 1;
 }
 
+int DatabaseProxy::userLevel(int id)
+{
+    return 1;
+}
+
 int DatabaseProxy::addUser(const QString &usr, const QString &pwd, int level)
 {
     return 1;

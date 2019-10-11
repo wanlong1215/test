@@ -267,7 +267,6 @@ struct showData
 class DatabaseProxy
 {
 public:
-	DatabaseProxy();
     static DatabaseProxy &instance();
 
     bool connectDB(const QString &ip, const QString &usr, const QString &pwd); // 连接DB
@@ -276,6 +275,7 @@ public:
     bool testDB(const QString &ip, const QString &usr, const QString &pwd); // 测试数据库连接
 
     int userId(const QString &usr, const QString &pwd); // 根据用户名和密码返回对应的id值
+    int userLevel(int id); // 根据用户ID获取用户级别，错误返回-1
     int addUser(const QString &usr, const QString &pwd, int level); // 添加用户，返回ID，错误返回-1
     bool modifyUser(int id, const QString &usr, const QString &pwd, int level); // 修改用户信息，错误返回false
     bool delUser(int id); // 删除用户
@@ -325,6 +325,8 @@ public:
     int createId();
 
 private:
+    DatabaseProxy();
+
 	CDATAOperate m_db2;//操作DB2的对象
 
     QList<proCompany *> _lst;

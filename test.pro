@@ -45,7 +45,8 @@ SOURCES += \
     PopupInformation.cpp \
     ConcentratorConfigDlg.cpp \
     AlarmConfigDlg.cpp \
-    DATAOperate.cpp
+    DATAOperate.cpp \
+    AppSession.cpp
 
 HEADERS += \
     TerminalGraphicsWidget.h \
@@ -69,7 +70,8 @@ HEADERS += \
     ConcentratorConfigDlg.h \
     AlarmConfigDlg.h \
     DATAOperate.h \
-    dbtool_ado.h
+    dbtool_ado.h \
+    AppSession.h
 
 FORMS += \
     Elec.ui \

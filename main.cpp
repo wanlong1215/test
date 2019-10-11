@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
 
 	QApplication a(argc, argv);
-
+/*
     // build data
     auto com = new proCompany();
     com->name = QStringLiteral("公司");
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-
+*/
 
     QString fileName = ":/resource/css/blue.css";
     if (!fileName.isEmpty())

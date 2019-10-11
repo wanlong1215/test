@@ -6,6 +6,8 @@
 #include <QDebug>
 #include "DatabaseConfigDlg.h"
 #include <QDir>
+#include "DatabaseProxy.h"
+#include "AppSession.h"
 
 FarsiLoginDlg::FarsiLoginDlg(QWidget *parent) :
     QDialog(parent),
@@ -125,10 +127,10 @@ void FarsiLoginDlg::updateUsersOfXml()
 
 void FarsiLoginDlg::on_btnLogin_clicked()
 {
-    QString qsUser = ui->leUser->text();
-    QString qsPwd = ui->lePwd->text();
+    QString usr = ui->leUser->text();
+    QString pwd = ui->lePwd->text();
 
-    if (qsUser.isEmpty())
+    if (usr.isEmpty())
     {
         QMessageBox::warning(this,
             tr("警告"),
@@ -136,6 +138,28 @@ void FarsiLoginDlg::on_btnLogin_clicked()
             QMessageBox::Ok);
         return;
     }
+
+    if (!DatabaseProxy::instance().connectDB("ip", "usr", "pwd"))
+    {
+        QMessageBox::warning(this,
+            tr("警告"),
+            tr("数据库连接失败，请设置数据库连接信息!"),
+            QMessageBox::Ok);
+        return;
+    }
+
+    int id = DatabaseProxy::instance().userId(usr, pwd);
+    if (-1 == id)
+    {
+        QMessageBox::warning(this,
+            tr("警告"),
+            tr("数据库内没有当前用户，请重新输入!"),
+            QMessageBox::Ok);
+        return;
+    }
+
+    AppSession::instance().user.id = id;
+    AppSession::instance().user.level = DatabaseProxy::instance().userLevel(id);
 
     updateUsersOfXml();
 
