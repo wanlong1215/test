@@ -33,6 +33,8 @@ private slots:
 
     void on_btnAlarm_clicked();
 
+    void on_btnConcentrator_clicked();
+
 private:
     void updateCheckStatus(QPushButton *btn);
 

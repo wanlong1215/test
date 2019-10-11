@@ -7,6 +7,7 @@
 #include <QPropertyAnimation>
 #include <QFile>
 #include "AlarmConfigDlg.h"
+#include "ConcentratorConfigDlg.h"
 
 Elec::Elec(QWidget *parent)
     : QMainWindow(parent)
@@ -112,6 +113,13 @@ void Elec::updateCheckStatus(QPushButton *btn)
 void Elec::on_btnAlarm_clicked()
 {
     AlarmConfigDlg *dlg = new AlarmConfigDlg(this);
+
+    dlg->exec();
+}
+
+void Elec::on_btnConcentrator_clicked()
+{
+    ConcentratorConfigDlg *dlg = new ConcentratorConfigDlg(this);
 
     dlg->exec();
 }
