@@ -45,7 +45,7 @@ void ConcentratorEditDlg::init()
     }
     else
     {
-        ui->leName->setText("集中器");
+        ui->leName->setText(QStringLiteral("集中器"));
     }
 }
 

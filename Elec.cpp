@@ -16,6 +16,8 @@ Elec::Elec(QWidget *parent)
 
     _lstMenuButton << ui.btnSummary << ui.btnConfigure;
     on_btnSummary_clicked();
+
+    this->resize(1366, 768);
 }
 
 Elec::~Elec()

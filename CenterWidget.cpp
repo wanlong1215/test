@@ -107,8 +107,7 @@ bool CenterWidget::eventFilter(QObject *obj, QEvent *e)
 			OrganizationTreeWidgetItem *itemO = NULL;
             if (NULL == clickItem)
             {
-                //addAc = menu.addAction(QString::fromLocal8Bit("添加公司"));
-                addAc = menu.addAction(QString("添加公司"));
+                addAc = menu.addAction(QStringLiteral("添加公司"));
             }
             else
             {
@@ -158,9 +157,6 @@ bool CenterWidget::eventFilter(QObject *obj, QEvent *e)
             {
                 modifyAc = menu.addAction(itemO->modifyMenuText());
                 delAc = menu.addAction(itemO->delMenuText());
-                QAction *read = menu.addAction("读取集中器时间");
-                QAction *readPara = menu.addAction("读取集中器参数");
-                QAction *write = menu.addAction("修改集中器时间");
                 selAc = menu.exec(QCursor::pos());
                 if (NULL != selAc)
                 {

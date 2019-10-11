@@ -7,22 +7,22 @@ BasicEditDlg::BasicEditDlg(int addType, int pid, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle("添加");
+    setWindowTitle(QStringLiteral("添加"));
     _type = addType;
     _parentId = pid;
     switch (_type)
     {
     case 1:
-        ui->leName->setText("公司");
+        ui->leName->setText(QStringLiteral("公司"));
         break;
     case 2:
-        ui->leName->setText("分公司");
+        ui->leName->setText(QStringLiteral("分公司"));
         break;
     case 3:
-        ui->leName->setText("供电所");
+        ui->leName->setText(QStringLiteral("供电所"));
         break;
     case 4:
-        ui->leName->setText("线路");
+        ui->leName->setText(QStringLiteral("线路"));
         break;
     default:
         break;

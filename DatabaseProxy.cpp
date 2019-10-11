@@ -203,10 +203,8 @@ bool DatabaseProxy::addCompany(proCompany *o)
 	company.companyID = o->id;
 	company.strName = o->name.toStdString();
 	company.strDescribe = o->desc.toStdString();
-	o->id = m_db2.InsertCompany(company);
-    // createId, set parent id
-    //o->id = createId();
-    //_lst.append(o);
+    o->id = m_db2.InsertCompany(company);
+    _lst.append(o);
 
     return true;
 }
@@ -218,14 +216,13 @@ bool DatabaseProxy::addSubCompany(proSubCompany *o, int parentid)
 	subCompany.strName = o->name.toStdString();
 	subCompany.strDescribe = o->desc.toStdString();
 	o->id = m_db2.InsertSubCompany(subCompany, parentid);
-    //proCompany *po = company(parentid);
+    proCompany *po = company(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -238,14 +235,13 @@ bool DatabaseProxy::addAmso(proAmso *o, int parentid)
 	amso.strDescribe = o->desc.toStdString();
 	o->id = m_db2.InsertAMSO(amso, parentid);
 
-    //proSubCompany *po = subCompany(parentid);
+    proSubCompany *po = subCompany(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -257,14 +253,13 @@ bool DatabaseProxy::addRoute(proRoute *o, int parentid)
 	route.strName = o->name.toStdString();
 	route.strDescribe = o->desc.toStdString();
 	o->id = m_db2.InsertRoute(route, parentid);
-    //proAmso *po = amso(parentid);
+    proAmso *po = amso(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -293,14 +288,13 @@ bool DatabaseProxy::addConcentrator(proConcentrator *o, int parentid)
 	o->id = m_db2.InsertConcentrator(concentrator, parentid);
 
 
-    //proRoute *po = route(parentid);
+    proRoute *po = route(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -317,14 +311,13 @@ bool DatabaseProxy::addLine(proLine *o, int parentid)
 	line.workerID = o->workerID;
 	o->id = m_db2.InsertLine(line, parentid);
 
-    //proConcentrator *po = concentrator(parentid);
+    proConcentrator *po = concentrator(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -336,14 +329,13 @@ bool DatabaseProxy::addMonitor(proMonitor *o, int parentid)
 	monitor.strName = o->name.toStdString();
 	o->id = m_db2.InsertMonitor(monitor,parentid);
 
-    //proLine *po = line(parentid);
+    proLine *po = line(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -374,14 +366,13 @@ bool DatabaseProxy::addTerminal(proTerminal *o, int parentid)
 	terminal.LowValue = o->lowPressureValue;
 	o->id = m_db2.InsertTerminal(terminal, parentid);
 
-    //proMonitor *po = monitor(parentid);
+    proMonitor *po = monitor(parentid);
 
-    //if (NULL != po)
-    //{
-    //    o->id = createId();
-    //    o->parent = po;
-    //    po->lst.append(o);
-    //}
+    if (NULL != po)
+    {
+        o->parent = po;
+        po->lst.append(o);
+    }
 
     return true;
 }
@@ -429,647 +420,714 @@ bool DatabaseProxy::addWarning(proWarning *o)
 
 bool DatabaseProxy::delCompany(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		if (pCompany->id == id)
-		{
-			for (int i = 0; i < pCompany->lst.size(); i++)
-			{
-				proSubCompany *pSubCompany = pCompany->lst.at(i);
-				for (int i = 0; pSubCompany->lst.size(); i++)
-				{
-					proAmso *pAmso = pSubCompany->lst.at(i);
-					for (int i = 0; i < pAmso->lst.size(); i++)
-					{
-						proRoute *pRoute = pAmso->lst.at(i);
-						for (int i = 0; i < pRoute->lst.size(); i++)
-						{
-							proConcentrator *pConcentrator = pRoute->lst.at(i);
-							for (int i = 0; i < pConcentrator->lst.size(); i++)
-							{
-								proLine *pLine = pConcentrator->lst.at(i);
-								for (int i = 0; i < pLine->lst.size(); i++)
-								{
-									proMonitor *pMonitor = pLine->lst.at(i);
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-								if (m_db2.DelLine(pLine->id))
-								{
-									pConcentrator->lst.removeOne(pLine);
-									delete pLine;
-								}
-							}
-							if (m_db2.DelConcentrator(pConcentrator->id))
-							{
-								pRoute->lst.removeOne(pConcentrator);
-								delete pConcentrator;
-							}
-						}
-						if (m_db2.DelRoute(pRoute->id))
-						{
-							pAmso->lst.removeOne(pRoute);
-							delete pRoute;
-						}
-					}
-					if (m_db2.DelAMSO(pAmso->id))
-					{
-						pSubCompany->lst.removeOne(pAmso);
-						delete pAmso;
-					}
-				}
-				if (m_db2.DelSubCompany(pSubCompany->id))
-				{
-					pCompany->lst.removeOne(pSubCompany);
-					delete pSubCompany;
-				}
-			}
-			if (m_db2.DelCompany(pCompany->id))
-			{
-				_lst.removeOne(pCompany);
-				delete pCompany;
-			}
-		}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		if (pCompany->id == id)
+//		{
+//			for (int i = 0; i < pCompany->lst.size(); i++)
+//			{
+//				proSubCompany *pSubCompany = pCompany->lst.at(i);
+//				for (int i = 0; pSubCompany->lst.size(); i++)
+//				{
+//					proAmso *pAmso = pSubCompany->lst.at(i);
+//					for (int i = 0; i < pAmso->lst.size(); i++)
+//					{
+//						proRoute *pRoute = pAmso->lst.at(i);
+//						for (int i = 0; i < pRoute->lst.size(); i++)
+//						{
+//							proConcentrator *pConcentrator = pRoute->lst.at(i);
+//							for (int i = 0; i < pConcentrator->lst.size(); i++)
+//							{
+//								proLine *pLine = pConcentrator->lst.at(i);
+//								for (int i = 0; i < pLine->lst.size(); i++)
+//								{
+//									proMonitor *pMonitor = pLine->lst.at(i);
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//								if (m_db2.DelLine(pLine->id))
+//								{
+//									pConcentrator->lst.removeOne(pLine);
+//									delete pLine;
+//								}
+//							}
+//							if (m_db2.DelConcentrator(pConcentrator->id))
+//							{
+//								pRoute->lst.removeOne(pConcentrator);
+//								delete pConcentrator;
+//							}
+//						}
+//						if (m_db2.DelRoute(pRoute->id))
+//						{
+//							pAmso->lst.removeOne(pRoute);
+//							delete pRoute;
+//						}
+//					}
+//					if (m_db2.DelAMSO(pAmso->id))
+//					{
+//						pSubCompany->lst.removeOne(pAmso);
+//						delete pAmso;
+//					}
+//				}
+//				if (m_db2.DelSubCompany(pSubCompany->id))
+//				{
+//					pCompany->lst.removeOne(pSubCompany);
+//					delete pSubCompany;
+//				}
+//			}
+//			if (m_db2.DelCompany(pCompany->id))
+//			{
+//				_lst.removeOne(pCompany);
+//				delete pCompany;
+//			}
+//		}
 		
-	}
+//	}
 	
-	
+    foreach(proCompany * o1, _lst) {
+        if (o1->id == id)
+        {
+            if (!o1->lst.isEmpty())
+            {
+                return false;
+            }
+            if (m_db2.DelCompany(id))
+            {
+                _lst.removeOne(o1);
+                delete o1;
 
-    //foreach(proCompany * o1, _lst) {
-    //    if (o1->id == id)
-    //    {
-    //        if (!o1->lst.isEmpty())
-    //        {
-    //            return false;
-    //        }
-    //        _ids.removeOne(id);
-    //        _lst.removeOne(o1);
-    //        return true;
-    //    }
-    //}
+                return true;
+            }
+        }
+    }
 
     return false;
 }
 
 bool DatabaseProxy::delSubCompany(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			if (pSubCompany->id == id)
-			{
-				for (int i = 0; pSubCompany->lst.size(); i++)
-				{
-					proAmso *pAmso = pSubCompany->lst.at(i);
-					for (int i = 0; i < pAmso->lst.size(); i++)
-					{
-						proRoute *pRoute = pAmso->lst.at(i);
-						for (int i = 0; i < pRoute->lst.size(); i++)
-						{
-							proConcentrator *pConcentrator = pRoute->lst.at(i);
-							for (int i = 0; i < pConcentrator->lst.size(); i++)
-							{
-								proLine *pLine = pConcentrator->lst.at(i);
-								for (int i = 0; i < pLine->lst.size(); i++)
-								{
-									proMonitor *pMonitor = pLine->lst.at(i);
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-								if (m_db2.DelLine(pLine->id))
-								{
-									pConcentrator->lst.removeOne(pLine);
-									delete pLine;
-								}
-							}
-							if (m_db2.DelConcentrator(pConcentrator->id))
-							{
-								pRoute->lst.removeOne(pConcentrator);
-								delete pConcentrator;
-							}
-						}
-						if (m_db2.DelRoute(pRoute->id))
-						{
-							pAmso->lst.removeOne(pRoute);
-							delete pRoute;
-						}
-					}
-					if (m_db2.DelAMSO(pAmso->id))
-					{
-						pSubCompany->lst.removeOne(pAmso);
-						delete pAmso;
-					}
-				}
-				if (m_db2.DelSubCompany(pSubCompany->id))
-				{
-					pCompany->lst.removeOne(pSubCompany);
-					delete pSubCompany;
-				}
-			}
-		}
-	}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			if (pSubCompany->id == id)
+//			{
+//				for (int i = 0; pSubCompany->lst.size(); i++)
+//				{
+//					proAmso *pAmso = pSubCompany->lst.at(i);
+//					for (int i = 0; i < pAmso->lst.size(); i++)
+//					{
+//						proRoute *pRoute = pAmso->lst.at(i);
+//						for (int i = 0; i < pRoute->lst.size(); i++)
+//						{
+//							proConcentrator *pConcentrator = pRoute->lst.at(i);
+//							for (int i = 0; i < pConcentrator->lst.size(); i++)
+//							{
+//								proLine *pLine = pConcentrator->lst.at(i);
+//								for (int i = 0; i < pLine->lst.size(); i++)
+//								{
+//									proMonitor *pMonitor = pLine->lst.at(i);
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//								if (m_db2.DelLine(pLine->id))
+//								{
+//									pConcentrator->lst.removeOne(pLine);
+//									delete pLine;
+//								}
+//							}
+//							if (m_db2.DelConcentrator(pConcentrator->id))
+//							{
+//								pRoute->lst.removeOne(pConcentrator);
+//								delete pConcentrator;
+//							}
+//						}
+//						if (m_db2.DelRoute(pRoute->id))
+//						{
+//							pAmso->lst.removeOne(pRoute);
+//							delete pRoute;
+//						}
+//					}
+//					if (m_db2.DelAMSO(pAmso->id))
+//					{
+//						pSubCompany->lst.removeOne(pAmso);
+//						delete pAmso;
+//					}
+//				}
+//				if (m_db2.DelSubCompany(pSubCompany->id))
+//				{
+//					pCompany->lst.removeOne(pSubCompany);
+//					delete pSubCompany;
+//				}
+//			}
+//		}
+//	}
 
-	//foreach(proCompany * o1, _lst) {
-	//    foreach(proSubCompany * o2, o1->lst) {
-	//        if (o2->id == id)
-	//        {
-	//            if (!o2->lst.isEmpty())
-	//            {
-	//                return false;
-	//            }
-	//            _ids.removeOne(id);
-	//            o1->lst.removeOne(o2);
-	//            return true;
-	//        }
-	//    }
-	//}
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            if (o2->id == id)
+            {
+                if (!o2->lst.isEmpty())
+                {
+                    return false;
+                }
+
+                if (m_db2.DelSubCompany(id))
+                {
+                    o1->lst.removeOne(o2);
+                    delete o2;
+
+                    return true;
+                }
+            }
+        }
+    }
 
 	return false;
 }
 
 bool DatabaseProxy::delAmso(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
-			{
-				proAmso *pAmso = pSubCompany->lst.at(i);
-				if (pAmso->id == id)
-				{
-					for (int i = 0; i < pAmso->lst.size(); i++)
-					{
-						proRoute *pRoute = pAmso->lst.at(i);
-						for (int i = 0; i < pRoute->lst.size(); i++)
-						{
-							proConcentrator *pConcentrator = pRoute->lst.at(i);
-							for (int i = 0; i < pConcentrator->lst.size(); i++)
-							{
-								proLine *pLine = pConcentrator->lst.at(i);
-								for (int i = 0; i < pLine->lst.size(); i++)
-								{
-									proMonitor *pMonitor = pLine->lst.at(i);
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-								if (m_db2.DelLine(pLine->id))
-								{
-									pConcentrator->lst.removeOne(pLine);
-									delete pLine;
-								}
-							}
-							if (m_db2.DelConcentrator(pConcentrator->id))
-							{
-								pRoute->lst.removeOne(pConcentrator);
-								delete pConcentrator;
-							}
-						}
-						if (m_db2.DelRoute(pRoute->id))
-						{
-							pAmso->lst.removeOne(pRoute);
-							delete pRoute;
-						}
-					}
-					if (m_db2.DelAMSO(pAmso->id))
-					{
-						pSubCompany->lst.removeOne(pAmso);
-						delete pAmso;
-					}
-				}
-			}
-		}
-	}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			for (int i = 0; pSubCompany->lst.size(); i++)
+//			{
+//				proAmso *pAmso = pSubCompany->lst.at(i);
+//				if (pAmso->id == id)
+//				{
+//					for (int i = 0; i < pAmso->lst.size(); i++)
+//					{
+//						proRoute *pRoute = pAmso->lst.at(i);
+//						for (int i = 0; i < pRoute->lst.size(); i++)
+//						{
+//							proConcentrator *pConcentrator = pRoute->lst.at(i);
+//							for (int i = 0; i < pConcentrator->lst.size(); i++)
+//							{
+//								proLine *pLine = pConcentrator->lst.at(i);
+//								for (int i = 0; i < pLine->lst.size(); i++)
+//								{
+//									proMonitor *pMonitor = pLine->lst.at(i);
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//								if (m_db2.DelLine(pLine->id))
+//								{
+//									pConcentrator->lst.removeOne(pLine);
+//									delete pLine;
+//								}
+//							}
+//							if (m_db2.DelConcentrator(pConcentrator->id))
+//							{
+//								pRoute->lst.removeOne(pConcentrator);
+//								delete pConcentrator;
+//							}
+//						}
+//						if (m_db2.DelRoute(pRoute->id))
+//						{
+//							pAmso->lst.removeOne(pRoute);
+//							delete pRoute;
+//						}
+//					}
+//					if (m_db2.DelAMSO(pAmso->id))
+//					{
+//						pSubCompany->lst.removeOne(pAmso);
+//						delete pAmso;
+//					}
+//				}
+//			}
+//		}
+//	}
 
-    //foreach(proCompany * o1, _lst) {
-    //    foreach(proSubCompany * o2, o1->lst) {
-    //        foreach(proAmso * o3, o2->lst) {
-    //            if (o3->id == id)
-    //            {
-    //                if (!o3->lst.isEmpty())
-    //                {
-    //                    return false;
-    //                }
-    //                _ids.removeOne(id);
-    //                o2->lst.removeOne(o3);
-    //                return true;
-    //            }
-    //        }
-    //    }
-    //}
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                if (o3->id == id)
+                {
+                    if (!o3->lst.isEmpty())
+                    {
+                        return false;
+                    }
+
+                    if (m_db2.DelAMSO(id))
+                    {
+                        o2->lst.removeOne(o3);
+                        delete o3;
+
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 
     return false;
 }
 
 bool DatabaseProxy::delRoute(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
-			{
-				proAmso *pAmso = pSubCompany->lst.at(i);
-				for (int i = 0; i < pAmso->lst.size(); i++)
-				{
-					proRoute *pRoute = pAmso->lst.at(i);
-					if (pRoute->id == id)
-					{
-						for (int i = 0; i < pRoute->lst.size(); i++)
-						{
-							proConcentrator *pConcentrator = pRoute->lst.at(i);
-							for (int i = 0; i < pConcentrator->lst.size(); i++)
-							{
-								proLine *pLine = pConcentrator->lst.at(i);
-								for (int i = 0; i < pLine->lst.size(); i++)
-								{
-									proMonitor *pMonitor = pLine->lst.at(i);
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-								if (m_db2.DelLine(pLine->id))
-								{
-									pConcentrator->lst.removeOne(pLine);
-									delete pLine;
-								}
-							}
-							if (m_db2.DelConcentrator(pConcentrator->id))
-							{
-								pRoute->lst.removeOne(pConcentrator);
-								delete pConcentrator;
-							}
-						}
-						if (m_db2.DelRoute(pRoute->id))
-						{
-							pAmso->lst.removeOne(pRoute);
-							delete pRoute;
-						}
-					}
-				}
-			}
-		}
-	}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			for (int i = 0; pSubCompany->lst.size(); i++)
+//			{
+//				proAmso *pAmso = pSubCompany->lst.at(i);
+//				for (int i = 0; i < pAmso->lst.size(); i++)
+//				{
+//					proRoute *pRoute = pAmso->lst.at(i);
+//					if (pRoute->id == id)
+//					{
+//						for (int i = 0; i < pRoute->lst.size(); i++)
+//						{
+//							proConcentrator *pConcentrator = pRoute->lst.at(i);
+//							for (int i = 0; i < pConcentrator->lst.size(); i++)
+//							{
+//								proLine *pLine = pConcentrator->lst.at(i);
+//								for (int i = 0; i < pLine->lst.size(); i++)
+//								{
+//									proMonitor *pMonitor = pLine->lst.at(i);
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//								if (m_db2.DelLine(pLine->id))
+//								{
+//									pConcentrator->lst.removeOne(pLine);
+//									delete pLine;
+//								}
+//							}
+//							if (m_db2.DelConcentrator(pConcentrator->id))
+//							{
+//								pRoute->lst.removeOne(pConcentrator);
+//								delete pConcentrator;
+//							}
+//						}
+//						if (m_db2.DelRoute(pRoute->id))
+//						{
+//							pAmso->lst.removeOne(pRoute);
+//							delete pRoute;
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
-    //foreach(proCompany * o1, _lst) {
-    //    foreach(proSubCompany * o2, o1->lst) {
-    //        foreach(proAmso * o3, o2->lst) {
-    //            foreach(proRoute * o4, o3->lst) {
-    //                if (o4->id == id)
-    //                {
-    //                    if (!o4->lst.isEmpty())
-    //                    {
-    //                        return false;
-    //                    }
-    //                    _ids.removeOne(id);
-    //                    o3->lst.removeOne(o4);
-    //                    return true;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                foreach(proRoute * o4, o3->lst) {
+                    if (o4->id == id)
+                    {
+                        if (!o4->lst.isEmpty())
+                        {
+                            return false;
+                        }
+
+                        if (m_db2.DelRoute(id))
+                        {
+                            o3->lst.removeOne(o4);
+                            delete o4;
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return false;
 }
 
 bool DatabaseProxy::delConcentrator(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
-			{
-				proAmso *pAmso = pSubCompany->lst.at(i);
-				for (int i = 0; i < pAmso->lst.size(); i++)
-				{
-					proRoute *pRoute = pAmso->lst.at(i);
-					for (int i = 0; i < pRoute->lst.size(); i++)
-					{
-						proConcentrator *pConcentrator = pRoute->lst.at(i);
-						if (pConcentrator->id == id)
-						{
-							for (int i = 0; i < pConcentrator->lst.size(); i++)
-							{
-								proLine *pLine = pConcentrator->lst.at(i);
-								for (int i = 0; i < pLine->lst.size(); i++)
-								{
-									proMonitor *pMonitor = pLine->lst.at(i);
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-								if (m_db2.DelLine(pLine->id))
-								{
-									pConcentrator->lst.removeOne(pLine);
-									delete pLine;
-								}
-							}
-							if (m_db2.DelConcentrator(pConcentrator->id))
-							{
-								pRoute->lst.removeOne(pConcentrator);
-								delete pConcentrator;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			for (int i = 0; pSubCompany->lst.size(); i++)
+//			{
+//				proAmso *pAmso = pSubCompany->lst.at(i);
+//				for (int i = 0; i < pAmso->lst.size(); i++)
+//				{
+//					proRoute *pRoute = pAmso->lst.at(i);
+//					for (int i = 0; i < pRoute->lst.size(); i++)
+//					{
+//						proConcentrator *pConcentrator = pRoute->lst.at(i);
+//						if (pConcentrator->id == id)
+//						{
+//							for (int i = 0; i < pConcentrator->lst.size(); i++)
+//							{
+//								proLine *pLine = pConcentrator->lst.at(i);
+//								for (int i = 0; i < pLine->lst.size(); i++)
+//								{
+//									proMonitor *pMonitor = pLine->lst.at(i);
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//								if (m_db2.DelLine(pLine->id))
+//								{
+//									pConcentrator->lst.removeOne(pLine);
+//									delete pLine;
+//								}
+//							}
+//							if (m_db2.DelConcentrator(pConcentrator->id))
+//							{
+//								pRoute->lst.removeOne(pConcentrator);
+//								delete pConcentrator;
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
-    //foreach(proCompany * o1, _lst) {
-    //    foreach(proSubCompany * o2, o1->lst) {
-    //        foreach(proAmso * o3, o2->lst) {
-    //            foreach(proRoute * o4, o3->lst) {
-    //                foreach(proConcentrator * o5, o4->lst) {
-    //                    if (o5->id == id)
-    //                    {
-    //                        if (!o5->lst.isEmpty())
-    //                        {
-    //                            return false;
-    //                        }
-    //                        _ids.removeOne(id);
-    //                        o4->lst.removeOne(o5);
-    //                        return true;
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                foreach(proRoute * o4, o3->lst) {
+                    foreach(proConcentrator * o5, o4->lst) {
+                        if (o5->id == id)
+                        {
+                            if (!o5->lst.isEmpty())
+                            {
+                                return false;
+                            }
+
+                            if (m_db2.DelConcentrator(id))
+                            {
+                                o4->lst.removeOne(o5);
+                                delete o5;
+
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return false;
 }
 
 bool DatabaseProxy::delLine(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
-			{
-				proAmso *pAmso = pSubCompany->lst.at(i);
-				for (int i = 0; i < pAmso->lst.size(); i++)
-				{
-					proRoute *pRoute = pAmso->lst.at(i);
-					for (int i = 0; i < pRoute->lst.size(); i++)
-					{
-						proConcentrator *pConcentrator = pRoute->lst.at(i);
-						for (int i = 0; i < pConcentrator->lst.size(); i++)
-						{
-							proLine *pLine = pConcentrator->lst.at(i);
-							if (pLine->id == id)
-							{
-								for (int i = 0; i < pLine->lst.size(); i++)
-								{
-									proMonitor *pMonitor = pLine->lst.at(i);
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-								if (m_db2.DelLine(pLine->id))
-								{
-									pConcentrator->lst.removeOne(pLine);
-									delete pLine;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			for (int i = 0; pSubCompany->lst.size(); i++)
+//			{
+//				proAmso *pAmso = pSubCompany->lst.at(i);
+//				for (int i = 0; i < pAmso->lst.size(); i++)
+//				{
+//					proRoute *pRoute = pAmso->lst.at(i);
+//					for (int i = 0; i < pRoute->lst.size(); i++)
+//					{
+//						proConcentrator *pConcentrator = pRoute->lst.at(i);
+//						for (int i = 0; i < pConcentrator->lst.size(); i++)
+//						{
+//							proLine *pLine = pConcentrator->lst.at(i);
+//							if (pLine->id == id)
+//							{
+//								for (int i = 0; i < pLine->lst.size(); i++)
+//								{
+//									proMonitor *pMonitor = pLine->lst.at(i);
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//								if (m_db2.DelLine(pLine->id))
+//								{
+//									pConcentrator->lst.removeOne(pLine);
+//									delete pLine;
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
-    //foreach(proCompany * o1, _lst) {
-    //    foreach(proSubCompany * o2, o1->lst) {
-    //        foreach(proAmso * o3, o2->lst) {
-    //            foreach(proRoute * o4, o3->lst) {
-    //                foreach(proConcentrator * o5, o4->lst) {
-    //                    foreach(proLine * o6, o5->lst) {
-    //                        if (o6->id == id)
-    //                        {
-    //                            if (!o6->lst.isEmpty())
-    //                            {
-    //                                return false;
-    //                            }
-    //                            _ids.removeOne(id);
-    //                            o5->lst.removeOne(o6);
-    //                            return true;
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                foreach(proRoute * o4, o3->lst) {
+                    foreach(proConcentrator * o5, o4->lst) {
+                        foreach(proLine * o6, o5->lst) {
+                            if (o6->id == id)
+                            {
+                                if (!o6->lst.isEmpty())
+                                {
+                                    return false;
+                                }
+
+                                if (m_db2.DelLine(id))
+                                {
+                                    o5->lst.removeOne(o6);
+                                    delete o6;
+
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return false;
 }
 
 bool DatabaseProxy::delMonitor(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
-			{
-				proAmso *pAmso = pSubCompany->lst.at(i);
-				for (int i = 0; i < pAmso->lst.size(); i++)
-				{
-					proRoute *pRoute = pAmso->lst.at(i);
-					for (int i = 0; i < pRoute->lst.size(); i++)
-					{
-						proConcentrator *pConcentrator = pRoute->lst.at(i);
-						for (int i = 0; i < pConcentrator->lst.size(); i++)
-						{
-							proLine *pLine = pConcentrator->lst.at(i);
-							for (int i = 0; i < pLine->lst.size(); i++)
-							{
-								proMonitor *pMonitor = pLine->lst.at(i);
-								if (pMonitor->id == id)
-								{
-									for (int i = 0; i < pMonitor->lst.size(); i++)
-									{
-										proTerminal *pTerminal = pMonitor->lst.at(i);
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}										
-									}
-									if (m_db2.DelMonitor(pMonitor->id))
-									{
-										pLine->lst.removeOne(pMonitor);
-										delete pMonitor;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	return true;
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			for (int i = 0; pSubCompany->lst.size(); i++)
+//			{
+//				proAmso *pAmso = pSubCompany->lst.at(i);
+//				for (int i = 0; i < pAmso->lst.size(); i++)
+//				{
+//					proRoute *pRoute = pAmso->lst.at(i);
+//					for (int i = 0; i < pRoute->lst.size(); i++)
+//					{
+//						proConcentrator *pConcentrator = pRoute->lst.at(i);
+//						for (int i = 0; i < pConcentrator->lst.size(); i++)
+//						{
+//							proLine *pLine = pConcentrator->lst.at(i);
+//							for (int i = 0; i < pLine->lst.size(); i++)
+//							{
+//								proMonitor *pMonitor = pLine->lst.at(i);
+//								if (pMonitor->id == id)
+//								{
+//									for (int i = 0; i < pMonitor->lst.size(); i++)
+//									{
+//										proTerminal *pTerminal = pMonitor->lst.at(i);
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//									if (m_db2.DelMonitor(pMonitor->id))
+//									{
+//										pLine->lst.removeOne(pMonitor);
+//										delete pMonitor;
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
+//	return true;
+
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                foreach(proRoute * o4, o3->lst) {
+                    foreach(proConcentrator * o5, o4->lst) {
+                        foreach(proLine * o6, o5->lst) {
+                            foreach(proMonitor * o7, o6->lst) {
+                                if (o7->id == id)
+                                {
+                                    if (!o7->lst.isEmpty())
+                                    {
+                                        return false;
+                                    }
+
+                                    if (m_db2.DelMonitor(id))
+                                    {
+                                        o6->lst.removeOne(o7);
+                                        delete o7;
+
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 bool DatabaseProxy::delTerminal(int id)
 {
-	for (int i = 0; i < _lst.size(); i++)
-	{
-		proCompany *pCompany = _lst.at(i);
-		for (int i = 0; i < pCompany->lst.size(); i++)
-		{
-			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
-			{
-				proAmso *pAmso = pSubCompany->lst.at(i);
-				for (int i = 0; i < pAmso->lst.size(); i++)
-				{
-					proRoute *pRoute = pAmso->lst.at(i);
-					for (int i = 0; i < pRoute->lst.size(); i++)
-					{
-						proConcentrator *pConcentrator = pRoute->lst.at(i);
-						for (int i = 0; i < pConcentrator->lst.size(); i++)
-						{
-							proLine *pLine = pConcentrator->lst.at(i);
-							for (int i = 0; i < pLine->lst.size(); i++)
-							{
-								proMonitor *pMonitor = pLine->lst.at(i);
-								for (int i = 0; i < pMonitor->lst.size(); i++)
-								{
-									proTerminal *pTerminal = pMonitor->lst.at(i);
-									if (pTerminal->id == id)
-									{
-										if (m_db2.DelTerminal(pTerminal->id))
-										{
-											pMonitor->lst.removeOne(pTerminal);
-											delete pTerminal;
-										}	
-									}									
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+//	for (int i = 0; i < _lst.size(); i++)
+//	{
+//		proCompany *pCompany = _lst.at(i);
+//		for (int i = 0; i < pCompany->lst.size(); i++)
+//		{
+//			proSubCompany *pSubCompany = pCompany->lst.at(i);
+//			for (int i = 0; pSubCompany->lst.size(); i++)
+//			{
+//				proAmso *pAmso = pSubCompany->lst.at(i);
+//				for (int i = 0; i < pAmso->lst.size(); i++)
+//				{
+//					proRoute *pRoute = pAmso->lst.at(i);
+//					for (int i = 0; i < pRoute->lst.size(); i++)
+//					{
+//						proConcentrator *pConcentrator = pRoute->lst.at(i);
+//						for (int i = 0; i < pConcentrator->lst.size(); i++)
+//						{
+//							proLine *pLine = pConcentrator->lst.at(i);
+//							for (int i = 0; i < pLine->lst.size(); i++)
+//							{
+//								proMonitor *pMonitor = pLine->lst.at(i);
+//								for (int i = 0; i < pMonitor->lst.size(); i++)
+//								{
+//									proTerminal *pTerminal = pMonitor->lst.at(i);
+//									if (pTerminal->id == id)
+//									{
+//										if (m_db2.DelTerminal(pTerminal->id))
+//										{
+//											pMonitor->lst.removeOne(pTerminal);
+//											delete pTerminal;
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 
-    //foreach(proCompany * o1, _lst) {
-    //    foreach(proSubCompany * o2, o1->lst) {
-    //        foreach(proAmso * o3, o2->lst) {
-    //            foreach(proRoute * o4, o3->lst) {
-    //                foreach(proConcentrator * o5, o4->lst) {
-    //                    foreach(proLine * o6, o5->lst) {
-    //                        foreach(proMonitor * o7, o6->lst) {
-    //                            foreach(proTerminal * o8, o7->lst) {
-    //                                if (o8->id == id)
-    //                                {
-    //                                    _ids.removeOne(id);
-    //                                    o7->lst.removeOne(o8);
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                foreach(proRoute * o4, o3->lst) {
+                    foreach(proConcentrator * o5, o4->lst) {
+                        foreach(proLine * o6, o5->lst) {
+                            foreach(proMonitor * o7, o6->lst) {
+                                foreach(proTerminal * o8, o7->lst) {
+                                    if (o8->id == id)
+                                    {
+                                        if (m_db2.DelTerminal(id))
+                                        {
+                                            o7->lst.removeOne(o8);
+                                            delete o8;
+                                        }
 
-    //                                    // if monitor child num = 0, delete monitor
-    //                                    if (o7->lst.isEmpty())
-    //                                    {
-    //                                        o6->lst.removeOne(o7);
-    //                                    }
-    //                                    return true;
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+                                        // if monitor child num = 0, delete monitor
+                                        if (o7->lst.isEmpty())
+                                        {
+                                            if (m_db2.DelMonitor(o7->id))
+                                            {
+                                                o6->lst.removeOne(o7);
+                                                delete o7;
+                                            }
+                                        }
+
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return false;
 }

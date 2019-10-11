@@ -55,6 +55,6 @@ void LineEditDlg::init()
     }
     else
     {
-        ui->leName->setText("线段");
+        ui->leName->setText(QStringLiteral("线段"));
     }
 }

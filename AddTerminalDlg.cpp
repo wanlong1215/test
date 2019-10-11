@@ -37,7 +37,7 @@ proTerminal *AddTerminalDlg::terminal3()
 
 void AddTerminalDlg::init()
 {
-    ui->leMonitorName->setText("监测点");
+    ui->leMonitorName->setText(QStringLiteral("监测点"));
     ui->deDate1->setDate(QDate::currentDate());
     ui->deDate2->setDate(QDate::currentDate());
     ui->deDate3->setDate(QDate::currentDate());
@@ -54,7 +54,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     proMonitor *po = new proMonitor(line);
 
-    po->name = "监视器";
+    po->name = QStringLiteral("监视器");
 
     DatabaseProxy::instance().addMonitor(po, _parentId);
 
@@ -62,7 +62,7 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o2 = new proTerminal(po);
     _o3 = new proTerminal(po);
 
-    _o1->name = "A相";
+    _o1->name = QStringLiteral("A相");
     _o1->type = 0;
     _o1->installTime = ui->deDate1->date().toJulianDay();
     _o1->addr = ui->leAddr1->text().toInt();
@@ -75,7 +75,7 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o1->RouteState5 = ui->leRoute51->text().toInt();
     _o1->RouteState6 = ui->leRoute61->text().toInt();
 
-    _o2->name = "B相";
+    _o2->name = QStringLiteral("B相");
     _o2->type = 1;
     _o2->installTime = ui->deDate2->date().toJulianDay();
     _o2->addr = ui->leAddr2->text().toInt();
@@ -88,7 +88,7 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o2->RouteState5 = ui->leRoute52->text().toInt();
     _o2->RouteState6 = ui->leRoute62->text().toInt();
 
-    _o3->name = "C相";
+    _o3->name = QStringLiteral("C相");
     _o3->type = 2;
     _o3->installTime = ui->deDate3->date().toJulianDay();
     _o3->addr = ui->leAddr3->text().toInt();
