@@ -1,7 +1,10 @@
 ﻿#ifndef DATABASEPROXY_H
 #define DATABASEPROXY_H
 
+#include <QDateTime>
+#include <QString>
 #include <QList>
+#include "DATAOperate.h"
 
 class proMonitor;
 class proTerminal
@@ -28,10 +31,11 @@ public:
     int RouteState5;//路由节点5
     int RouteState6;//路由节点6
 
-    double highPressureValue;//变比参数
-    float highPressureOffset;
-    int highPressureSymbol;//0:+ 1:-
-    int lowPressureValue;
+	//变比参数
+    int highPressureValue;//高压值
+    float highPressureOffset;//高压浮动值
+    int highPressureSymbol;//0:+ 1:- 高压浮动符号
+    int lowPressureValue;//低压值
 
     proMonitor *parent;
 };
@@ -44,6 +48,10 @@ public:
     proMonitor(proLine * p)
     {
         parent = p;
+    }
+    ~proMonitor() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
     }
 
     QString pressureValueA();
@@ -65,17 +73,22 @@ public:
     {
         parent = p;
     }
+    ~proLine() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
+    }
     int id;
     QString name;
     int type; // TODO: 高压 低压 变压
     int workerID;
 
-    int preAddr;//相邻前一个终端编号
-    int nextAddr;//相邻后一个终端编号
+	QString addr;
+    QString preAddr;//相邻前一个终端编号
+    QString nextAddr;//相邻后一个终端编号
 
-    int iValueA;
-    int iValueB;
-    int iValueC;
+    //int iValueA;
+    //int iValueB;
+    //int iValueC;
 
     proConcentrator *parent;
     QList<proMonitor *> lst;
@@ -88,6 +101,10 @@ public:
     proConcentrator(proRoute *p)
     {
         parent = p;
+    }
+    ~proConcentrator() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
     }
 
     QList<proLine *> getSortLine();
@@ -123,6 +140,10 @@ public:
     {
         parent = p;
     }
+    ~proRoute() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
+    }
     int id;
     QString name;
     QString desc;
@@ -138,6 +159,10 @@ public:
     proAmso(proSubCompany *p)
     {
         parent = p;
+    }
+    ~proAmso() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
     }
     int id;
     QString name;
@@ -155,6 +180,10 @@ public:
     {
         parent = p;
     }
+    ~proSubCompany() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
+    }
 
     int id;
     QString name;
@@ -167,6 +196,11 @@ public:
 class proCompany
 {
 public:
+    proCompany(){}
+    ~proCompany() {
+        while (!lst.isEmpty())
+            delete lst.takeFirst();
+    }
     int id;
     QString name;
     QString desc;
@@ -183,10 +217,10 @@ struct proData
     int relaycnt;//中继次数
     int relayPosition;//中继位置
     int GetherUnitAddr;//采集单位地址
-    int vValue;//采集电压值
-    int vAngValue;//采集电压角度
-    int iValue;//采集电流值
-    int iAngValue;//采集电流角度
+    float vValue;//采集电压值
+    float vAngValue;//采集电压角度
+    float iValue;//采集电流值
+    float iAngValue;//采集电流角度
     int intRev1;
     int intRev2;
     int intRev3;
@@ -194,17 +228,52 @@ struct proData
     int intRev5;
     int intRev6;
 
-    double iValueA;// 界面展示三个电流值
-    double iValueB;
-    double iValueC;
+	int iValueA;
+	int iValueB;
+	int iValueC;
+};
+
+struct proWarning 
+{
+	int WarningID;
+	INT64 WarningTime;
+	int WarningLine;
+	int MonitorAddr1;
+	int MonitorAddr2;
+	int Type;
+	float iValue1;
+	float iValue2;
+	QString WorkerName;
+	QString WarningInfo;
+	INT64 SendTime;
+	int SendState;
+};
+
+
+struct showData
+{
+	QString company;
+	QString subCompany;
+	QString amso;
+	QString route;
+	QString concentrator;
+	QString line;
+	QString monitor;
+	DATA valueA;
+	DATA valueB;
+	DATA valueC;
 };
 
 class DatabaseProxy
 {
 public:
+	DatabaseProxy();
     static DatabaseProxy &instance();
 
-    QList<proCompany *> getOrganizations();
+    bool connectDB();
+
+    QList<proCompany *> getOrganizations();//获得所有的组织架构，在获得之前需要清楚组织架构，另外，获得组织架构之前应该先连接数据库，不应该在这个函数里，你看看在哪里合适吧
+	void clearOrganizations();//清除组织架构，但是没有清数据库。
 
     bool addCompany(proCompany *o);
     bool addSubCompany(proSubCompany *o, int parentid);
@@ -214,6 +283,8 @@ public:
     bool addLine(proLine *o, int parentid);
     bool addMonitor(proMonitor *o, int parentid);
     bool addTerminal(proTerminal *o, int parentid);
+	bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
+	bool addWarning(proWarning *o);//添加报警信息
 
     bool delCompany(int id);
     bool delSubCompany(int id);
@@ -221,7 +292,10 @@ public:
     bool delRoute(int id);
     bool delConcentrator(int id);
     bool delLine(int id);
+	bool delMonitor(int id);
     bool delTerminal(int id);
+
+	void GetShowDataInfoByConcentratorID(showData &sData, int ConcentratorId);//这个函数是通过组织架构寻找需要显示的信息中的各个名称
 
     proCompany *company(int id);
     proSubCompany *subCompany(int id);
@@ -234,15 +308,19 @@ public:
 
     proConcentrator *firstConcentrator();
 
-    QList<proData> historyData(int ConcentratorId, QDateTime begin, QDateTime end);
+    QList<proData> historyData(int ConcentratorId, QDateTime begin, QDateTime end);//我没用
+
+	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorId);//获得所有的历史数据
+	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorId, INT64 begin, INT64 end);//通过时间查询历史数据，这里注意传入的时间是转换后的64位int
+	bool historyWarning(QList<proWarning> &pDatalist);//获得历史报警信息
 
     int createId();
 
 private:
-    DatabaseProxy();
+	CDATAOperate m_db2;//操作DB2的对象
 
     QList<proCompany *> _lst;
-    QList<int> _ids;
+    QList<int> _ids;//应该没有用了
 };
 
 #endif // DATABASEPROXY_H

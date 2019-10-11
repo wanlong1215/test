@@ -6,7 +6,7 @@
 #include "FarsiLoginDlg.h"
 #include "Elec.h"
 #include "DatabaseProxy.h"
-
+#include <QDebug>
 int main(int argc, char *argv[])
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));

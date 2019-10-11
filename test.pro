@@ -44,7 +44,8 @@ SOURCES += \
     ServerConfigDlg.cpp \
     PopupInformation.cpp \
     ConcentratorConfigDlg.cpp \
-    AlarmConfigDlg.cpp
+    AlarmConfigDlg.cpp \
+    DATAOperate.cpp
 
 HEADERS += \
     TerminalGraphicsWidget.h \
@@ -66,7 +67,9 @@ HEADERS += \
     ServerConfigDlg.h \
     PopupInformation.h \
     ConcentratorConfigDlg.h \
-    AlarmConfigDlg.h
+    AlarmConfigDlg.h \
+    DATAOperate.h \
+    dbtool_ado.h
 
 FORMS += \
     Elec.ui \
