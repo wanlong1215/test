@@ -60,6 +60,13 @@ bool DatabaseProxy::delUser(int id)
     return true;
 }
 
+QList<proUser> DatabaseProxy::users()
+{
+    // 胖子
+    QList<proUser> usrs;
+    return usrs;
+}
+
 void DatabaseProxy::clearOrganizations()
 {
     while (!_lst.isEmpty())

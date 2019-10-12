@@ -265,6 +265,14 @@ struct showData
 	DATA valueC;
 };
 
+struct proUser
+{
+    int id;
+    QString name;
+    QString pwd;
+    int level;
+};
+
 class DatabaseProxy
 {
 public:
@@ -281,6 +289,8 @@ public:
     int addUser(const QString &usr, const QString &pwd, int level); // 添加用户，返回ID，错误返回-1
     bool modifyUser(int id, const QString &usr, const QString &pwd, int level); // 修改用户信息，错误返回false
     bool delUser(int id); // 删除用户
+
+    QList<proUser> users();
 
     QList<proCompany *> getOrganizations();//获得所有的组织架构，在获得之前需要清楚组织架构，另外，获得组织架构之前应该先连接数据库，不应该在这个函数里，你看看在哪里合适吧
 	void clearOrganizations();//清除组织架构，但是没有清数据库。

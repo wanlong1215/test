@@ -9,6 +9,9 @@
 #include "DatabaseProxy.h"
 #include "AppSession.h"
 
+#define RootUser "root"
+#define RootPassword "2006"
+
 FarsiLoginDlg::FarsiLoginDlg(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FarsiLoginDlg)
@@ -153,11 +156,6 @@ void FarsiLoginDlg::getConnectInfo(QString &ip, QString &usr, QString &pwd)
 
 void FarsiLoginDlg::on_btnLogin_clicked()
 {
-    // TODO: 方便测试，不进行用户校验
-    DatabaseProxy::instance().connectDB("127.0.0.1", "Administrator", "123");
-    accept();
-    return;
-
     QString usr = ui->leUser->text();
     QString pwd = ui->lePwd->text();
 
@@ -178,6 +176,15 @@ void FarsiLoginDlg::on_btnLogin_clicked()
             QStringLiteral("警告"),
             QStringLiteral("数据库连接失败，请设置数据库连接信息!"),
             QMessageBox::Ok);
+        return;
+    }
+
+    // 超级管理员
+    if (usr == RootUser && pwd == RootPassword)
+    {
+        AppSession::instance().user.id = 0;
+        AppSession::instance().user.level = 0;
+        accept();
         return;
     }
 

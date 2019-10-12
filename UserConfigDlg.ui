@@ -7,106 +7,137 @@
     <x>0</x>
     <y>0</y>
     <width>352</width>
-    <height>401</height>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string>用户管理</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QToolButton" name="toolButton">
-       <property name="font">
-        <font>
-         <pointsize>13</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>添加</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButton_2">
-       <property name="font">
-        <font>
-         <pointsize>13</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>删除</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QTableWidget" name="tableWidget">
-     <row>
-      <property name="text">
-       <string>1</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
-       <string>2</string>
-      </property>
-     </row>
-     <column>
-      <property name="text">
-       <string>用户名</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>密码</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>角色</string>
-      </property>
-     </column>
-     <item row="0" column="0">
-      <property name="text">
-       <string>admin</string>
-      </property>
-     </item>
-     <item row="0" column="2">
-      <property name="text">
-       <string>管理员</string>
-      </property>
-     </item>
-     <item row="1" column="0">
-      <property name="text">
-       <string>user1</string>
-      </property>
-     </item>
-     <item row="1" column="1">
-      <property name="text">
-       <string>123</string>
-      </property>
-     </item>
-     <item row="1" column="2">
-      <property name="text">
-       <string>普通用户</string>
-      </property>
-     </item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+      </font>
+     </property>
+     <property name="title">
+      <string>用户列表</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QTableWidget" name="tableWidget"/>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="userName">
+          <property name="text">
+           <string>用户名</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLineEdit" name="userNameEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="password">
+          <property name="text">
+           <string>密   码</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="passwordEdit"/>
+        </item>
+        <item row="2" column="2">
+         <widget class="QComboBox" name="m_pUserPreviewComboBox">
+          <item>
+           <property name="text">
+            <string>管理员</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>操作员</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>权   限</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addBut">
+          <property name="text">
+           <string>添加用户</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="removeBut">
+          <property name="text">
+           <string>删除用户</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="m_pModifyBtn">
+          <property name="text">
+           <string>修改用户</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
