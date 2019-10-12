@@ -42,10 +42,12 @@ void ConcentratorEditDlg::init()
         ui->sbSaveTimer->setValue(_o->saveTimer);
         ui->sbLoopTimer->setValue(_o->wirelessSearchTimer);
         ui->sbConAddr->setValue(_o->concentratorAddr);
+        ui->leTime->setDateTime(QDateTime::fromMSecsSinceEpoch(_o->ConcentratorCurrentTime));
     }
     else
     {
         ui->leName->setText(QStringLiteral("集中器"));
+        ui->leTime->setDateTime(QDateTime::currentDateTime());
     }
 }
 
@@ -72,6 +74,7 @@ void ConcentratorEditDlg::on_btnOK_clicked()
     _o->saveTimer = ui->sbSaveTimer->value();
     _o->wirelessSearchTimer = ui->sbLoopTimer->value();
     _o->concentratorAddr = ui->sbConAddr->value();
+    _o->ConcentratorCurrentTime = ui->leTime->dateTime().toMSecsSinceEpoch();
 
     accept();
 }
