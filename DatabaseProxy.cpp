@@ -292,6 +292,7 @@ bool DatabaseProxy::addConcentrator(proConcentrator *o, int parentid)
 	concentrator.ConcentratorAddr = o->concentratorAddr;
 	concentrator.ConcentratorCurrentTime = o->ConcentratorCurrentTime;
 	concentrator.SelfReportOnOff = o->SelfReportOnOff;
+    concentrator.ConcentratorTimer = o->concentratorTimer;
 	o->id = m_db2.InsertConcentrator(concentrator, parentid);
 
 

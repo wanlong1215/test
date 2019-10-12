@@ -31,8 +31,9 @@ void LineEditDlg::on_btnOK_clicked()
 
     _o->name = ui->leName->text();
     _o->type = ui->cbType->currentIndex();
-    _o->preAddr = ui->lePreId->text().toInt();
-    _o->nextAddr = ui->leNextId->text().toInt();
+    _o->addr = ui->leAddr->text();
+    _o->preAddr = ui->lePreId->text();
+    _o->nextAddr = ui->leNextId->text();
     _o->workerID = ui->leWorkId->text().toInt();
 
     accept();
@@ -49,6 +50,7 @@ void LineEditDlg::init()
     {
         ui->leName->setText(_o->name);
         ui->cbType->setCurrentIndex(_o->type);
+        ui->leAddr->setText(_o->addr);
         ui->lePreId->setText(_o->preAddr);
         ui->leNextId->setText(_o->nextAddr);
         ui->leWorkId->setText(QString::number(_o->workerID));

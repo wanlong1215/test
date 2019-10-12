@@ -74,6 +74,12 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o1->RouteState4 = ui->leRoute41->text().toInt();
     _o1->RouteState5 = ui->leRoute51->text().toInt();
     _o1->RouteState6 = ui->leRoute61->text().toInt();
+    _o1->highPressureValue = 0;
+    _o1->highPressureSymbol = 0;
+    _o1->highPressureOffset = 0;
+    _o1->lowPressureValue = 0;
+    _o1->index=0;
+    _o1->TerminalCurrentTime=_o1->installTime;
 
     _o2->name = QStringLiteral("B相");
     _o2->type = 1;
@@ -87,6 +93,12 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o2->RouteState4 = ui->leRoute42->text().toInt();
     _o2->RouteState5 = ui->leRoute52->text().toInt();
     _o2->RouteState6 = ui->leRoute62->text().toInt();
+    _o2->highPressureValue = 0;
+    _o2->highPressureSymbol = 0;
+    _o2->highPressureOffset = 0;
+    _o2->lowPressureValue = 0;
+    _o2->index=0;
+    _o2->TerminalCurrentTime=_o2->installTime;
 
     _o3->name = QStringLiteral("C相");
     _o3->type = 2;
@@ -104,6 +116,8 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o3->highPressureSymbol = ui->cbHighPressureSymbol->currentIndex();
     _o3->highPressureOffset = ui->leHighPressureOffset->text().toInt();
     _o3->lowPressureValue = ui->leLowPressureValue->text().toInt();
+    _o3->index=0;
+    _o3->TerminalCurrentTime=_o3->installTime;
 
     accept();
 }

@@ -153,6 +153,11 @@ void FarsiLoginDlg::getConnectInfo(QString &ip, QString &usr, QString &pwd)
 
 void FarsiLoginDlg::on_btnLogin_clicked()
 {
+    // TODO: 方便测试，不进行用户校验
+    DatabaseProxy::instance().connectDB("127.0.0.1", "Administrator", "123");
+    accept();
+    return;
+
     QString usr = ui->leUser->text();
     QString pwd = ui->lePwd->text();
 
