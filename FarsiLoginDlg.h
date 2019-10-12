@@ -17,17 +17,16 @@ public:
 
 private slots:
     void on_btnLogin_clicked();
-
     void on_btnSet_clicked();
 
 private:
-    void SetServerRes(int userid, int level);
-
     // 从xml中读取已经登录过的用户
     void initUsersFromXml();
 
     // 更新xml中的用户信息
     void updateUsersOfXml();
+
+    void getConnectInfo(QString &ip, QString &usr, QString &pwd);
 
 private:
     Ui::FarsiLoginDlg *ui;

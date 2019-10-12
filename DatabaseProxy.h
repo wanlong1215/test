@@ -127,6 +127,7 @@ public:
     int wirelessSearchTimer;//无线模组轮寻间隔
     int concentratorAddr;//集中器地址
     qint64 ConcentratorCurrentTime;//集中器当前时间
+	int SelfReportOnOff;//自检开关
 
     proRoute *parent;
     QList<proLine *> lst;
@@ -267,6 +268,7 @@ struct showData
 class DatabaseProxy
 {
 public:
+	DatabaseProxy();
     static DatabaseProxy &instance();
 
     bool connectDB(const QString &ip, const QString &usr, const QString &pwd); // 连接DB
@@ -325,9 +327,9 @@ public:
     int createId();
 
 private:
-    DatabaseProxy();
 
 	CDATAOperate m_db2;//操作DB2的对象
+	bool m_connectState;//当前数据库的连接状态
 
     QList<proCompany *> _lst;
     QList<int> _ids;//应该没有用了

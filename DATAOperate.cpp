@@ -1,4 +1,5 @@
-ï»¿#include "DATAOperate.h"
+//ï»?include "DATAOperate.h"
+#include "DATAOperate.h"
 
 CDATAOperate::CDATAOperate(void):m_conn(NULL)
 {
@@ -183,6 +184,7 @@ int CDATAOperate::InsertConcentrator(CONCENTRATOR p, int RouteID)
 	}
 	catch (_com_error& e)
 	{
+		string str = e.Description();
 		OutputDebugString(e.Description());
 		return 0;
 	}
@@ -393,6 +395,35 @@ int CDATAOperate::InsertWarning(WARNING p)
 	return 0;
 }
 
+int CDATAOperate::InsertUser(string usr, string code, int level)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select UserID from final table (insert into BR_USER(UserName,UserCode,UserPri) values (?, ?, ?) )";
+		st.prepare(sql);
+		st.set_string(0, usr);
+		st.set_string( 1, code);
+		st.set_long(2, level);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if( rs.db_eof() )
+		{
+			rs.close();
+			return 0;
+		}
+		int newID;
+		newID = rs.get_long( 0 );
+		rs.close();
+		return newID;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
 
 BOOL CDATAOperate::DelCompany(int companyID)
 {
@@ -538,6 +569,24 @@ BOOL CDATAOperate::DelData(int TerminalID)
         const char *sql = "delete from BR_DATA where TerminalID = ?";
 		st.prepare(sql);
 		st.set_long( 0, TerminalID );
+		st.execute();
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CDATAOperate::DelUser(int userID)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "delete from BR_USER where UserID = ?";
+		st.prepare(sql);
+		st.set_long( 0, userID );
 		st.execute();
 	}
 	catch (_com_error& e)
@@ -734,6 +783,28 @@ int CDATAOperate::ModifyTerminal(TERMINAL p, int TerminalID)
 		st.set_long(17, p.HighSymbol);
 		st.set_long(18, p.LowValue);
 		st.set_long(19, TerminalID);
+		st.execute();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::ModifyUser(int id, string usr, string code, int level)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "update BR_USER set UserName=?,UserCode=?,UserPri=? where UserID=?";
+		st.prepare(sql);
+		st.set_string( 0, usr );
+		st.set_string( 1, code );
+		st.set_long( 2, level );
+		st.set_long( 3, id );
 		st.execute();
 		return 1;
 	}
@@ -1676,6 +1747,59 @@ int CDATAOperate::GetWarning(vector<WARNING> &v)
 		}
 		rs.close();
 		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::GetUserID(string usr, string code)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select UserID from BR_USER where UserName = ? and UserCode = ?";
+		st.prepare(sql);
+		st.set_string(0, usr);
+		st.set_string(1, code);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		while( !rs.db_eof() )
+		{
+			int res =  rs.get_long(0);
+			rs.close();
+			return res;
+		}
+		rs.close();
+		return -1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::GetUserLever(int id)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select UserPri from BR_USER where UserID = ?";
+		st.prepare(sql);
+		st.set_long(0, id);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		while( !rs.db_eof() )
+		{
+			int res =  rs.get_long(0);
+			rs.close();
+			return res;
+		}
+		rs.close();
+		return -1;
 	}
 	catch (_com_error& e)
 	{

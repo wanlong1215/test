@@ -1,4 +1,4 @@
-﻿#pragma once
+//�?pragma once
 #include "dbtool_ado.h"
 using namespace ADO_WRAPPER;
 #include <vector>
@@ -159,6 +159,7 @@ public:
 	int InsertTerminal(TERMINAL p, int MonitorID);
 	int InsertData(DATA p);
 	int InsertWarning(WARNING p);
+	int InsertUser(string usr, string code, int level);
 	///¸÷¸ö±íµÄÉ¾³ý²Ù×÷£¬³É¹¦·µ»ØTURE£¬Ê§°Ü·µ»ØFALSE
 	BOOL DelCompany(int companyID);
 	BOOL DelSubCompany(int subCompanyID);
@@ -169,6 +170,7 @@ public:
 	BOOL DelMonitor(int MonitorID);
 	BOOL DelTerminal(int TerminalID);
 	BOOL DelData(int TerminalAddr);
+	BOOL DelUser(int userID);
 	///ÐÞ¸Ä¸÷¸ö±íµÄÖµ£¬³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 	int ModifyCompany(COMPANY p, int CompanyID);
 	int ModifySubCompany(SUBCOMPANY p, int SubCompanyID);
@@ -178,6 +180,7 @@ public:
 	int ModifyLine(LINE p, int LineID);
 	int ModifyMonitor(MONITOR p, int MonitorID);
 	int ModifyTerminal(TERMINAL p, int TerminalID);
+	int ModifyUser(int id, string usr, string code, int level);
 	//int ModifyData(int TerminalID, string strValue);
 	///²éÑ¯¸÷¸ö±íµÄÖµ£¬³É¹¦·µ»Ø1£¬Ê§°Ü·µ»Ø0
 	int GetCompany(COMPANY &p, int CompanyID);
@@ -211,6 +214,8 @@ public:
 	int GetDatabyTerminalIDAndData(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end);
 	int GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT64 time);
 	int GetWarning(vector<WARNING> &v);
+	int GetUserID(string usr, string code);
+	int GetUserLever(int id);
 
 
 private:

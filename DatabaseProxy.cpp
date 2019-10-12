@@ -3,6 +3,7 @@
 
 DatabaseProxy::DatabaseProxy()
 {
+	m_connectState = false;
 }
 
 DatabaseProxy &DatabaseProxy::instance()
@@ -16,14 +17,17 @@ DatabaseProxy &DatabaseProxy::instance()
 // TODO: 胖子，这块是你的
 bool DatabaseProxy::connectDB(const QString &ip, const QString &usr, const QString &pwd)
 {
-    string csIP = ip.toStdString();
+    string strIP = ip.toStdString();
+	string strUsr = usr.toStdString();
+	string strPwd = pwd.toStdString();
 
-    return m_db2.DB2Connect("127.0.0.1", "Administrator", "123");
+	m_connectState = m_db2.DB2Connect(strIP, strUsr, strPwd);
+    return m_connectState;
 }
 
 bool DatabaseProxy::isDBConnected()
 {
-    return true;
+    return m_connectState;
 }
 
 bool DatabaseProxy::testDB(const QString &ip, const QString &usr, const QString &pwd)
@@ -33,26 +37,28 @@ bool DatabaseProxy::testDB(const QString &ip, const QString &usr, const QString 
 
 int DatabaseProxy::userId(const QString &usr, const QString &pwd)
 {
-    return 1;
+    return m_db2.GetUserID(usr.toStdString(), pwd.toStdString());
 }
 
 int DatabaseProxy::userLevel(int id)
 {
-    return 1;
+    return m_db2.GetUserLever(id);
 }
 
 int DatabaseProxy::addUser(const QString &usr, const QString &pwd, int level)
 {
-    return 1;
+    return m_db2.InsertUser(usr.toStdString(), pwd.toStdString(), level);
 }
 
 bool DatabaseProxy::modifyUser(int id, const QString &usr, const QString &pwd, int level)
 {
+	m_db2.ModifyUser(id, usr.toStdString(), pwd.toStdString(), level);
     return true;
 }
 
 bool DatabaseProxy::delUser(int id)
 {
+	m_db2.DelUser(id);
     return true;
 }
 /***************************************************************************************************************/
@@ -285,6 +291,7 @@ bool DatabaseProxy::addConcentrator(proConcentrator *o, int parentid)
 	concentrator.wirelessSearchTimer = o->wirelessSearchTimer;
 	concentrator.ConcentratorAddr = o->concentratorAddr;
 	concentrator.ConcentratorCurrentTime = o->ConcentratorCurrentTime;
+	concentrator.SelfReportOnOff = o->SelfReportOnOff;
 	o->id = m_db2.InsertConcentrator(concentrator, parentid);
 
 
