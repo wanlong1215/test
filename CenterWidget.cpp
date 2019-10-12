@@ -140,7 +140,17 @@ bool CenterWidget::eventFilter(QObject *obj, QEvent *e)
                     delItem(clickItem);
                 }
             }
-		}
+        } else if (e->type() == QEvent::MouseButtonPress) {
+            QMouseEvent *mouseEv = dynamic_cast<QMouseEvent *>(e);
+            QTreeWidgetItem *clickItem = ui->trwOrganization->itemAt(mouseEv->pos());
+            OrganizationTreeWidgetItem *itemO = dynamic_cast<OrganizationTreeWidgetItem *>(clickItem);
+
+            if (nullptr == itemO || itemO->_level != 6) {
+                showTerminal(nullptr);
+            } else {
+                showTerminal(itemO->_o6);
+            }
+        }
     }
     else if (obj == ui->trwDetail->viewport())
     {
@@ -433,5 +443,23 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
         }
 
         ui->trwOrganization->clearSelection();
+    }
+}
+
+void CenterWidget::showTerminal(proLine *o)
+{
+    while (0 != ui->trwDetail->topLevelItemCount()) {
+        delete ui->trwDetail->takeTopLevelItem(0);
+    }
+
+    if (nullptr == o) {
+        return;
+    }
+
+    foreach(auto o6, o->lst) {
+        foreach (auto o7, o6->lst) {
+            OrganizationTreeWidgetItem *itemT = new OrganizationTreeWidgetItem(o7, ui->trwDetail);
+            ui->trwDetail->addTopLevelItem(itemT);
+        }
     }
 }

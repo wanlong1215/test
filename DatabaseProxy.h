@@ -296,6 +296,15 @@ public:
 	bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
 	bool addWarning(proWarning *o);//添加报警信息
 
+    bool modifyCompany(proCompany *o);
+    bool modifySubCompany(proSubCompany *o);
+    bool modifyAmso(proAmso *o);
+    bool modifyRoute(proRoute *o);
+    bool modifyConcentrator(proConcentrator *o);
+    bool modifyLine(proLine *o);
+    bool modifyMonitor(proMonitor *o);
+    bool modifyTerminal(proTerminal *o);
+
     bool delCompany(int id);
     bool delSubCompany(int id);
     bool delAmso(int id);

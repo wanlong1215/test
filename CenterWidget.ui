@@ -41,6 +41,11 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>18</pointsize>
+          </font>
+         </property>
          <column>
           <property name="text">
            <string notr="true">1</string>
@@ -50,6 +55,11 @@
        </item>
        <item>
         <widget class="QTreeWidget" name="trwDetail">
+         <property name="font">
+          <font>
+           <pointsize>18</pointsize>
+          </font>
+         </property>
          <column>
           <property name="text">
            <string notr="true">1</string>

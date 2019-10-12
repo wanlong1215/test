@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTreeWidgetItem>
+#include "DatabaseProxy.h"
 
 namespace Ui {
 class CenterWidget;
@@ -24,6 +25,8 @@ protected:
     void addItem(QTreeWidgetItem * item);
     void modifyItem(QTreeWidgetItem * item);
     void delItem(QTreeWidgetItem * item);
+
+    void showTerminal(proLine *o);
 
 private:
 	Ui::CenterWidget *ui;

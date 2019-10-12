@@ -13,8 +13,6 @@ DatabaseProxy &DatabaseProxy::instance()
     return instance;
 }
 
-/***************************************************************************************************************/
-// TODO: 胖子，这块是你的
 bool DatabaseProxy::connectDB(const QString &ip, const QString &usr, const QString &pwd)
 {
     string strIP = ip.toStdString();
@@ -61,7 +59,6 @@ bool DatabaseProxy::delUser(int id)
 	m_db2.DelUser(id);
     return true;
 }
-/***************************************************************************************************************/
 
 void DatabaseProxy::clearOrganizations()
 {
@@ -422,10 +419,51 @@ bool DatabaseProxy::addWarning(proWarning *o)
 	w.SendTime = o->SendTime;
 	w.SendState = o->SendState;
 	m_db2.InsertWarning(w);
-	return true;
+    return true;
 }
 
+/***************************************************************************************************************/
+// 胖子
+bool DatabaseProxy::modifyCompany(proCompany *o)
+{
+    return true;
+}
 
+bool DatabaseProxy::modifySubCompany(proSubCompany *o)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyAmso(proAmso *o)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyRoute(proRoute *o)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyConcentrator(proConcentrator *o)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyLine(proLine *o)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyMonitor(proMonitor *o)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyTerminal(proTerminal *o)
+{
+    return true;
+}
+/***************************************************************************************************************/
 bool DatabaseProxy::delCompany(int id)
 {
 //	for (int i = 0; i < _lst.size(); i++)
