@@ -1719,6 +1719,36 @@ int CDATAOperate::GetAllTerminalByID(vector<TERMINAL> &v, int MonitorID)//»ñµ
 	return 0;
 }
 
+int CDATAOperate::GetAllUsers(vector<USR> &v)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select UserID,UserName,UserCode,UserPri from BR_USER";
+		st.prepare(sql);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		v.clear();
+		while( !rs.db_eof() )
+		{
+			USR p;
+			p.usrID =  rs.get_long(0);
+			p.usrName = rs.get_string(1);
+			p.usrPassWord = rs.get_string(2);
+			p.usrLever = rs.get_long(3);
+			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
 int CDATAOperate::GetWarning(vector<WARNING> &v)
 {
 	try

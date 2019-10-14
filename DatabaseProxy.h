@@ -248,6 +248,7 @@ struct proWarning
 	QString WarningInfo;
 	INT64 SendTime;
 	int SendState;
+    int isPopup; // 客户端是否弹窗，默认0，弹出后客户端修改成1
 };
 
 
@@ -303,8 +304,8 @@ public:
     bool addLine(proLine *o, int parentid);
     bool addMonitor(proMonitor *o, int parentid);
     bool addTerminal(proTerminal *o, int parentid);
-	bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
-	bool addWarning(proWarning *o);//添加报警信息
+    bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
+    bool addWarning(proWarning *o);     //添加报警信息，这里客户端不调用，统一从服务端插入
 
     bool modifyCompany(proCompany *o);
     bool modifySubCompany(proSubCompany *o);
@@ -314,6 +315,7 @@ public:
     bool modifyLine(proLine *o);
     bool modifyMonitor(proMonitor *o);
     bool modifyTerminal(proTerminal *o);
+    bool modifyWarningPopuped(int id);  // 客户端只修改报警数据中的字段isPopup=1
 
     bool delCompany(int id);
     bool delSubCompany(int id);
@@ -341,7 +343,7 @@ public:
 
 	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorId);//获得所有的历史数据
 	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorId, INT64 begin, INT64 end);//通过时间查询历史数据，这里注意传入的时间是转换后的64位int
-	bool historyWarning(QList<proWarning> &pDatalist);//获得历史报警信息
+    bool historyWarning(QList<proWarning> &pDatalist, bool containsPopup = true);//获得历史报警信息
 
     int createId();
 

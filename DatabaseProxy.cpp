@@ -64,6 +64,18 @@ QList<proUser> DatabaseProxy::users()
 {
     // 胖子
     QList<proUser> usrs;
+	vector<USR> vUsr;
+	m_db2.GetAllUsers(vUsr);
+	for (int i = 0; i < vUsr.size(); i++)
+	{
+		proUser pUsr;
+		pUsr.id = vUsr[i].usrID;
+		pUsr.name = QString::fromStdString(vUsr[i].usrName);
+		pUsr.pwd = QString::fromStdString(vUsr[i].usrPassWord);
+		pUsr.level = vUsr[i].usrLever;
+		usrs<<pUsr;
+	}
+	
     return usrs;
 }
 
@@ -433,41 +445,126 @@ bool DatabaseProxy::addWarning(proWarning *o)
 // 胖子
 bool DatabaseProxy::modifyCompany(proCompany *o)
 {
+	COMPANY company;
+	company.companyID = o->id;
+	company.strName = o->name.toStdString();
+	company.strDescribe = o->desc.toStdString();
+	o->id = m_db2.ModifyCompany(company, company.companyID);
     return true;
 }
 
 bool DatabaseProxy::modifySubCompany(proSubCompany *o)
 {
+	SUBCOMPANY subCompany;
+	subCompany.subCompanyID = o->id;
+	subCompany.companyID = o->parent->id;
+	subCompany.strName = o->name.toStdString();
+	subCompany.strDescribe = o->desc.toStdString();
+	o->id = m_db2.InsertSubCompany(subCompany, subCompany.subCompanyID);
     return true;
 }
 
 bool DatabaseProxy::modifyAmso(proAmso *o)
 {
+	AMSO amso;
+	amso.AMSOID = o->id;
+	amso.subCompanyID = o->parent->id;
+	amso.strName = o->name.toStdString();
+	amso.strDescribe = o->desc.toStdString();
+	o->id = m_db2.ModifyAMSO(amso, amso.AMSOID);
     return true;
 }
 
 bool DatabaseProxy::modifyRoute(proRoute *o)
 {
+	ROUTE route;
+	route.routeID = o->id;
+	route.AMSOID = o->parent->id;
+	route.strName = o->name.toStdString();
+	route.strDescribe = o->desc.toStdString();
+	o->id = m_db2.ModifyRoute(route, route.routeID);
     return true;
 }
 
 bool DatabaseProxy::modifyConcentrator(proConcentrator *o)
 {
+	CONCENTRATOR concentrator;
+	concentrator.ConcentratorID = o->id;
+	concentrator.routeID = o->parent->id;
+	concentrator.strName = o->name.toStdString();
+	concentrator.strDestIP = o->destIp.toStdString();
+	concentrator.strDestPort = o->destPort.toStdString();
+	concentrator.strConnectType = o->type.toStdString();
+	concentrator.strInstallPlace = o->installAddr.toStdString();
+	concentrator.strAPName = o->apName.toStdString();
+	concentrator.strAPProtocol = o->apProtocol.toStdString();
+	concentrator.TerminalTimer = o->terminalTimer;
+	concentrator.HeartTimer = o->heartTimer;
+	concentrator.strSimCard = o->strSimCard.toStdString();
+	concentrator.GPRSReConnectTimer = o->gprsReConnectTimer;
+	concentrator.GPRSSignalStrength = o->gprsSignalStrength;
+	concentrator.SaveTimer = o->saveTimer;
+	concentrator.wirelessSearchTimer = o->wirelessSearchTimer;
+	concentrator.ConcentratorAddr = o->concentratorAddr;
+	concentrator.ConcentratorCurrentTime = o->ConcentratorCurrentTime;
+	concentrator.SelfReportOnOff = o->SelfReportOnOff;
+	concentrator.ConcentratorTimer = o->concentratorTimer;
+	o->id = m_db2.ModifyConcentrator(concentrator, concentrator.ConcentratorID);
     return true;
 }
 
 bool DatabaseProxy::modifyLine(proLine *o)
 {
+	LINE line;
+	line.lineID = o->id;
+	line.ConcentratorID = o->parent->id;
+	line.strName = o->name.toStdString();
+	line.strType = o->type;
+	line.strAddr = o->addr.toStdString();
+	line.strPreAddr = o->preAddr.toStdString();
+	line.strNextAddr = o->nextAddr.toStdString();
+	line.workerID = o->workerID;
+	o->id = m_db2.ModifyLine(line, line.lineID);
     return true;
 }
 
 bool DatabaseProxy::modifyMonitor(proMonitor *o)
 {
+	MONITOR monitor;
+	monitor.MonitorID = o->id;
+	monitor.lineID = o->parent->id;
+	monitor.strName = o->name.toStdString();
+	o->id = m_db2.ModifyMonitor(monitor,monitor.MonitorID);
     return true;
 }
 
 bool DatabaseProxy::modifyTerminal(proTerminal *o)
 {
+	TERMINAL terminal;
+	terminal.TerminalID = o->id;
+	terminal.MonitorID = o->parent->id;
+	terminal.strName = o->name.toStdString();
+	char chType[10] = {0};
+	itoa(o->type,chType,10);
+	terminal.strType = string(chType);
+	terminal.index = o->index;
+	terminal.installTime = o->installTime;
+	terminal.addr = o->addr;
+	terminal.preAddr = o->preAddr;
+	terminal.nextAddr = o->nextAddr;
+	terminal.ConcentratorAddr = o->ConcentratorAddr;
+	terminal.TerminalCurrentTime = o->TerminalCurrentTime;
+	terminal.RouteState1 = o->RouteState1;
+	terminal.RouteState2 = o->RouteState2;
+	terminal.RouteState3 = o->RouteState3;
+	terminal.RouteState4 = o->RouteState4;
+	terminal.RouteState5 = o->RouteState5;
+	terminal.RouteState6 = o->RouteState6;
+	terminal.HighValue = o->highPressureValue;
+	terminal.HighOffset = o->highPressureOffset;
+	terminal.HighSymbol = o->highPressureSymbol;
+	terminal.LowValue = o->lowPressureValue;
+	o->id = m_db2.ModifyTerminal(terminal, terminal.TerminalID);
     return true;
 }
 /***************************************************************************************************************/
@@ -1715,7 +1812,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 	return true;
 }
 
-bool DatabaseProxy::historyWarning(QList<proWarning> &pDatalist)
+bool DatabaseProxy::historyWarning(QList<proWarning> &pDatalist, bool containsPopup)
 {
 	vector<WARNING> vdata;
 	m_db2.GetWarning(vdata);

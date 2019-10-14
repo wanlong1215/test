@@ -142,6 +142,15 @@ struct WARNING
 
 };
 
+struct USR 
+{
+	int usrID;
+	string usrName;
+	string usrPassWord;
+	int usrLever;
+};
+
+
 class CDATAOperate
 {
 public:
@@ -216,6 +225,7 @@ public:
 	int GetWarning(vector<WARNING> &v);
 	int GetUserID(string usr, string code);
 	int GetUserLever(int id);
+	int GetAllUsers(vector<USR> &v);
 
 
 private:
