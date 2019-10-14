@@ -16,7 +16,7 @@ public:
     }
     int id;
     QString name;//终端名称
-    int type;//终端类型：高压 低压 变压
+    QString type;//终端类型：A高压 B低压 C变压
     int index;//终端索引
     qint64 installTime;//终端安装时间
     int addr;//终端地址编号
@@ -60,6 +60,9 @@ public:
 
     int id;
     QString name;
+    QString addr;
+    QString preAddr;
+    QString nextAddr;
     QList<proTerminal *> lst;
 
     proLine *parent;

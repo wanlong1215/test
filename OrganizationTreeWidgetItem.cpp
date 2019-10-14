@@ -32,17 +32,23 @@ OrganizationTreeWidgetItem::OrganizationTreeWidgetItem(proLine *o, QTreeWidgetIt
     setText(0, o->name);
 }
 
-OrganizationTreeWidgetItem::OrganizationTreeWidgetItem(proTerminal *o, QTreeWidget *parent) : BasicTreeWidgetItem(7, parent)
+OrganizationTreeWidgetItem::OrganizationTreeWidgetItem(proMonitor *o, QTreeWidgetItem *parent) : BasicTreeWidgetItem(7, parent)
 {
     _o7 = o;
-    setText(0, _o7->parent->parent->parent->parent->parent->parent->parent->name);
-    setText(1, _o7->parent->parent->parent->parent->parent->parent->name);
-    setText(2, _o7->parent->parent->parent->parent->parent->name);
-    setText(3, _o7->parent->parent->parent->parent->name);
-    setText(4, _o7->parent->parent->parent->name);
-    setText(5, _o7->parent->parent->name);
-    setText(6, _o7->parent->name);
-    setText(7, _o7->name);
+    setText(0, o->name);
+}
+
+OrganizationTreeWidgetItem::OrganizationTreeWidgetItem(proTerminal *o, QTreeWidget *parent) : BasicTreeWidgetItem(8, parent)
+{
+    _o8 = o;
+    setText(0, _o8->parent->parent->parent->parent->parent->parent->parent->name);
+    setText(1, _o8->parent->parent->parent->parent->parent->parent->name);
+    setText(2, _o8->parent->parent->parent->parent->parent->name);
+    setText(3, _o8->parent->parent->parent->parent->name);
+    setText(4, _o8->parent->parent->parent->name);
+    setText(5, _o8->parent->parent->name);
+    setText(6, _o8->parent->name);
+    setText(7, _o8->name);
 }
 
 bool OrganizationTreeWidgetItem::canAddChild()
@@ -55,7 +61,7 @@ QString OrganizationTreeWidgetItem::delMenuText()
     QStringList lst;
 
     //lst << QString::fromLocal8Bit("删除公司") << QString::fromLocal8Bit("删除分公司") << QString::fromLocal8Bit("删除供电所") << QString::fromLocal8Bit("删除线路") << QString::fromLocal8Bit("删除集中器") << QString::fromLocal8Bit("删除线段");
-    lst << QStringLiteral("删除公司") << QStringLiteral("删除分公司") << QStringLiteral("删除供电所") << QStringLiteral("删除线路") << QStringLiteral("删除集中器") << QStringLiteral("删除线段") << QStringLiteral("删除终端");
+    lst << QStringLiteral("删除公司") << QStringLiteral("删除分公司") << QStringLiteral("删除供电所") << QStringLiteral("删除线路") << QStringLiteral("删除集中器") << QStringLiteral("删除线段") << QStringLiteral("删除监测点") << QStringLiteral("删除终端");
 
     int l = _level - 1;
     if (l >= 0 && l < lst.count())
@@ -90,7 +96,7 @@ QString OrganizationTreeWidgetItem::modifyMenuText()
     QStringList lst;
 
     //lst << QString::fromLocal8Bit("修改公司") << QString::fromLocal8Bit("修改分公司") << QString::fromLocal8Bit("修改供电所") << QString::fromLocal8Bit("修改线路") << QString::fromLocal8Bit("修改集中器") << QString::fromLocal8Bit("修改线段");
-    lst << QStringLiteral("修改公司") << QStringLiteral("修改分公司") << QStringLiteral("修改供电所") << QStringLiteral("修改线路") << QStringLiteral("修改集中器") << QStringLiteral("修改线段") << QStringLiteral("修改终端");
+    lst << QStringLiteral("修改公司") << QStringLiteral("修改分公司") << QStringLiteral("修改供电所") << QStringLiteral("修改线路") << QStringLiteral("修改集中器") << QStringLiteral("修改线段") << QStringLiteral("修改监测点") << QStringLiteral("修改终端");
 
     int l = _level - 1;
     if (l >= 0 && l < lst.count())

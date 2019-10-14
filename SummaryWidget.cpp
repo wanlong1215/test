@@ -76,7 +76,7 @@ void SummaryWidget::init()
     connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
     connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
     connect(ui->rbAbsoluteQuery, SIGNAL(toggled(bool)), this, SLOT(onAbsoluteQueryToggled(bool)));
-    connect(ui->btnQuery, SIGNAL(clicked(bool)), this, SLOT(onHistoryQuery()));
+    connect(ui->btnQuery, SIGNAL(clicked(bool)), this, SLOT(onRealtimeQuery()));
 
     ui->dteBegin->setDateTime(QDateTime::currentDateTime().addSecs(-60 * 60));
     ui->dteEnd->setDateTime(QDateTime::currentDateTime());
@@ -147,10 +147,10 @@ void SummaryWidget::onHistoryQuery()
     QStringList lstHeader;
 
     ui->tawHistoryDetail->setColumnCount(11);
-    lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+    lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
     ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
     ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
-    for (int i = 0; i < 11; i++)
+    for (int i = 0; i < 10; i++)
     {
         ui->tawHistoryDetail->setColumnWidth(i, 150);
     }
@@ -159,25 +159,62 @@ void SummaryWidget::onHistoryQuery()
         return;
     }
 
-    // TODO: begin & end time
-    QList<proData> lst = DatabaseProxy::instance().historyData(_currentConcentrator->id, QDateTime(), QDateTime());
+    QList<showData> lst;
+    if (ui->rbAutoQuery->isChecked()) {
+        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->id);
+    } else if (ui->rbQuickQuery->isChecked()) {
+        int beginTime = 0;
+        int endTime = QDateTime::currentDateTime().toSecsSinceEpoch();
+        switch (ui->cbQuickCycle->currentIndex())
+        {
+        case 0: // 3 hours
+            beginTime = QDateTime::currentDateTime().addSecs(-1*3*60*60).toSecsSinceEpoch();
+            break;
+        case 1: // 1 day
+            beginTime = QDateTime::currentDateTime().addDays(-1*1).toSecsSinceEpoch();
+            break;
+        case 2: // 3 days
+            beginTime = QDateTime::currentDateTime().addDays(-1*3).toSecsSinceEpoch();
+            break;
+        case 3: // 7 days
+            beginTime = QDateTime::currentDateTime().addDays(-1*7).toSecsSinceEpoch();
+            break;
+        case 4: // 1 mounth
+            beginTime = QDateTime::currentDateTime().addMonths(-1*1).toSecsSinceEpoch();
+            break;
+        case 5: // 3 mounths
+            beginTime = QDateTime::currentDateTime().addMonths(-1*3).toSecsSinceEpoch();
+            break;
+        case 6: // 6 mounths
+            beginTime = QDateTime::currentDateTime().addMonths(-1*6).toSecsSinceEpoch();
+            break;
+        default:
+            break;
+        }
+
+        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->id, beginTime, endTime);
+    } else if (ui->rbAbsoluteQuery->isChecked()) {
+        int beginTime = ui->dteBegin->dateTime().toSecsSinceEpoch();
+        int endTime = ui->dteEnd->dateTime().toSecsSinceEpoch();
+
+        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->id, beginTime, endTime);
+    }
+
     ui->tawHistoryDetail->setRowCount(lst.count());
     ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
     for (int i = 0; i < lst.count(); i++)
     {
-        proData data = lst.at(i);
-        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
-        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->name));
-        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(QStringLiteral("归属线段")));
-        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(QStringLiteral("归属监测点")));
-        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
-        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
-        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
-        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
+        showData data = lst.at(i);
+        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(data.company));
+        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.subCompany));
+        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.amso));
+        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.route));
+        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.concentrator));
+        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.line));
+        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.monitor));
+        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.valueA.iValue)));
+        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueB.iValue)));
+        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueC.iValue)));
     }
 }
 
@@ -197,10 +234,10 @@ void SummaryWidget::onRealtimeQuery()
     QStringList lstHeader;
 
     ui->tawRealTimeDetail->setColumnCount(12);
-    lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+    lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
     ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
     ui->tawRealTimeDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
-    for (int i = 0; i < 11; i++)
+    for (int i = 0; i < 10; i++)
     {
         ui->tawRealTimeDetail->setColumnWidth(i, i==0?50:150);
     }
@@ -209,31 +246,33 @@ void SummaryWidget::onRealtimeQuery()
         return;
     }
 
-    // TODO: begin & end time
-    QList<proData> lst = DatabaseProxy::instance().historyData(1, QDateTime(), QDateTime());
-    ui->tawRealTimeDetail->setRowCount(lst.count());
+    int routCount = 0;
+    foreach(auto o, _currentConcentrator->lst) {
+        routCount += o->lst.count();
+    }
+
+    ui->tawRealTimeDetail->setRowCount(routCount);
     ui->tawRealTimeDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    for (int i = 0; i < lst.count(); i++)
-    {
-        proData data = lst.at(i);
-        QTableWidgetItem *item = new QTableWidgetItem("");
-        item->setCheckState(Qt::Unchecked);
-        ui->tawRealTimeDetail->setItem(i, 0, item);
-        ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(_currentConcentrator->parent->parent->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(_currentConcentrator->parent->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 4, new QTableWidgetItem(_currentConcentrator->parent->name));
-        ui->tawRealTimeDetail->setItem(i, 5, new QTableWidgetItem(_currentConcentrator->name));
-        ui->tawRealTimeDetail->setItem(i, 6, new QTableWidgetItem(QStringLiteral("归属线段")));
-        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QStringLiteral("归属监测点")));
-//        ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.iValueA)));
-//        ui->tawRealTimeDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.iValueB)));
-//        ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.iValueC)));
-        ui->tawRealTimeDetail->setItem(i, 8, new QTableWidgetItem(QString("")));
-        ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString("")));
-        ui->tawRealTimeDetail->setItem(i, 10, new QTableWidgetItem(QString("")));
-        ui->tawRealTimeDetail->setItem(i, 11, new QTableWidgetItem(QDateTime::fromSecsSinceEpoch(data.CollectTime).toString("yyyy-MM-dd hh:mm")));
+    int i = 0;
+    foreach(auto o6, _currentConcentrator->lst) {
+        foreach (auto o, o6->lst) {
+            QTableWidgetItem *item = new QTableWidgetItem("");
+            item->setCheckState(Qt::Unchecked);
+            item->setData(0, o->id);
+            ui->tawRealTimeDetail->setItem(i, 0, item);
+            ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
+            ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
+            ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(o6->parent->parent->parent->name));
+            ui->tawRealTimeDetail->setItem(i, 4, new QTableWidgetItem(o6->parent->parent->name));
+            ui->tawRealTimeDetail->setItem(i, 5, new QTableWidgetItem(o6->parent->name));
+            ui->tawRealTimeDetail->setItem(i, 6, new QTableWidgetItem(o6->name));
+            ui->tawRealTimeDetail->setItem(i, 7, new QTableWidgetItem(o->name));
+            ui->tawRealTimeDetail->setItem(i, 8, new QTableWidgetItem(QString("")));
+            ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString("")));
+            ui->tawRealTimeDetail->setItem(i, 10, new QTableWidgetItem(QString("")));
+            i++;
+        }
     }
 }
 

@@ -54,7 +54,10 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     proMonitor *po = new proMonitor(line);
 
-    po->name = QStringLiteral("监视器");
+    po->name = ui->leMonitorName->text();
+    po->addr = ui->leMonitorAddr->text();
+    po->preAddr = ui->lePreMonitorAddr->text();
+    po->nextAddr = ui->leNextMonitorAddr->text();
 
     DatabaseProxy::instance().addMonitor(po, _parentId);
 
@@ -63,11 +66,11 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o3 = new proTerminal(po);
 
     _o1->name = QStringLiteral("A相");
-    _o1->type = 0;
+    _o1->type = "A";
     _o1->installTime = ui->deDate1->date().toJulianDay();
     _o1->addr = ui->leAddr1->text().toInt();
-    _o1->preAddr = ui->lePreAddr1->text().toInt();
-    _o1->nextAddr = ui->leNextAddr1->text().toInt();
+    _o1->preAddr = 0;
+    _o1->nextAddr = 0;
     _o1->RouteState1 = ui->leRoute11->text().toInt();
     _o1->RouteState2 = ui->leRoute21->text().toInt();
     _o1->RouteState3 = ui->leRoute31->text().toInt();
@@ -82,11 +85,11 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o1->TerminalCurrentTime=_o1->installTime;
 
     _o2->name = QStringLiteral("B相");
-    _o2->type = 1;
+    _o2->type = "B";
     _o2->installTime = ui->deDate2->date().toJulianDay();
     _o2->addr = ui->leAddr2->text().toInt();
-    _o2->preAddr = ui->lePreAddr2->text().toInt();
-    _o2->nextAddr = ui->leNextAddr2->text().toInt();
+    _o2->preAddr = 0;
+    _o2->nextAddr = 0;
     _o2->RouteState1 = ui->leRoute12->text().toInt();
     _o2->RouteState2 = ui->leRoute22->text().toInt();
     _o2->RouteState3 = ui->leRoute32->text().toInt();
@@ -101,11 +104,11 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o2->TerminalCurrentTime=_o2->installTime;
 
     _o3->name = QStringLiteral("C相");
-    _o3->type = 2;
+    _o3->type = "C";
     _o3->installTime = ui->deDate3->date().toJulianDay();
     _o3->addr = ui->leAddr3->text().toInt();
-    _o3->preAddr = ui->lePreAddr3->text().toInt();
-    _o3->nextAddr = ui->leNextAddr3->text().toInt();
+    _o3->preAddr = 0;
+    _o3->nextAddr = 0;
     _o3->RouteState1 = ui->leRoute13->text().toInt();
     _o3->RouteState2 = ui->leRoute23->text().toInt();
     _o3->RouteState3 = ui->leRoute33->text().toInt();

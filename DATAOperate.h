@@ -1,4 +1,4 @@
-//锘?pragma once
+#pragma once
 #include "dbtool_ado.h"
 using namespace ADO_WRAPPER;
 #include <vector>
@@ -38,26 +38,30 @@ struct ROUTE
 
 struct CONCENTRATOR 
 {
-	int ConcentratorID;
-	int routeID;//脣霉脢么脧脽脗路ID
-	string strName;//录炉脰脨脝梅脙没鲁脝
-	string strDestIP;//脛驴卤锚脫貌
-	string strDestPort;//脛驴卤锚露脣驴脷
-	string strConnectType;//脕卢陆脫脌脿脨脥
-	string strInstallPlace;//掳虏脳掳碌脴碌茫
-	string strAPName;//陆脫脠毛碌茫脙没鲁脝
-	string strAPProtocol;//陆脫脠毛碌茫脨颅脪茅
-	int TerminalTimer;//脰脮露脣露脕脠隆录盲赂么
-	int	ConcentratorTimer;//录炉脰脨脝梅露脕脠隆录盲赂么
-	int HeartTimer;//脨脛脤酶录盲赂么
-	string strSimCard;//sim驴篓潞脜
-	int GPRSReConnectTimer;//Gprs碌么脧脽脰脴虏娄录盲赂么-路脰
-	int GPRSSignalStrength;//GPRS脨脜潞脜脟驴露脠
-	int SaveTimer;//麓忙麓垄录盲赂么
-	int wirelessSearchTimer;//脦脼脧脽脛拢脳茅脗脰脩掳录盲赂么
-	int ConcentratorAddr;//录炉脰脨脝梅碌脴脰路
-	INT64 ConcentratorCurrentTime;//录炉脰脨脝梅碌卤脟掳脢卤录盲
-	int SelfReportOnOff;//脳脭卤卢录盲赂么驴陋鹿脴
+	int ConcentratorID;//集中器的ID主键
+	int routeID;//所属线路的ID
+	string strName;//集中器名称
+	string strDestIP;//目的地址
+	string strDestPort;//目的端口
+	string strConnectType;//连接类型
+	string strInstallPlace;//安装地点
+	string strAPName;//接入点名称
+	string strAPProtocol;//接入点协议
+	int TerminalTimer;//获取终端间隔（分钟）
+	int	ConcentratorTimer;//获取集中器间隔（分钟）
+	int HeartTimer;//心跳间隔
+	string strSimCard;//sim卡号
+	int GPRSReConnectTimer;//Gprs掉线重拨间隔-分
+	int GPRSSignalStrength;//GPRS信号强度
+	int SaveTimer;//存储间隔
+	int wirelessSearchTimer;//无线模组轮寻间隔
+	int ConcentratorAddr;//集中器地址
+	INT64 ConcentratorCurrentTime;//集中器当前时间
+	int SelfReportOnOff;//间隔自报开关
+	int reserve1;
+	int reserve2;
+	int reserve3;
+	int reserve4;
 };
 
 struct LINE 
@@ -77,31 +81,32 @@ struct MONITOR
 	int MonitorID;
 	int lineID;
 	string strName;
+	int MonitorAddr;
 };
 
 struct TERMINAL 
 {
 	int TerminalID;
 	int MonitorID;
-	string strName;//脰脮露脣脙没鲁脝
-	string strType;//脰脮露脣脌脿脨脥
-	int index;//脰脮露脣脣梅脪媒
-	INT64 installTime;//脰脮露脣掳虏脳掳脢卤录盲
-	int addr;//脰脮露脣碌脴脰路卤脿潞脜
-	int preAddr;//脧脿脕脷脟掳脪禄赂枚脰脮露脣卤脿潞脜
-	int nextAddr;//脧脿脕脷潞贸脪禄赂枚脰脮露脣卤脿潞脜
-	int ConcentratorAddr;//录炉脰脨脝梅碌脴脰路
-	INT64 TerminalCurrentTime;//脰脮露脣碌卤脟掳脨脜脧垄
-	int RouteState1;//脗路脫脡陆脷碌茫1
-	int RouteState2;//脗路脫脡陆脷碌茫2
-	int RouteState3;//脗路脫脡陆脷碌茫3
-	int RouteState4;//脗路脫脡陆脷碌茫4
-	int RouteState5;//脗路脫脡陆脷碌茫5
-	int RouteState6;//脗路脫脡陆脷碌茫6
-	int HighValue;//赂脽脩鹿脰碌
-	float HighOffset;//赂脽脩鹿赂隆露炉脰碌
-	int HighSymbol;//0:+ 1:- 赂脽脩鹿赂隆露炉路没潞脜
-	int LowValue;//碌脥脩鹿脰碌
+	string strName;//终端名称
+	string strType;//终端类型
+	int index;//终端索引
+	INT64 installTime;//终端安装时间
+	int addr;//终端地址编号
+	int preAddr;//相邻前一个终端编号
+	int nextAddr;//相邻后一个终端编号
+	int ConcentratorAddr;//集中器地址
+	INT64 TerminalCurrentTime;//终端当前信息
+	int RouteState1;//路由节点1
+	int RouteState2;//路由节点2
+	int RouteState3;//路由节点3
+	int RouteState4;//路由节点4
+	int RouteState5;//路由节点5
+	int RouteState6;//路由节点6
+	int HighValue;//高压值
+	float HighOffset;//高压偏移值
+	int HighSymbol;//0:+ 1:- 高压符号
+	int LowValue;//低压值
 };
 
 struct DATA 
@@ -157,7 +162,7 @@ public:
 	CDATAOperate();
 	~CDATAOperate(void);
 	BOOL DB2Connect(string strIP, string strUsr, string strCode);
-	///赂梅赂枚卤铆碌脛虏氓脠毛虏脵脳梅拢卢鲁脡鹿娄路碌禄脴虏氓脠毛脧卯碌脛脣梅脪媒拢卢脢搂掳脺路碌禄脴0
+	///各个表的插入操作，成功返回插入项的索引，失败返回0
 	int InsertCompany(COMPANY p);
 	int InsertSubCompany(SUBCOMPANY p, int CompanyID);
 	int InsertAMSO(AMSO p, int SubCompanyID);
@@ -169,7 +174,7 @@ public:
 	int InsertData(DATA p);
 	int InsertWarning(WARNING p);
 	int InsertUser(string usr, string code, int level);
-	///赂梅赂枚卤铆碌脛脡戮鲁媒虏脵脳梅拢卢鲁脡鹿娄路碌禄脴TURE拢卢脢搂掳脺路碌禄脴FALSE
+	///各个表的删除操作，成功返回TURE，失败返回FALSE
 	BOOL DelCompany(int companyID);
 	BOOL DelSubCompany(int subCompanyID);
 	BOOL DelAMSO(int AMSOID);
@@ -180,18 +185,19 @@ public:
 	BOOL DelTerminal(int TerminalID);
 	BOOL DelData(int TerminalAddr);
 	BOOL DelUser(int userID);
-	///脨脼赂脛赂梅赂枚卤铆碌脛脰碌拢卢鲁脡鹿娄路碌禄脴1拢卢脢搂掳脺路碌禄脴0
+	///修改各个表的值，成功返回1，失败返回0
 	int ModifyCompany(COMPANY p, int CompanyID);
 	int ModifySubCompany(SUBCOMPANY p, int SubCompanyID);
 	int ModifyAMSO(AMSO p, int AMSOID);
 	int ModifyRoute(ROUTE p, int RouteID);
-	int ModifyConcentrator(CONCENTRATOR p, int ConcentratorID);
+	int ModifyConcentrator(CONCENTRATOR p, int ConcentratorID);//没有写备用 小帅用
+	int ModifyConcentratorReserve(CONCENTRATOR p, int ConcentratorID);//此函数专门写备用的四个整形 小帅用
 	int ModifyLine(LINE p, int LineID);
 	int ModifyMonitor(MONITOR p, int MonitorID);
 	int ModifyTerminal(TERMINAL p, int TerminalID);
 	int ModifyUser(int id, string usr, string code, int level);
 	//int ModifyData(int TerminalID, string strValue);
-	///虏茅脩炉赂梅赂枚卤铆碌脛脰碌拢卢鲁脡鹿娄路碌禄脴1拢卢脢搂掳脺路碌禄脴0
+	///查询各个表的值，成功返回1，失败返回0
 	int GetCompany(COMPANY &p, int CompanyID);
 	int GetSubCompany(SUBCOMPANY &p, int SubCompanyID);
 	int GetAMSO(AMSO &p, int AMSOID);
@@ -200,7 +206,7 @@ public:
 	int GetLine(LINE &p, int LineID);
 	int GetMonitor(MONITOR &p, int MonitorID);
 	int GetTerminal(TERMINAL &p, int TerminalID);
-	///路碌禄脴赂梅赂枚卤铆碌脛脣霉脫脨脧卯拢卢鲁脡鹿娄路碌禄脴1拢卢脢搂掳脺路碌禄脴0
+	///返回各个表的所有项，成功返回1，失败返回0
 	int GetAllCompanyID(vector<COMPANY> &v);
 	int GetAllSubCompanyID(vector<SUBCOMPANY> &v);
 	int GetAllAMSOID(vector<AMSO> &v);
@@ -208,23 +214,30 @@ public:
 	int GetAllConcentratorID(vector<CONCENTRATOR> &v);
 	int GetAllLineID(vector<LINE> &v);
 	int GetAllTerminalID(vector<TERMINAL> &v);
-	///脥篓鹿媒赂梅赂枚脥芒录眉碌脛ID禄帽碌脙脣霉脢么脥芒录眉碌脛脧卯
-	int GetAllSubCompanyByID(vector<SUBCOMPANY> &v, int CompanyID);//禄帽碌脙碌卤脟掳鹿芦脣戮ID碌脛脣霉脫脨脳脫鹿芦脣戮
-	int GetAllAMSOByID(vector<AMSO> &v, int subCompanyID);//禄帽碌脙碌卤脟掳脳脫鹿芦脣戮ID碌脛脣霉脫脨鹿漏碌莽脣霉
-	int GetAllRouteByID(vector<ROUTE> &v, int amsoID);//禄帽碌脙碌卤脟掳鹿漏碌莽脣霉碌脛脣霉脫脨脧脽脗路
-	int GetAllConcentratorByID(vector<CONCENTRATOR> &v, int routeID);//禄帽碌脙碌卤脟掳脧脽脗路碌脛脣霉脫脨录炉脰脨脝梅
-	int GetAllLineByID(vector<LINE> &v, int concentratorID);//禄帽碌脙碌卤脟掳录炉脰脨脝梅碌脛脣霉脫脨脧脽露脦
-	int GetAllMonitorByID(vector<MONITOR> &v, int lineID);//禄帽碌脙碌卤脟掳脧脽露脦碌脛脣霉脫脨录脿虏芒碌茫
-	int GetAllTerminalByID(vector<TERMINAL> &v, int MonitorID);//禄帽碌脙碌卤脟掳录矛虏芒碌茫脧脗碌脛脣霉脫脨脰脮露脣
-	//int GetData(int TerminalID);
-	///脥篓鹿媒录炉脰脨脝梅ID路碌禄脴脣霉脫脨碌卤脟掳录炉脰脨脝梅脧脗碌脛脣霉脫脨脰脮露脣脢媒戮脻
-	int GetDatabyConcentratorID(vector<DATA> &v, int ConAddr);
-	int GetDatabyTerminalID(vector<DATA> &v, int ConAddr, int TerminalAddr);
-	int GetDatabyTerminalIDAndData(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end);
+	///龙哥接口
+	int GetAllSubCompanyByID(vector<SUBCOMPANY> &v, int CompanyID);//通过公司ID获得所有子公司ID
+	int GetAllAMSOByID(vector<AMSO> &v, int subCompanyID);//通过子公司ID获得子公司所有的供电所
+	int GetAllRouteByID(vector<ROUTE> &v, int amsoID);//通过供电所ID获得所有属于供电所的线路
+	int GetAllConcentratorByID(vector<CONCENTRATOR> &v, int routeID);//通过线路ID获得所有该线路上的集中器
+	int GetAllLineByID(vector<LINE> &v, int concentratorID);//通过集中器ID获得集中器上的所有线段
+	int GetAllMonitorByID(vector<MONITOR> &v, int lineID);//通过线段ID获得当前线段上所有的监测点
+	int GetAllTerminalByID(vector<TERMINAL> &v, int MonitorID);//通过监测点ID获得所有该监测点上的终端
+	
+	int GetDatabyConcentratorAddr(vector<DATA> &v, int ConAddr);//获得数据-通过集中器地址，即将所有属于该集中器的终端的所有数据读出来
+	int GetDatabyTerminalAddr(vector<DATA> &v, int ConAddr, int TerminalAddr);//获得数据-通过集中器地址与终端地址
+	 //小帅用//通过一条记录找到上一个监测点相同类型的终端的同时刻记录。返回说明 1,返回成功、-1前面没有监测点、0未知错误
+	int GetPreDatabyData(DATA &dest, DATA src);
+	 //用时间确定返回的数据
+	int GetDatabyTerminalAddrAndDate(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end);
+	//通过终端地址和时间来寻找当前的数据
 	int GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT64 time);
+	//获得所有的报警信息
 	int GetWarning(vector<WARNING> &v);
+	//通过用户名和密码获得当前用户在数据库中的ID
 	int GetUserID(string usr, string code);
+	//通过用户ID获取用户级别
 	int GetUserLever(int id);
+	//获得所有用户信息
 	int GetAllUsers(vector<USR> &v);
 
 

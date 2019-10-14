@@ -10,6 +10,7 @@
 #include "LineEditDlg.h"
 #include "AddTerminalDlg.h"
 #include "ModifyTerminalDlg.h"
+#include "ModifyMonitorDlg.h"
 
 CenterWidget::CenterWidget(QWidget *parent) :
     QWidget(parent),
@@ -73,6 +74,14 @@ void CenterWidget::init()
                             OrganizationTreeWidgetItem *i6 = new OrganizationTreeWidgetItem(o6, i5);
 
                             i5->addChild(i6);
+
+                            // add monitor, level=7
+                            foreach(proMonitor * o7, o6->lst) {
+                                OrganizationTreeWidgetItem *i7 = new OrganizationTreeWidgetItem(o7, i6);
+                                i6->addChild(i7);
+                            }
+
+                            i6->setExpanded(true);
                         }
 
                         i5->setExpanded(true);
@@ -145,10 +154,10 @@ bool CenterWidget::eventFilter(QObject *obj, QEvent *e)
             QTreeWidgetItem *clickItem = ui->trwOrganization->itemAt(mouseEv->pos());
             OrganizationTreeWidgetItem *itemO = dynamic_cast<OrganizationTreeWidgetItem *>(clickItem);
 
-            if (nullptr == itemO || itemO->_level != 6) {
+            if (nullptr == itemO || itemO->_level != 7) {
                 showTerminal(nullptr);
             } else {
-                showTerminal(itemO->_o6);
+                showTerminal(itemO->_o7);
             }
         }
     }
@@ -365,7 +374,15 @@ void CenterWidget::modifyItem(QTreeWidgetItem * clickItem)
     }
     else if (7 == clickItemO->_level)
     {
-        ModifyTerminalDlg *dlg = new ModifyTerminalDlg(clickItemO->_o7, this);
+        ModifyMonitorDlg *dlg = new ModifyMonitorDlg(clickItemO->_o7, this);
+        if (dlg->exec() == QDialog::Accepted)
+        {
+            clickItemO->setText(0, clickItemO->_o7->name);
+        }
+    }
+    else if (8 == clickItemO->_level)
+    {
+        ModifyTerminalDlg *dlg = new ModifyTerminalDlg(clickItemO->_o8, this);
         if (dlg->exec() == QDialog::Accepted)
         {
             clickItemO->setText(6, dlg->terminal()->name);
@@ -438,6 +455,13 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
             }
         }
         break;
+        case 7: {
+            if (DatabaseProxy::instance().delMonitor(itemO->id()))
+            {
+                itemO->parent()->removeChild(itemO);
+            }
+        }
+        break;
         default:
             break;
         }
@@ -446,7 +470,7 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
     }
 }
 
-void CenterWidget::showTerminal(proLine *o)
+void CenterWidget::showTerminal(proMonitor *o)
 {
     while (0 != ui->trwDetail->topLevelItemCount()) {
         delete ui->trwDetail->takeTopLevelItem(0);
@@ -456,10 +480,8 @@ void CenterWidget::showTerminal(proLine *o)
         return;
     }
 
-    foreach(auto o6, o->lst) {
-        foreach (auto o7, o6->lst) {
-            OrganizationTreeWidgetItem *itemT = new OrganizationTreeWidgetItem(o7, ui->trwDetail);
-            ui->trwDetail->addTopLevelItem(itemT);
-        }
+    foreach (auto o8, o->lst) {
+        OrganizationTreeWidgetItem *itemT = new OrganizationTreeWidgetItem(o8, ui->trwDetail);
+        ui->trwDetail->addTopLevelItem(itemT);
     }
 }

@@ -367,10 +367,8 @@ bool DatabaseProxy::addTerminal(proTerminal *o, int parentid)
 {
 	TERMINAL terminal;
 	terminal.MonitorID = parentid;
-	terminal.strName = o->name.toStdString();
-	char chType[10] = {0};
-	itoa(o->type,chType,10);
-	terminal.strType = string(chType);
+    terminal.strName = o->name.toStdString();
+    terminal.strType = o->type.toStdString();
 	terminal.index = o->index;
 	terminal.installTime = o->installTime;
 	terminal.addr = o->addr;
@@ -543,10 +541,8 @@ bool DatabaseProxy::modifyTerminal(proTerminal *o)
 	TERMINAL terminal;
 	terminal.TerminalID = o->id;
 	terminal.MonitorID = o->parent->id;
-	terminal.strName = o->name.toStdString();
-	char chType[10] = {0};
-	itoa(o->type,chType,10);
-	terminal.strType = string(chType);
+    terminal.strName = o->name.toStdString();
+    terminal.strType = o->type.toStdString();
 	terminal.index = o->index;
 	terminal.installTime = o->installTime;
 	terminal.addr = o->addr;

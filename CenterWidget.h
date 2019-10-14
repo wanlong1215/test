@@ -26,7 +26,7 @@ protected:
     void modifyItem(QTreeWidgetItem * item);
     void delItem(QTreeWidgetItem * item);
 
-    void showTerminal(proLine *o);
+    void showTerminal(proMonitor *o);
 
 private:
 	Ui::CenterWidget *ui;

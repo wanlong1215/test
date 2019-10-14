@@ -31,6 +31,8 @@ int BasicTreeWidgetItem::id()
         return _o6->id;
     case 7:
         return _o7->id;
+    case 8:
+        return _o8->id;
     default:
         break;
 	}
@@ -56,6 +58,8 @@ QString BasicTreeWidgetItem::name()
         return _o6->name;
     case 7:
         return _o7->name;
+    case 8:
+        return _o8->name;
     default:
         break;
 	}

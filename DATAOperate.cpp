@@ -1,4 +1,4 @@
-//ï»?include "DATAOperate.h"
+//#include "stdafx.h"
 #include "DATAOperate.h"
 
 CDATAOperate::CDATAOperate(void):m_conn(NULL)
@@ -228,10 +228,11 @@ int CDATAOperate::InsertMonitor(MONITOR p, int LineID)
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select MonitorID from final table (insert into BR_MONITOR(LineID,MonitorNAME) values (?, ?) )";
+        const char *sql = "select MonitorID from final table (insert into BR_MONITOR(LineID,MonitorNAME,MonitorAddr) values (?, ?, ?) )";
 		st.prepare(sql);
 		st.set_long(0, LineID);
 		st.set_string( 1, p.strName );
+		st.set_long(2, p.MonitorAddr);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if( rs.db_eof() )
 		{
@@ -701,8 +702,30 @@ int CDATAOperate::ModifyConcentrator(CONCENTRATOR p, int ConcentratorID)
 		st.set_long(14, p.wirelessSearchTimer);
 		st.set_long(15, p.ConcentratorAddr);
 		st.set_bigInt(16, p.ConcentratorCurrentTime);
-		st.set_bigInt(17, p.SelfReportOnOff);
+		st.set_long(17, p.SelfReportOnOff);
 		st.set_long(18, ConcentratorID);
+		st.execute();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+int CDATAOperate::ModifyConcentratorReserve(CONCENTRATOR p, int ConcentratorID)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "update BR_CONCENTRATOR set intRev1=?,intRev2=?,intRev3=?,intRev4=? where ConcentratorID=?";
+		st.prepare(sql);
+		st.set_long( 0, p.reserve1);
+		st.set_long( 1, p.reserve2 );
+		st.set_long( 2, p.reserve3 );
+		st.set_long( 3, p.reserve4 );
+		st.set_long(4, ConcentratorID);
 		st.execute();
 		return 1;
 	}
@@ -742,10 +765,11 @@ int CDATAOperate::ModifyMonitor(MONITOR p, int MonitorID)
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "update BR_MONITOR set MonitorNAME=? where MonitorID=?";
+        const char *sql = "update BR_MONITOR set MonitorNAME=?,MonitorAddr=? where MonitorID=?";
 		st.prepare(sql);
 		st.set_string( 0,p.strName );
-		st.set_long(1, MonitorID);
+		st.set_long(1, p.MonitorAddr);
+		st.set_long(2, MonitorID);
 		st.execute();
 		return 1;
 	}
@@ -930,7 +954,7 @@ int CDATAOperate::GetConcentrator(CONCENTRATOR &p, int ConcentratorID)
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select RouteID,ConcentratorNAME,DestAddr,DestPort,ConnectType,InstallPlace,APName,APProtocol,GetTerminalTimer,GetConcentratorTimer,HeartTimer,SimCardNumber,GPRSReConnectTimer,GPRSSignalStrength,SaveTimer,wirelessSearchTimer,ConcentratorAddr,ConcentratorCurrentTime,SelfReportOnOff from BR_CONCENTRATOR where ConcentratorID = ?";
+        const char *sql = "select RouteID,ConcentratorNAME,DestAddr,DestPort,ConnectType,InstallPlace,APName,APProtocol,GetTerminalTimer,GetConcentratorTimer,HeartTimer,SimCardNumber,GPRSReConnectTimer,GPRSSignalStrength,SaveTimer,wirelessSearchTimer,ConcentratorAddr,ConcentratorCurrentTime,SelfReportOnOff,intRev1,intRev2,intRev3,intRev4 from BR_CONCENTRATOR where ConcentratorID = ?";
 		st.prepare(sql);
 		st.set_long( 0, ConcentratorID );
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -958,6 +982,10 @@ int CDATAOperate::GetConcentrator(CONCENTRATOR &p, int ConcentratorID)
 		p.ConcentratorAddr = rs.get_long(16);
 		p.ConcentratorCurrentTime = rs.get_bigInt(17);
 		p.SelfReportOnOff = rs.get_long(18);
+		p.reserve1 = rs.get_long(19);
+		p.reserve2 = rs.get_long(20);
+		p.reserve3 = rs.get_long(21);
+		p.reserve4 = rs.get_long(22);
 		rs.close();
 		return 1;
 	}
@@ -1005,7 +1033,7 @@ int CDATAOperate::GetMonitor(MONITOR &p, int MonitorID)
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select LineID,MonitorNAME from BR_MONITOR where MonitorID = ?";
+        const char *sql = "select LineID,MonitorNAME,MonitorAddr from BR_MONITOR where MonitorID = ?";
 		st.prepare(sql);
 		st.set_long( 0, MonitorID );
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -1016,6 +1044,7 @@ int CDATAOperate::GetMonitor(MONITOR &p, int MonitorID)
 		}
 		p.lineID = rs.get_long(0);
 		p.strName = rs.get_string(1);
+		p.MonitorAddr = rs.get_long(2);
 		rs.close();
 		return 1;
 	}
@@ -1311,7 +1340,7 @@ int CDATAOperate::GetAllTerminalID(vector<TERMINAL> &v)
 	return 0;
 }
 
-int CDATAOperate::GetDatabyConcentratorID(vector<DATA> &v, int ConAddr)
+int CDATAOperate::GetDatabyConcentratorAddr(vector<DATA> &v, int ConAddr)
 {
 	try
 	{
@@ -1385,7 +1414,7 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
 	return 0;
 }
 
-int CDATAOperate::GetDatabyTerminalIDAndData(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end)
+int CDATAOperate::GetDatabyTerminalAddrAndDate(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end)
 {
 	try
 	{
@@ -1426,7 +1455,7 @@ int CDATAOperate::GetDatabyTerminalIDAndData(vector<DATA> &v, int ConAddr, int T
 	return 0;
 }
 
-int CDATAOperate::GetDatabyTerminalID(vector<DATA> &v, int ConAddr, int TerminalAddr)
+int CDATAOperate::GetDatabyTerminalAddr(vector<DATA> &v, int ConAddr, int TerminalAddr)
 {
 	try
 	{
@@ -1646,7 +1675,7 @@ int CDATAOperate::GetAllMonitorByID(vector<MONITOR> &v, int lineID)//Â»Ã±ÂµÃƒÂµÂ
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select MonitorID,LineID,MonitorNAME from BR_MONITOR where LineID=?";
+        const char *sql = "select MonitorID,LineID,MonitorNAME,MonitorAddr from BR_MONITOR where LineID=?";
 		st.prepare(sql);
 		st.set_long(0, lineID);
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -1657,6 +1686,7 @@ int CDATAOperate::GetAllMonitorByID(vector<MONITOR> &v, int lineID)//Â»Ã±ÂµÃƒÂµÂ
 			p.MonitorID = rs.get_long(0);
 			p.lineID = rs.get_long(1);
 			p.strName = rs.get_string(2);
+			p.MonitorAddr = rs.get_long(3);
 			v.push_back(p);
 			rs.move_next();
 		}
@@ -1830,6 +1860,104 @@ int CDATAOperate::GetUserLever(int id)
 		}
 		rs.close();
 		return -1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::GetPreDatabyData(DATA &dest, DATA src)
+{
+	try
+	{
+
+		int iMonitorID = -1;
+		int curMonitorAddr = -1;
+		int preMonitorID = -1;
+		int preTerminalAddr = -1;
+		string strType;
+		//¸ù¾ÝÒ»Ìõ¼ÇÂ¼ÖÐµÄÖÕ¶ËµØÖ·ÕÒµ½ÆäËùÊô¼à²âµãID£¬²¢»ñÈ¡ÖÕ¶ËÀàÐÍ
+		PreparedStatement st(m_conn);
+		const char *sql = "select MonitorID,TerminalTYPE from BR_TERMINAL where TerminalAddr = ?";
+		st.prepare(sql);
+		st.set_long(0, src.TerminalAddr);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		while( !rs.db_eof() )
+		{
+			iMonitorID =  rs.get_long(0);
+			strType = rs.get_string(1);
+			break;
+		}
+		rs.close();
+		
+		//¸ù¾Ýµ±Ç°¼à²âµãID»ñµÃµ±Ç°¼à²âµãµØÖ·
+		PreparedStatement st1(m_conn);
+		const char *sql1 = "select MonitorAddr from BR_MONITOR where MonitorID = ?";
+		st1.prepare(sql1);
+		st1.set_long(0, iMonitorID);
+		ADO_WRAPPER::ResultSet rs1 = st1.execute();
+		while( !rs1.db_eof() )
+		{
+			curMonitorAddr =  rs1.get_long(0);
+			break;
+		}
+		rs1.close();
+		//¸ù¾Ýµ±Ç°¼à²âµãµØÖ·»ñµÃÇ°Ò»¸ö¼à²âµãID
+		if (curMonitorAddr == 0)
+		{
+			return -1;
+		}
+		
+		PreparedStatement st2(m_conn);
+		const char *sql2 = "select MonitorID from BR_MONITOR where MonitorAddr = ?";
+		st2.prepare(sql2);
+		st2.set_long(0, curMonitorAddr-1);
+		ADO_WRAPPER::ResultSet rs2 = st2.execute();
+		while( !rs2.db_eof() )
+		{
+			preMonitorID =  rs2.get_long(0);
+			break;
+		}
+		rs2.close();
+		//¸ù¾ÝÇ°Ò»¸ö¼à²âµãIDÕÒµ½¶ÔÓ¦µÄÍ¬ÀàÐÍÖÕ¶ËµØÖ·
+		PreparedStatement st3(m_conn);
+		const char *sql3 = "select TerminalAddr from BR_TERMINAL where MonitorID = ? and TerminalTYPE = ?";
+		st3.prepare(sql3);
+		st3.set_long(0, preMonitorID);
+		st3.set_string(1, strType);
+		ADO_WRAPPER::ResultSet rs3 = st3.execute();
+		while( !rs3.db_eof() )
+		{
+			preTerminalAddr =  rs3.get_long(0);
+			break;
+		}
+		rs3.close();
+		//×îºó¸ù¾ÝÖÕ¶ËµØÖ·ºÍÊ±¼äÕÒµ½×îÖÕÒªÕÒµÄÊý¾Ý
+		PreparedStatement st4(m_conn);
+		const char *sql4 = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue from BR_DATA where TerminalAddr = ? and CollectTime = ?";
+		st4.prepare(sql4);
+		st4.set_long(0, preTerminalAddr);
+		st4.set_bigInt(1, src.CollectTime);
+		ADO_WRAPPER::ResultSet rs4 = st4.execute();
+		while( !rs4.db_eof() )
+		{
+			dest.DataID = rs.get_long(0);
+			dest.TerminalAddr = rs.get_long(1);
+			dest.ConcentratorAddr = rs.get_long(2);
+			dest.CollectTime = rs.get_bigInt(3);
+			dest.relaycnt = rs.get_long(4);
+			dest.relayPosition = rs.get_long(5);
+			dest.GetherUnitAddr = rs.get_long(6);
+			dest.vValue = rs.get_float(7);
+			dest.vAngValue = rs.get_float(8);
+			dest.iValue = rs.get_float(9);
+			dest.iAngValue = rs.get_float(10);
+			return 1;
+		}
+		rs4.close();
 	}
 	catch (_com_error& e)
 	{

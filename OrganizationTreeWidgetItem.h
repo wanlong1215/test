@@ -12,6 +12,7 @@ public:
     OrganizationTreeWidgetItem(proRoute *o, QTreeWidgetItem *parent);
     OrganizationTreeWidgetItem(proConcentrator *o, QTreeWidgetItem *parent);
     OrganizationTreeWidgetItem(proLine *o, QTreeWidgetItem *parent);
+    OrganizationTreeWidgetItem(proMonitor *o, QTreeWidgetItem *parent);
     OrganizationTreeWidgetItem(proTerminal *o, QTreeWidget *parent);
 
     bool canAddChild() override;

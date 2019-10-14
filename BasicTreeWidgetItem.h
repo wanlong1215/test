@@ -21,7 +21,8 @@ public:
 public:
     int _level;
 
-    proTerminal *_o7;
+    proTerminal *_o8;
+    proMonitor *_o7;
     proLine *_o6;
     proConcentrator *_o5;
     proRoute *_o4;
