@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>958</width>
+    <width>1130</width>
     <height>669</height>
    </rect>
   </property>
@@ -168,30 +168,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btnConcentrator">
-         <property name="minimumSize">
-          <size>
-           <width>110</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>110</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>15</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>设备管理</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="btnDatabase">
          <property name="minimumSize">
           <size>
@@ -212,33 +188,6 @@
          </property>
          <property name="text">
           <string>数据库配置</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="benServer">
-         <property name="minimumSize">
-          <size>
-           <width>110</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>110</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>15</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>服务配置</string>
          </property>
          <property name="checkable">
           <bool>false</bool>

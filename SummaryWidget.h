@@ -25,7 +25,7 @@ private slots:
     void onHistoryQuery();
     void onRealtimeQuery();
 
-    void on_btnReadRealtime_clicked();
+    void onTimeout();
 
 private:
     bool eventFilter(QObject *obj, QEvent *e);
@@ -34,6 +34,7 @@ private:
     Ui::SummaryWidget *ui;
 
     proConcentrator *_currentConcentrator;
+    QTimer *_timer;
 };
 
 #endif // SUMMARYWIDGET_H

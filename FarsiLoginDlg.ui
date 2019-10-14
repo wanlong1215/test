@@ -213,6 +213,12 @@ QPushButton:pressed{background-color: #cccccc;border-style: inset;}</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>btnLogin</tabstop>
+  <tabstop>leUser</tabstop>
+  <tabstop>lePwd</tabstop>
+  <tabstop>btnSet</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

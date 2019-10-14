@@ -16,6 +16,7 @@ public:
     explicit AddTerminalDlg(int parentId, QWidget *parent = 0);
     ~AddTerminalDlg();
 
+    proMonitor *monitor();
     proTerminal *terminal1();
     proTerminal *terminal2();
     proTerminal *terminal3();
@@ -31,6 +32,7 @@ private:
     Ui::AddTerminalDlg *ui;
 
     int _parentId;
+    proMonitor *_monitor;
     proTerminal *_o1;
     proTerminal *_o2;
     proTerminal *_o3;

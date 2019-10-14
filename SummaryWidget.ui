@@ -89,7 +89,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>948</width>
+            <width>939</width>
             <height>198</height>
            </rect>
           </property>
@@ -321,8 +321,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>936</width>
-            <height>184</height>
+            <width>927</width>
+            <height>181</height>
            </rect>
           </property>
           <widget class="TerminalGraphicsWidget" name="wgtGraphics" native="true">
@@ -362,6 +362,13 @@
            </property>
            <property name="text">
             <string>读取</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnStopRead">
+           <property name="text">
+            <string>停止</string>
            </property>
           </widget>
          </item>

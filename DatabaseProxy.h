@@ -277,6 +277,15 @@ struct proUser
     int level;
 };
 
+struct proWorker
+{
+    int id;
+    int amsoId;
+    QString name;
+    QString phone;
+    QString remarks;
+};
+
 class DatabaseProxy
 {
 public:
@@ -295,6 +304,12 @@ public:
     bool delUser(int id); // 删除用户
 
     QList<proUser> users();
+
+    QList<proWorker> workers();
+    bool worker(int id, proWorker &worker);
+    int addWorker(proWorker *u);
+    bool delWorker(int id);
+    bool modifyWorker(proWorker *u); // 以ID为准修改其他信息
 
     QList<proCompany *> getOrganizations();//获得所有的组织架构，在获得之前需要清楚组织架构，另外，获得组织架构之前应该先连接数据库，不应该在这个函数里，你看看在哪里合适吧
 	void clearOrganizations();//清除组织架构，但是没有清数据库。
@@ -339,6 +354,8 @@ public:
     proLine *line(int id);
     proMonitor *monitor(int id);
     proTerminal *terminal(int id);
+
+    QList<proAmso *> amsos();
 
     proConcentrator *firstConcentrator();
 

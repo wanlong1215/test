@@ -2,6 +2,7 @@
 #include "ui_SummaryWidget.h"
 #include "DatabaseProxy.h"
 #include "OrganizationTreeWidgetItem.h"
+#include <QTimer>
 
 SummaryWidget::SummaryWidget(QWidget *parent) :
     QWidget(parent),
@@ -73,10 +74,27 @@ void SummaryWidget::init()
         i1->setExpanded(true);
     }
 
+    _timer = new QTimer(this);
+    _timer->setInterval(30);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
     connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
     connect(ui->rbAbsoluteQuery, SIGNAL(toggled(bool)), this, SLOT(onAbsoluteQueryToggled(bool)));
-    connect(ui->btnQuery, SIGNAL(clicked(bool)), this, SLOT(onRealtimeQuery()));
+    connect(ui->btnQuery, &QPushButton::clicked, this, [this]() {
+        // insert read command
+        for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
+            auto item = ui->tawRealTimeDetail->item(i, 0);
+            if (item->checkState() == Qt::Checked) {
+                //
+            }
+        }
+
+        _timer->start();
+    });
+    connect(ui->btnStopRead, &QPushButton::clicked, this, [this]() {
+        // insert stop command
+        _timer->stop();
+    });
 
     ui->dteBegin->setDateTime(QDateTime::currentDateTime().addSecs(-60 * 60));
     ui->dteEnd->setDateTime(QDateTime::currentDateTime());
@@ -233,11 +251,11 @@ void SummaryWidget::onRealtimeQuery()
 
     QStringList lstHeader;
 
-    ui->tawRealTimeDetail->setColumnCount(12);
+    ui->tawRealTimeDetail->setColumnCount(11);
     lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
     ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
     ui->tawRealTimeDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 11; i++)
     {
         ui->tawRealTimeDetail->setColumnWidth(i, i==0?50:150);
     }
@@ -259,7 +277,7 @@ void SummaryWidget::onRealtimeQuery()
         foreach (auto o, o6->lst) {
             QTableWidgetItem *item = new QTableWidgetItem("");
             item->setCheckState(Qt::Unchecked);
-            item->setData(0, o->id);
+            item->setData(1, o->id);
             ui->tawRealTimeDetail->setItem(i, 0, item);
             ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
@@ -272,6 +290,17 @@ void SummaryWidget::onRealtimeQuery()
             ui->tawRealTimeDetail->setItem(i, 9, new QTableWidgetItem(QString("")));
             ui->tawRealTimeDetail->setItem(i, 10, new QTableWidgetItem(QString("")));
             i++;
+        }
+    }
+}
+
+void SummaryWidget::onTimeout()
+{
+    // 读取数据
+    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
+        auto item = ui->tawRealTimeDetail->item(i, 0);
+        if (item->data(1) == 1) {
+            // update 8 9 10
         }
     }
 }
@@ -325,21 +354,4 @@ bool SummaryWidget::eventFilter(QObject*obj, QEvent*e)
     }
 
     return QWidget::eventFilter(obj, e);
-}
-
-void SummaryWidget::on_btnReadRealtime_clicked()
-{
-    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++)
-    {
-        auto item = ui->tawRealTimeDetail->item(i, 0);
-        if (nullptr == item)
-        {
-            continue;
-        }
-
-        if (Qt::Checked == item->checkState())
-        {
-            // TODO: 调用后端接口，获得数据
-        }
-    }
 }

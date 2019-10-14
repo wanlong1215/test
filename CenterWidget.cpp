@@ -290,6 +290,13 @@ void CenterWidget::addItem(QTreeWidgetItem *clickItem)
 
         if (dlg->exec() == QDialog::Accepted)
         {
+            auto monitor = dlg->monitor();
+            OrganizationTreeWidgetItem *itemM = new OrganizationTreeWidgetItem(monitor, clickItemO);
+            ui->trwOrganization->clearFocus();
+            itemM->setSelected(true);
+            clickItemO->addChild(itemM);
+            clickItemO->setExpanded(true);
+
             proTerminal *proT1 = dlg->terminal1();
             if (DatabaseProxy::instance().addTerminal(proT1, proT1->parent->id))
             {

@@ -16,6 +16,9 @@ public:
     ~AlarmConfigDlg();
 
 private:
+    void init();
+
+private:
     Ui::AlarmConfigDlg *ui;
 };
 

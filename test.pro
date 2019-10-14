@@ -47,7 +47,8 @@ SOURCES += \
     AlarmConfigDlg.cpp \
     DATAOperate.cpp \
     AppSession.cpp \
-    ModifyMonitorDlg.cpp
+    ModifyMonitorDlg.cpp \
+    AddWorkerDlg.cpp
 
 HEADERS += \
     TerminalGraphicsWidget.h \
@@ -73,7 +74,8 @@ HEADERS += \
     DATAOperate.h \
     dbtool_ado.h \
     AppSession.h \
-    ModifyMonitorDlg.h
+    ModifyMonitorDlg.h \
+    AddWorkerDlg.h
 
 FORMS += \
     Elec.ui \
@@ -92,7 +94,8 @@ FORMS += \
     PopupInformation.ui \
     ConcentratorConfigDlg.ui \
     AlarmConfigDlg.ui \
-    ModifyMonitorDlg.ui
+    ModifyMonitorDlg.ui \
+    AddWorkerDlg.ui
 
 RESOURCES += \
     resource.qrc

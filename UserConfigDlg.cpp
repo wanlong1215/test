@@ -81,7 +81,7 @@ void UserConfigDlg::Init()
 
     int i = 0;
     foreach (auto usr, users) {
-        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(usr.id));
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(usr.id)));
         ui->tableWidget->setItem(i, 1, new QTableWidgetItem(usr.name));
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(usr.pwd));
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem( _map.value(usr.level) ));

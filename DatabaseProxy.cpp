@@ -79,6 +79,32 @@ QList<proUser> DatabaseProxy::users()
     return usrs;
 }
 
+QList<proWorker> DatabaseProxy::workers()
+{
+    QList<proWorker> lst;
+    return lst;
+}
+
+bool DatabaseProxy::worker(int id, proWorker &worker)
+{
+    return true;
+}
+
+int DatabaseProxy::addWorker(proWorker *u)
+{
+    return 1;
+}
+
+bool DatabaseProxy::delWorker(int id)
+{
+    return true;
+}
+
+bool DatabaseProxy::modifyWorker(proWorker *u)
+{
+    return true;
+}
+
 void DatabaseProxy::clearOrganizations()
 {
     while (!_lst.isEmpty())
@@ -351,6 +377,7 @@ bool DatabaseProxy::addMonitor(proMonitor *o, int parentid)
 	MONITOR monitor;
 	monitor.lineID = parentid;
 	monitor.strName = o->name.toStdString();
+    monitor.MonitorAddr = o->addr.toInt();
 	o->id = m_db2.InsertMonitor(monitor,parentid);
 
     proLine *po = line(parentid);
@@ -1609,6 +1636,20 @@ proTerminal *DatabaseProxy::terminal(int id)
     return NULL;
 }
 
+QList<proAmso *> DatabaseProxy::amsos()
+{
+    QList<proAmso *> lst;
+    foreach(proCompany * o1, _lst) {
+        foreach(proSubCompany * o2, o1->lst) {
+            foreach(proAmso * o3, o2->lst) {
+                lst.append(o3);
+            }
+        }
+    }
+
+    return lst;
+}
+
 proConcentrator *DatabaseProxy::firstConcentrator()
 {
     foreach(proCompany * o1, _lst) {
@@ -1677,13 +1718,13 @@ void DatabaseProxy::GetShowDataInfoByConcentratorID(showData &sData, int Concent
 	}
 }
 
-bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorId)
+bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr)
 {
 	vector<DATA> vdata;
-	m_db2.GetDatabyConcentratorID(vdata, ConcentratorId);
+	m_db2.GetDatabyConcentratorAddr(vdata, ConcentratorAddr);
 	showData sData;
-	GetShowDataInfoByConcentratorID(sData, ConcentratorId);
-	proConcentrator *pConcentrator =  concentrator(ConcentratorId);
+	GetShowDataInfoByConcentratorID(sData, ConcentratorAddr);
+	proConcentrator *pConcentrator =  concentrator(ConcentratorAddr);
 	for (int i = 0; i < pConcentrator->lst.size(); i++)
 	{
 		proLine *pLine = pConcentrator->lst.at(i);
@@ -1697,7 +1738,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 			{
 				proTerminal *pTerminal = pMonitor->lst.at(0);
 				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalID(terminalData1, ConcentratorId, pTerminal->addr);
+				m_db2.GetDatabyTerminalAddr(terminalData1, ConcentratorAddr, pTerminal->addr);
 				for (int i = 0; i < terminalData1.size(); i++)
 				{
 					DATA d = terminalData1[i];
@@ -1711,7 +1752,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 				proTerminal *pTerminal1 = pMonitor->lst.at(0);
 				proTerminal *pTerminal2 = pMonitor->lst.at(1);
 				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalID(terminalData1, ConcentratorId, pTerminal1->addr);
+				m_db2.GetDatabyTerminalAddr(terminalData1, ConcentratorAddr, pTerminal1->addr);
 				for (int i = 0; i < terminalData1.size(); i++)
 				{
 					DATA d = terminalData1[i];
@@ -1726,7 +1767,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 				proTerminal *pTerminal2 = pMonitor->lst.at(1);
 				proTerminal *pTerminal3 = pMonitor->lst.at(2);
 				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalID(terminalData1, ConcentratorId, pTerminal1->addr);
+				m_db2.GetDatabyTerminalAddr(terminalData1, ConcentratorAddr, pTerminal1->addr);
 				for (int i = 0; i < terminalData1.size(); i++)
 				{
 					DATA d = terminalData1[i];
@@ -1743,13 +1784,13 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 }
 
 
-bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorId, INT64 begin, INT64 end)
+bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr, INT64 begin, INT64 end)
 {
 	vector<DATA> vdata;
-	m_db2.GetDatabyConcentratorID(vdata, ConcentratorId);
+	m_db2.GetDatabyConcentratorAddr(vdata, ConcentratorAddr);
 	showData sData;
-	GetShowDataInfoByConcentratorID(sData, ConcentratorId);
-	proConcentrator *pConcentrator =  concentrator(ConcentratorId);
+	GetShowDataInfoByConcentratorID(sData, ConcentratorAddr);
+	proConcentrator *pConcentrator =  concentrator(ConcentratorAddr);
 	for (int i = 0; i < pConcentrator->lst.size(); i++)
 	{
 		proLine *pLine = pConcentrator->lst.at(i);
@@ -1763,7 +1804,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 			{
 				proTerminal *pTerminal = pMonitor->lst.at(0);
 				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalIDAndData(terminalData1, ConcentratorId, pTerminal->addr, begin, end);
+				m_db2.GetDatabyTerminalAddrAndDate(terminalData1, ConcentratorAddr, pTerminal->addr, begin, end);
 				for (int i = 0; i < terminalData1.size(); i++)
 				{
 					DATA d = terminalData1[i];
@@ -1777,7 +1818,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 				proTerminal *pTerminal1 = pMonitor->lst.at(0);
 				proTerminal *pTerminal2 = pMonitor->lst.at(1);
 				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalIDAndData(terminalData1, ConcentratorId, pTerminal1->addr, begin, end);
+				m_db2.GetDatabyTerminalAddrAndDate(terminalData1, ConcentratorAddr, pTerminal1->addr, begin, end);
 				for (int i = 0; i < terminalData1.size(); i++)
 				{
 					DATA d = terminalData1[i];
@@ -1792,7 +1833,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 				proTerminal *pTerminal2 = pMonitor->lst.at(1);
 				proTerminal *pTerminal3 = pMonitor->lst.at(2);
 				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalIDAndData(terminalData1, ConcentratorId, pTerminal1->addr, begin, end);
+				m_db2.GetDatabyTerminalAddrAndDate(terminalData1, ConcentratorAddr, pTerminal1->addr, begin, end);
 				for (int i = 0; i < terminalData1.size(); i++)
 				{
 					DATA d = terminalData1[i];

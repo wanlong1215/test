@@ -8,6 +8,7 @@ AddTerminalDlg::AddTerminalDlg(int parentId, QWidget *parent) :
     ui->setupUi(this);
 
     _parentId = parentId;
+    _monitor = nullptr;
     _o1 = NULL;
     _o2 = NULL;
     _o3 = NULL;
@@ -18,6 +19,11 @@ AddTerminalDlg::AddTerminalDlg(int parentId, QWidget *parent) :
 AddTerminalDlg::~AddTerminalDlg()
 {
     delete ui;
+}
+
+proMonitor *AddTerminalDlg::monitor()
+{
+    return _monitor;
 }
 
 proTerminal *AddTerminalDlg::terminal1()
@@ -52,18 +58,18 @@ void AddTerminalDlg::on_btnOK_clicked()
 {
     proLine *line = DatabaseProxy::instance().line(_parentId);
 
-    proMonitor *po = new proMonitor(line);
+    _monitor = new proMonitor(line);
 
-    po->name = ui->leMonitorName->text();
-    po->addr = ui->leMonitorAddr->text();
-    po->preAddr = ui->lePreMonitorAddr->text();
-    po->nextAddr = ui->leNextMonitorAddr->text();
+    _monitor->name = ui->leMonitorName->text();
+    _monitor->addr = ui->leMonitorAddr->text();
+    _monitor->preAddr = ui->lePreMonitorAddr->text();
+    _monitor->nextAddr = ui->leNextMonitorAddr->text();
 
-    DatabaseProxy::instance().addMonitor(po, _parentId);
+    DatabaseProxy::instance().addMonitor(_monitor, _parentId);
 
-    _o1 = new proTerminal(po);
-    _o2 = new proTerminal(po);
-    _o3 = new proTerminal(po);
+    _o1 = new proTerminal(_monitor);
+    _o2 = new proTerminal(_monitor);
+    _o3 = new proTerminal(_monitor);
 
     _o1->name = QStringLiteral("A相");
     _o1->type = "A";
