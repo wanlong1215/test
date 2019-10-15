@@ -281,8 +281,9 @@ struct proWorker
 struct proCommand 
 {
 	int UserID;
-	QString CommandType;
-	QString CommandInfo;
+	int ConcentratorAddr;
+	int TerminalAddr;
+	int Commandtype;
 };
 
 
@@ -368,7 +369,7 @@ public:
 	bool historyWarningAll(QList<proWarning> &pDatalist);//获得所有的报警信息，包含已报的和未报的
 	bool historyWarningPoped(QList<proWarning> &pDatalist);//获得已经报过警的信息
 
-	bool realTimeDataByAddr(showData &pShowData, int ConcentratorAddr);//获得实时数据 注意这里传入的是集中器地址
+	bool realTimeData(vector<DATA> &v);//获得实时数据 注意这里传入的是集中器地址
 
     int createId();
 

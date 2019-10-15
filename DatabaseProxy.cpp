@@ -509,8 +509,9 @@ bool DatabaseProxy::addCommand(proCommand *o)
 {
 	COMMAND cmd;
 	cmd.UserID = o->UserID;
-    cmd.CommandType = ToString(o->CommandType);
-    cmd.CommandInfo = ToString(o->CommandInfo);
+    cmd.ConcentratorAddr = o->ConcentratorAddr;
+    cmd.TerminalAddr = o->TerminalAddr;
+	cmd.Commandtype = o->Commandtype;
 	m_db2.InsertCommand(cmd);
 	return true;
 }
@@ -1800,49 +1801,10 @@ void DatabaseProxy::GetShowDataInfoByConcentratorAddr(showData &sData, int Conce
 	}
 }
 
-//获得实时数据 注意这里传入的是集中器地址
-bool DatabaseProxy::realTimeDataByAddr(showData &pShowData, int ConcentratorAddr)
+//获得实时数据 注意这里传入的是终端地址
+bool DatabaseProxy::realTimeData(vector<DATA> &v)
 {
-	GetShowDataInfoByConcentratorAddr(pShowData, ConcentratorAddr);
-	proConcentrator *pConcentrator =  concentratorAddr(ConcentratorAddr);
-	if (pConcentrator ==  NULL)
-	{
-		return false;
-	}
-	for (int i = 0; i < pConcentrator->lst.size(); i++)
-	{
-		proLine *pLine = pConcentrator->lst.at(i);
-		pShowData.line = pLine->name;
-		for (int i = 0; i < pLine->lst.size(); i++)
-		{
-			proMonitor *pMonitor = pLine->lst.at(i);
-			pShowData.monitor = pMonitor->name;
-
-			if (pMonitor->lst.size() == 1)
-			{
-				proTerminal *pTerminal = pMonitor->lst.at(0);
-				m_db2.GetRealDatabyTerminalAddr(pShowData.valueA, pTerminal->addr);
-
-			}
-			else if (pMonitor->lst.size() == 2)
-			{
-				proTerminal *pTerminal1 = pMonitor->lst.at(0);
-				proTerminal *pTerminal2 = pMonitor->lst.at(1);
-				m_db2.GetRealDatabyTerminalAddr(pShowData.valueA, pTerminal1->addr);
-				m_db2.GetRealDatabyTerminalAddr(pShowData.valueB, pTerminal2->addr);
-			}
-			else
-			{
-				proTerminal *pTerminal1 = pMonitor->lst.at(0);
-				proTerminal *pTerminal2 = pMonitor->lst.at(1);
-				proTerminal *pTerminal3 = pMonitor->lst.at(2);
-				m_db2.GetRealDatabyTerminalAddr(pShowData.valueA, pTerminal1->addr);
-				m_db2.GetRealDatabyTerminalAddr(pShowData.valueB, pTerminal2->addr);
-				m_db2.GetRealDatabyTerminalAddr(pShowData.valueC, pTerminal3->addr);
-			}
-		}
-
-	}
+	m_db2.GetRealData(v);
 	return true;
 }
 

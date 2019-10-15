@@ -379,11 +379,12 @@ int CDATAOperate::InsertCommand(COMMAND p)
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "insert into BR_COMMAND(UserID,CommandType,CommandInfo) values (?, ?, ?)";
+		const char *sql = "insert into BR_COMMAND(UserID,ConcentratorAddr,TerminalAddr,Commandtype) values (?, ?, ?, ?)";
 		st.prepare(sql);
 		st.set_long( 0, p.UserID);
-		st.set_string(1, p.CommandType);
-		st.set_string(2, p.CommandInfo);
+		st.set_long(1, p.ConcentratorAddr);
+		st.set_long(2, p.TerminalAddr);
+		st.set_long(3, p.Commandtype);
 		st.execute();
 		return 1;
 	}
@@ -1579,12 +1580,12 @@ int CDATAOperate::GetDatabyConcentratorAddr(vector<DATA> &v, int ConAddr)
 }
 
 //获得实时指令
-int CDATAOperate::GetCommand(COMMAND &cmd)
+int CDATAOperate::GetCommand(vector<COMMAND> &v)
 {
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "select UserID,CommandType,CommandInfo from BR_COMMAND";
+		const char *sql = "select UserID,ConcentratorAddr,TerminalAddr,Commandtype from BR_COMMAND";
 		st.prepare(sql);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if (rs.db_eof())
@@ -1595,9 +1596,12 @@ int CDATAOperate::GetCommand(COMMAND &cmd)
 		
 		while( !rs.db_eof() )
 		{
+			COMMAND cmd;
 			cmd.UserID = rs.get_long(0);
-			cmd.CommandType = rs.get_string(1);
-			cmd.CommandInfo = rs.get_string(2);
+			cmd.ConcentratorAddr = rs.get_long(1);
+			cmd.TerminalAddr = rs.get_long(2);
+			cmd.Commandtype = rs.get_long(3);
+			v.push_back(cmd);
 			rs.move_next();
 		}
 		rs.close();
@@ -1617,14 +1621,13 @@ int CDATAOperate::GetCommand(COMMAND &cmd)
 }
 
 //通过终端地址来寻找当前的实时数据
-int CDATAOperate::GetRealDatabyTerminalAddr(DATA &data, int TerminalAddr)
+int CDATAOperate::GetRealData(vector<DATA> &v)
 {
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue from BR_DATA_REAL where TerminalAddr = ?";
+		const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue from BR_DATA_REAL";
 		st.prepare(sql);
-		st.set_long( 0, TerminalAddr );
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if (rs.db_eof())
 		{
@@ -1633,6 +1636,7 @@ int CDATAOperate::GetRealDatabyTerminalAddr(DATA &data, int TerminalAddr)
 		}
 		while( !rs.db_eof() )
 		{
+			DATA data;
 			data.DataID = rs.get_long(0);
 			data.TerminalAddr = rs.get_long(1);
 			data.ConcentratorAddr = rs.get_long(2);
@@ -1644,14 +1648,14 @@ int CDATAOperate::GetRealDatabyTerminalAddr(DATA &data, int TerminalAddr)
 			data.vAngValue = rs.get_float(8);
 			data.iValue = rs.get_float(9);
 			data.iAngValue = rs.get_float(10);
+			v.push_back(data);
 			rs.move_next();
 		}
 		rs.close();
 
 		PreparedStatement st1(m_conn);
-		const char *sql1 = "Delete from BR_DATA_REAL where TerminalAddr = ?";
+		const char *sql1 = "Delete from BR_DATA_REAL";
 		st1.prepare(sql1);
-		st1.set_long( 0, TerminalAddr );
 		st1.execute();
 
 		return 1;

@@ -2,6 +2,7 @@
 #define APPSESSION_H
 
 #include <QString>
+#include <QDateTime>
 
 struct LoginUser
 {
@@ -14,6 +15,9 @@ class AppSession
 {
 public:
     static AppSession &instance();
+
+    qint64 toInt64Time(const QDateTime &dateTime);
+    QDateTime toQDateTime(qint64 time64);
 
     LoginUser user;
 

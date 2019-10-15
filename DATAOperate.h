@@ -167,8 +167,9 @@ struct WORKER
 struct COMMAND 
 {
 	int UserID;
-	string CommandType;
-	string CommandInfo;
+	int ConcentratorAddr;
+	int TerminalAddr;
+	int Commandtype;
 };
 
 
@@ -269,9 +270,9 @@ public:
 	//获得所有用户信息
 	int GetAllUsers(vector<USR> &v);
 	//通过终端地址来寻找当前的实时数据  -1表示目前库中没有数据 0表示sql有错误, 1表示读取成功
-	int GetRealDatabyTerminalAddr(DATA &data, int TerminalAddr);
+	int GetRealData(vector<DATA> &v);
 	//获得实时指令 -1表示目前库中没有指令 0表示sql有错误, 1表示读取成功
-	int GetCommand(COMMAND &cmd);
+	int GetCommand(vector<COMMAND> &v);
 
 
 private:
