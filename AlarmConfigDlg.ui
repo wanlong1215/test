@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string>报警数据管理</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

@@ -8,6 +8,8 @@ QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG(debug, debug|release): DEFINES += __IsDebug
+
 TARGET = ElectricityManager
 TEMPLATE = app
 

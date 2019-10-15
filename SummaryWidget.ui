@@ -48,7 +48,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>false</bool>
@@ -265,11 +265,18 @@
            <property name="minimumSize">
             <size>
              <width>100</width>
-             <height>40</height>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>50</height>
             </size>
            </property>
            <property name="font">
             <font>
+             <family>微软雅黑</family>
              <pointsize>18</pointsize>
             </font>
            </property>
@@ -355,8 +362,21 @@
          </item>
          <item>
           <widget class="QPushButton" name="btnReadRealtime">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>50</height>
+            </size>
+           </property>
            <property name="font">
             <font>
+             <family>微软雅黑</family>
              <pointsize>18</pointsize>
             </font>
            </property>
@@ -367,6 +387,23 @@
          </item>
          <item>
           <widget class="QPushButton" name="btnStopRead">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+            </font>
+           </property>
            <property name="text">
             <string>停止</string>
            </property>

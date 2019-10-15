@@ -252,6 +252,7 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 								proMonitor *pMonitor = new proMonitor(pLine);
 								pMonitor->id = monitor[i].MonitorID;
                                 pMonitor->name = ToQString(monitor[i].strName);//(monitor[i].strName);
+                                pMonitor->addr = monitor[i].MonitorAddr;
 
 								vector<TERMINAL> terminal;
 								m_db2.GetAllTerminalByID(terminal, monitor[i].MonitorID);

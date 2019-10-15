@@ -3,6 +3,8 @@
 #include "DatabaseProxy.h"
 #include "OrganizationTreeWidgetItem.h"
 #include <QTimer>
+#include <QMessageBox>
+#include "AppSession.h"
 
 SummaryWidget::SummaryWidget(QWidget *parent) :
     QWidget(parent),
@@ -13,8 +15,6 @@ SummaryWidget::SummaryWidget(QWidget *parent) :
     _currentConcentrator = NULL;
     ui->trwOrganization->setHeaderHidden(true);
     ui->trwOrganization->viewport()->installEventFilter(this);
-
-    init();
 }
 
 SummaryWidget::~SummaryWidget()
@@ -80,26 +80,14 @@ void SummaryWidget::init()
     connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
     connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
     connect(ui->rbAbsoluteQuery, SIGNAL(toggled(bool)), this, SLOT(onAbsoluteQueryToggled(bool)));
-    connect(ui->btnQuery, &QPushButton::clicked, this, [this]() {
-        // insert read command
-        for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
-            auto item = ui->tawRealTimeDetail->item(i, 0);
-            if (item->checkState() == Qt::Checked) {
-                //
-            }
-        }
-
-        _timer->start();
-    });
-    connect(ui->btnStopRead, &QPushButton::clicked, this, [this]() {
-        // insert stop command
-        _timer->stop();
-    });
+    connect(ui->btnQuery, &QPushButton::clicked, this, &SummaryWidget::onHistoryQuery);
 
     ui->dteBegin->setDateTime(QDateTime::currentDateTime().addSecs(-60 * 60));
     ui->dteEnd->setDateTime(QDateTime::currentDateTime());
-
     ui->rbAutoQuery->setChecked(true);
+
+    _currentConcentrator = DatabaseProxy::instance().firstConcentrator();
+
     onAutoQueryToggled(true);
 }
 void SummaryWidget::onAutoQueryToggled(bool b)
@@ -113,10 +101,7 @@ void SummaryWidget::onAutoQueryToggled(bool b)
     {
         ui->tawHistoryDetail->removeRow(0);
     }
-    _currentConcentrator = DatabaseProxy::instance().firstConcentrator();
-    // TODO: set item selected
 
-    ui->wgtHistoryGraphics->init(_currentConcentrator);
     onHistoryQuery();
 }
 void SummaryWidget::onQuickQueryToggled(bool b)
@@ -131,7 +116,6 @@ void SummaryWidget::onQuickQueryToggled(bool b)
         ui->tawHistoryDetail->removeRow(0);
     }
 
-    ui->wgtHistoryGraphics->init(_currentConcentrator);
     onHistoryQuery();
 }
 void SummaryWidget::onAbsoluteQueryToggled(bool b)
@@ -145,7 +129,7 @@ void SummaryWidget::onAbsoluteQueryToggled(bool b)
     {
         ui->tawHistoryDetail->removeRow(0);
     }
-    ui->wgtHistoryGraphics->init(_currentConcentrator);
+
     onHistoryQuery();
 }
 
@@ -164,7 +148,7 @@ void SummaryWidget::onHistoryQuery()
 
     QStringList lstHeader;
 
-    ui->tawHistoryDetail->setColumnCount(11);
+    ui->tawHistoryDetail->setColumnCount(10);
     lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
     ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
     ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
@@ -182,30 +166,30 @@ void SummaryWidget::onHistoryQuery()
     if (ui->rbAutoQuery->isChecked()) {
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr);
     } else if (ui->rbQuickQuery->isChecked()) {
-        int beginTime = 0;
-        int endTime = QDateTime::currentDateTime().toSecsSinceEpoch();
+        qint64 beginTime = 0;
+        qint64 endTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
         switch (ui->cbQuickCycle->currentIndex())
         {
         case 0: // 3 hours
-            beginTime = QDateTime::currentDateTime().addSecs(-1*3*60*60).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addSecs(-1*3*60*60));
             break;
         case 1: // 1 day
-            beginTime = QDateTime::currentDateTime().addDays(-1*1).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addDays(-1*1));
             break;
         case 2: // 3 days
-            beginTime = QDateTime::currentDateTime().addDays(-1*3).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addDays(-1*3));
             break;
         case 3: // 7 days
-            beginTime = QDateTime::currentDateTime().addDays(-1*7).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addDays(-1*7));
             break;
         case 4: // 1 mounth
-            beginTime = QDateTime::currentDateTime().addMonths(-1*1).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addMonths(-1*1));
             break;
         case 5: // 3 mounths
-            beginTime = QDateTime::currentDateTime().addMonths(-1*3).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addMonths(-1*3));
             break;
         case 6: // 6 mounths
-            beginTime = QDateTime::currentDateTime().addMonths(-1*6).toSecsSinceEpoch();
+            beginTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime().addMonths(-1*6));
             break;
         default:
             break;
@@ -213,8 +197,8 @@ void SummaryWidget::onHistoryQuery()
 
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     } else if (ui->rbAbsoluteQuery->isChecked()) {
-        int beginTime = ui->dteBegin->dateTime().toSecsSinceEpoch();
-        int endTime = ui->dteEnd->dateTime().toSecsSinceEpoch();
+        qint64 beginTime = AppSession::instance().toInt64Time(ui->dteBegin->dateTime());
+        qint64 endTime = AppSession::instance().toInt64Time(ui->dteEnd->dateTime());
 
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     }
@@ -276,9 +260,17 @@ void SummaryWidget::onRealtimeQuery()
     int i = 0;
     foreach(auto o6, _currentConcentrator->lst) {
         foreach (auto o, o6->lst) {
+            if (o->lst.count() != 3) {
+                continue;
+            }
+
             QTableWidgetItem *item = new QTableWidgetItem("");
             item->setCheckState(Qt::Unchecked);
-            item->setData(1, o->id);
+            item->setData(0, "");
+            item->setData(1, o->addr);
+            item->setData(2, o->lst.at(0)->addr);
+            item->setData(3, o->lst.at(1)->addr);
+            item->setData(4, o->lst.at(2)->addr);
             ui->tawRealTimeDetail->setItem(i, 0, item);
             ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
@@ -297,12 +289,27 @@ void SummaryWidget::onRealtimeQuery()
 
 void SummaryWidget::onTimeout()
 {
-    // 读取数据
-    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
-        auto item = ui->tawRealTimeDetail->item(i, 0);
-        if (item->data(1) == 1) {
-            // update 8 9 10
+    vector<DATA> datas;
+    if (DatabaseProxy::instance().realTimeData(datas))
+    {
+        for (int i = 0; i < datas.size(); i++)
+        {
+            DATA dt = datas[i];
+
+            for (int j = 0; j < ui->tawRealTimeDetail->rowCount(); j++) {
+                auto item = ui->tawRealTimeDetail->item(j, 0);
+                if (item->checkState() == Qt::Checked && item->data(1).toInt() == dt.ConcentratorAddr) {
+                    if (item->data(2).toInt() == dt.TerminalAddr) {
+                        ui->tawRealTimeDetail->item(j, 8)->setText(QString::number(dt.iValue));
+                    } else if (item->data(3).toInt() == dt.TerminalAddr) {
+                        ui->tawRealTimeDetail->item(j, 9)->setText(QString::number(dt.iValue));
+                    } else if (item->data(4).toInt() == dt.TerminalAddr) {
+                        ui->tawRealTimeDetail->item(j, 10)->setText(QString::number(dt.iValue));
+                    }
+                }
+            }
         }
+
     }
 }
 
@@ -355,4 +362,62 @@ bool SummaryWidget::eventFilter(QObject*obj, QEvent*e)
     }
 
     return QWidget::eventFilter(obj, e);
+}
+
+void SummaryWidget::on_btnReadRealtime_clicked()
+{
+    // insert read command
+    int commandNum = 0;
+    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
+        auto item = ui->tawRealTimeDetail->item(i, 0);
+        if (item->checkState() == Qt::Checked) {
+            commandNum++;
+            auto command = new proCommand;
+            command->Commandtype = 1;
+            command->UserID = AppSession::instance().user.id;
+            command->ConcentratorAddr = item->data(1).toInt();
+            command->TerminalAddr = item->data(2).toInt();
+            DatabaseProxy::instance().addCommand(command);
+            command->TerminalAddr = item->data(3).toInt();
+            DatabaseProxy::instance().addCommand(command);
+            command->TerminalAddr = item->data(4).toInt();
+            DatabaseProxy::instance().addCommand(command);
+        }
+    }
+
+    if (commandNum > 0)
+    {
+        QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("读取指令已下发!"));
+    }
+
+    _timer->start();
+}
+
+void SummaryWidget::on_btnStopRead_clicked()
+{
+    // insert stop command
+    int commandNum = 0;
+    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
+        auto item = ui->tawRealTimeDetail->item(i, 0);
+        if (item->checkState() == Qt::Checked) {
+            commandNum++;
+            auto command = new proCommand;
+            command->Commandtype = 0;
+            command->UserID = AppSession::instance().user.id;
+            command->ConcentratorAddr = item->data(1).toInt();
+            command->TerminalAddr = item->data(2).toInt();
+            DatabaseProxy::instance().addCommand(command);
+            command->TerminalAddr = item->data(3).toInt();
+            DatabaseProxy::instance().addCommand(command);
+            command->TerminalAddr = item->data(4).toInt();
+            DatabaseProxy::instance().addCommand(command);
+        }
+    }
+
+    if (commandNum > 0)
+    {
+        QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("停止读取指令已下发!"));
+    }
+
+    _timer->stop();
 }

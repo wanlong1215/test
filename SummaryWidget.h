@@ -27,6 +27,10 @@ private slots:
 
     void onTimeout();
 
+    void on_btnReadRealtime_clicked();
+
+    void on_btnStopRead_clicked();
+
 private:
     bool eventFilter(QObject *obj, QEvent *e);
 

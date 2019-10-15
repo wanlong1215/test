@@ -63,8 +63,10 @@ void AddWorkerDlg::on_btnOK_clicked()
 
     if (isAdd)
     {
-        if (-1 != DatabaseProxy::instance().addWorker(_u))
+        int id = DatabaseProxy::instance().addWorker(_u);
+        if (-1 != id)
         {
+            _u->id = id;
             accept();
         }
     }
