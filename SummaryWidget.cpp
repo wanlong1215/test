@@ -242,7 +242,7 @@ void SummaryWidget::onRealtimeQuery()
     ui->tawRealTimeDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
     for (int i = 0; i < 11; i++)
     {
-        ui->tawRealTimeDetail->setColumnWidth(i, i==0?50:150);
+        ui->tawRealTimeDetail->setColumnWidth(i, i==0?80:150);
     }
     if (NULL == _currentConcentrator)
     {
@@ -266,11 +266,10 @@ void SummaryWidget::onRealtimeQuery()
 
             QTableWidgetItem *item = new QTableWidgetItem("");
             item->setCheckState(Qt::Unchecked);
-            item->setData(0, "");
-            item->setData(1, o->addr);
-            item->setData(2, o->lst.at(0)->addr);
-            item->setData(3, o->lst.at(1)->addr);
-            item->setData(4, o->lst.at(2)->addr);
+            item->setData(10, o->addr);
+            item->setData(11, o->lst.at(0)->addr);
+            item->setData(12, o->lst.at(1)->addr);
+            item->setData(13, o->lst.at(2)->addr);
             ui->tawRealTimeDetail->setItem(i, 0, item);
             ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
@@ -298,12 +297,12 @@ void SummaryWidget::onTimeout()
 
             for (int j = 0; j < ui->tawRealTimeDetail->rowCount(); j++) {
                 auto item = ui->tawRealTimeDetail->item(j, 0);
-                if (item->checkState() == Qt::Checked && item->data(1).toInt() == dt.ConcentratorAddr) {
-                    if (item->data(2).toInt() == dt.TerminalAddr) {
+                if (item->checkState() == Qt::Checked && item->data(10).toInt() == dt.ConcentratorAddr) {
+                    if (item->data(11).toInt() == dt.TerminalAddr) {
                         ui->tawRealTimeDetail->item(j, 8)->setText(QString::number(dt.iValue));
-                    } else if (item->data(3).toInt() == dt.TerminalAddr) {
+                    } else if (item->data(12).toInt() == dt.TerminalAddr) {
                         ui->tawRealTimeDetail->item(j, 9)->setText(QString::number(dt.iValue));
-                    } else if (item->data(4).toInt() == dt.TerminalAddr) {
+                    } else if (item->data(13).toInt() == dt.TerminalAddr) {
                         ui->tawRealTimeDetail->item(j, 10)->setText(QString::number(dt.iValue));
                     }
                 }
@@ -375,12 +374,12 @@ void SummaryWidget::on_btnReadRealtime_clicked()
             auto command = new proCommand;
             command->Commandtype = 1;
             command->UserID = AppSession::instance().user.id;
-            command->ConcentratorAddr = item->data(1).toInt();
-            command->TerminalAddr = item->data(2).toInt();
+            command->ConcentratorAddr = item->data(10).toInt();
+            command->TerminalAddr = item->data(11).toInt();
             DatabaseProxy::instance().addCommand(command);
-            command->TerminalAddr = item->data(3).toInt();
+            command->TerminalAddr = item->data(12).toInt();
             DatabaseProxy::instance().addCommand(command);
-            command->TerminalAddr = item->data(4).toInt();
+            command->TerminalAddr = item->data(13).toInt();
             DatabaseProxy::instance().addCommand(command);
         }
     }
@@ -404,12 +403,12 @@ void SummaryWidget::on_btnStopRead_clicked()
             auto command = new proCommand;
             command->Commandtype = 0;
             command->UserID = AppSession::instance().user.id;
-            command->ConcentratorAddr = item->data(1).toInt();
-            command->TerminalAddr = item->data(2).toInt();
+            command->ConcentratorAddr = item->data(10).toInt();
+            command->TerminalAddr = item->data(11).toInt();
             DatabaseProxy::instance().addCommand(command);
-            command->TerminalAddr = item->data(3).toInt();
+            command->TerminalAddr = item->data(12).toInt();
             DatabaseProxy::instance().addCommand(command);
-            command->TerminalAddr = item->data(4).toInt();
+            command->TerminalAddr = item->data(13).toInt();
             DatabaseProxy::instance().addCommand(command);
         }
     }
