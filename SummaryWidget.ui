@@ -48,7 +48,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>false</bool>
@@ -402,6 +402,7 @@
            <property name="font">
             <font>
              <family>微软雅黑</family>
+             <pointsize>18</pointsize>
             </font>
            </property>
            <property name="text">

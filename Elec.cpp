@@ -29,9 +29,8 @@ Elec::Elec(QWidget *parent)
             }
         }
     });
-#ifndef __IsDebug
+
     _timer->start();
-#endif
 
     this->resize(1366, 768);
 }

@@ -2106,7 +2106,7 @@ int CDATAOperate::GetWarningNopop(vector<WARNING> &v)
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState from BR_WARNING where Popuped = ?";
+		const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState,WarningID from BR_WARNING where Popuped = ?";
 		st.prepare(sql);
 		st.set_long(0, 0);
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -2125,6 +2125,7 @@ int CDATAOperate::GetWarningNopop(vector<WARNING> &v)
 			p.WarningInfo = rs.get_string(8);
 			p.SendTime = rs.get_bigInt(9);
 			p.SendState = rs.get_long(10);
+			p.WarningID = rs.get_long(11);
 			v.push_back(p);
 			rs.move_next();
 		}
@@ -2144,7 +2145,7 @@ int CDATAOperate::GetWarningPoped(vector<WARNING> &v)
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState from BR_WARNING where Popuped = ?";
+		const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState,WarningID from BR_WARNING where Popuped = ?";
 		st.prepare(sql);
 		st.set_long(0, 1);
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -2163,6 +2164,7 @@ int CDATAOperate::GetWarningPoped(vector<WARNING> &v)
 			p.WarningInfo = rs.get_string(8);
 			p.SendTime = rs.get_bigInt(9);
 			p.SendState = rs.get_long(10);
+			p.WarningID = rs.get_long(11);
 			v.push_back(p);
 			rs.move_next();
 		}
@@ -2182,7 +2184,7 @@ int CDATAOperate::GetWarning(vector<WARNING> &v)
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState from BR_WARNING";
+        const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState,WarningID from BR_WARNING";
 		st.prepare(sql);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		v.clear();
@@ -2200,6 +2202,7 @@ int CDATAOperate::GetWarning(vector<WARNING> &v)
 			p.WarningInfo = rs.get_string(8);
 			p.SendTime = rs.get_bigInt(9);
 			p.SendState = rs.get_long(10);
+			p.WarningID = rs.get_long(11);
 			v.push_back(p);
 			rs.move_next();
 		}

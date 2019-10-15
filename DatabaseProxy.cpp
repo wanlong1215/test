@@ -134,8 +134,7 @@ int DatabaseProxy::addWorker(proWorker *u)
     worker.name = ToString(u->name);
     worker.remarks = ToString(u->remarks);
     worker.phone = ToString(u->phone);
-	m_db2.InsertWorker(worker);
-	return 1;
+	return m_db2.InsertWorker(worker);
 }
 
 bool DatabaseProxy::delWorker(int id)
@@ -251,8 +250,8 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 							{
 								proMonitor *pMonitor = new proMonitor(pLine);
 								pMonitor->id = monitor[i].MonitorID;
+								pMonitor->addr = monitor[i].MonitorAddr;
                                 pMonitor->name = ToQString(monitor[i].strName);//(monitor[i].strName);
-                                pMonitor->addr = monitor[i].MonitorAddr;
 
 								vector<TERMINAL> terminal;
 								m_db2.GetAllTerminalByID(terminal, monitor[i].MonitorID);
@@ -1957,6 +1956,7 @@ bool DatabaseProxy::historyWarningAll(QList<proWarning> &pDatalist)
 	for (int i = 0; i < vdata.size(); i++)
 	{
 		proWarning pWarning;
+		pWarning.WarningID = vdata[i].WarningID;
 		pWarning.WarningTime = vdata[i].WarningTime;
 		pWarning.WarningLine = vdata[i].WarningLine;
 		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
@@ -1980,6 +1980,7 @@ bool DatabaseProxy::historyWarningPoped(QList<proWarning> &pDatalist)
 	for (int i = 0; i < vdata.size(); i++)
 	{
 		proWarning pWarning;
+		pWarning.WarningID = vdata[i].WarningID;
 		pWarning.WarningTime = vdata[i].WarningTime;
 		pWarning.WarningLine = vdata[i].WarningLine;
 		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
@@ -2003,6 +2004,7 @@ bool DatabaseProxy::historyWarningNopop(QList<proWarning> &pDatalist)
 	for (int i = 0; i < vdata.size(); i++)
 	{
 		proWarning pWarning;
+		pWarning.WarningID = vdata[i].WarningID;
 		pWarning.WarningTime = vdata[i].WarningTime;
 		pWarning.WarningLine = vdata[i].WarningLine;
 		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
