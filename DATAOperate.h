@@ -164,6 +164,13 @@ struct WORKER
 	string remarks;
 };
 
+struct COMMAND 
+{
+	int UserID;
+	string CommandType;
+	string CommandInfo;
+};
+
 
 class CDATAOperate
 {
@@ -184,6 +191,8 @@ public:
 	int InsertWarning(WARNING p);
 	int InsertUser(string usr, string code, int level);
 	int InsertWorker(WORKER p);
+	int InsertRealData(DATA p);//插入实时数据
+	int InsertCommand(COMMAND p);//插入指令
 	///各个表的删除操作，成功返回TURE，失败返回FALSE
 	BOOL DelCompany(int companyID);
 	BOOL DelSubCompany(int subCompanyID);
@@ -259,6 +268,10 @@ public:
 	int GetUserLever(int id);
 	//获得所有用户信息
 	int GetAllUsers(vector<USR> &v);
+	//通过终端地址来寻找当前的实时数据  -1表示目前库中没有数据 0表示sql有错误, 1表示读取成功
+	int GetRealDatabyTerminalAddr(DATA &data, int TerminalAddr);
+	//获得实时指令 -1表示目前库中没有指令 0表示sql有错误, 1表示读取成功
+	int GetCommand(COMMAND &cmd);
 
 
 private:

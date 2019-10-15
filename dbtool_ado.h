@@ -1,30 +1,30 @@
 #if !defined(ADO_WRAPPER_DBTOOL_API_H)
 #define ADO_WRAPPER_DBTOOL_API_H
 /**
- * ADO_WRAPPER ADO�ӿڵİ�װ�⣬�ṩһ�����򵥵ġ�����C++�����Ա�Ľӿڣ���ADO��ϸ�ں͸���������������
- * ͬʱ����BusRobot��Ŀ�ṩһ���򵥵ġ����������ļ���(���ݿ�)���ӹ������ܡ�
+ * ADO_WRAPPER ADO接口的包装库，提供一个更简单的、面向C++编程人员的接口，把ADO的细节和复杂性隐藏起来，
+ * 同时对于BusRobot项目提供一个简单的、基于配置文件的(数据库)连接管理功能。
  *
- * �˽ӿ��ṩ3����Connection��PreparedStatement��ResultSet��
+ * 此接口提供3个类Connection、PreparedStatement、ResultSet：
  *
  * Connection
- * ʵ�����ӹ�����ͬʱ�û�����ʹ�����������������
+ * 实现连接管理，同时用户可以使用它进行事务管理。
  *
  * PreparedStatement
- * ��װSQL����ִ�нӿڣ����Դ�����̬SQL��䣬ͨ��C++���͵Ĳ���ֱ�Ӵ������ݡ�
+ * 封装SQL语句的执行接口，可以处理动态SQL语句，通过C++类型的参数直接传递数据。
  *
  * ResultSet
- * SQL��䷵�صĽ���������Է����(��C++����)��ȡÿ�����ݡ�
+ * SQL语句返回的结果集，可以方便的(以C++类型)获取每行数据。
  *
  * @author anhu.xie 2008-11-06
  */
-// ԭ�ƻ�ʵ�ֲ�������һ��DLL�����������º궨��
+// 原计划实现部分做成一个DLL，所以有以下宏定义
 #ifdef DBTOOL_EXPORTS
 #define DBTOOL_API __declspec(dllexport)
 #else
 #define DBTOOL_API __declspec(dllimport)
 #endif
-// Ŀǰ����DLL����Դ�뼶��������ֱ�����ô�.h�ļ���
-// BTW����ҪConnection::Connection(void)�����dbTool.cpp�ŵ��Լ��Ĺ��̡�
+// 目前不是DLL，是源码级共享，可直接引用此.h文件。
+// BTW，需要Connection::Connection(void)的请把dbTool.cpp放到自己的工程。
 #undef DBTOOL_API
 #define DBTOOL_API
 
@@ -33,7 +33,7 @@
 #import "msado15.dll" rename("EOF", "AdoEOF")
 #include <oledberr.h>
 
-// �ӿڲ���
+// 接口部分
 namespace ADO_WRAPPER {
 
 	class ResultSet;
@@ -42,44 +42,44 @@ namespace ADO_WRAPPER {
 	using std::string;
 
 	/**
-	 * ���ݿ�����
+	 * 数据库连接
 	 */
 	class DBTOOL_API Connection {
 		friend PreparedStatement;
-		ADODB::_ConnectionPtr conn_ado; // ����װ��ADO����
-		bool created_new_conn; // �����Ƿ��������Լ������ģ�
+		ADODB::_ConnectionPtr conn_ado; // 所包装的ADO连接
+		bool created_new_conn; // 连接是否是我们自己创建的？
 		void CreateConnection(const char *conn_str, const char *usr, const char *passwd);
 	public:
 		/**
-		 * ���������ļ�����Ĭ�����ݿ�����
-		 * �Ȳ��ṩ��
+		 * 根据配置文件创建默认数据库连接
+		 * 先不提供！
 		 */
 //		Connection();
 		/**
-		 * ʹ��ָ�������Ӳ����������ݿ�����
-		 * @param conn_str �����ַ���
-		 * @param usr ��¼���ݿ���û���
-		 * @param passwd ��¼���ݿ������
+		 * 使用指定的连接参数创建数据库连接
+		 * @param conn_str 连接字符串
+		 * @param usr 登录数据库的用户名
+		 * @param passwd 登录数据库的密码
 		 */
 		Connection(const char *conn_str, const char *usr, const char *passwd);
 		/**
-		 * ʹ�����е�ADO Connection����������ݿ�����
-		 * @param pconn ���е�ADO���ӣ���Ȼ��һ��IDispatchָ�룬��������ADO Connection����
+		 * 使用已有的ADO Connection对象管理数据库连接
+		 * @param pconn 已有的ADO连接，虽然是一个IDispatch指针，但必须是ADO Connection对象
 		 */
 		Connection(IDispatch * pconn);
 		/**
-		 * �������캯����׷�������Լ��򿪵����ӣ�����֤�ر�
+		 * 拷贝构造函数，追踪我们自己打开的连接，并保证关闭
 		 */
 		Connection(const Connection &src);
 		/**
-		 * ��������������ر������Լ��򿪵�����
+		 * 析构函数，负责关闭我们自己打开的连接
 		 */
 		~Connection();
 		/**
-		 * ��һ���µ����ݿ�����
-		 * @param conn_str ADO�����ַ���
-		 * @param usr ��¼���ݿ��õ��û���
-		 * @param passwd ��¼���ݿ��õ�����
+		 * 打开一个新的数据库连接
+		 * @param conn_str ADO连接字符串
+		 * @param usr 登录数据库用的用户名
+		 * @param passwd 登录数据库用的密码
 		 */
 		void open(const char *conn_str, const char *usr, const char *passwd) {
 			conn_ado = NULL;
@@ -87,29 +87,29 @@ namespace ADO_WRAPPER {
 			CreateConnection(conn_str, usr, passwd);
 		}
 		/**
-		 * ����һ��ִ��SQL���Ķ���
-		 * @return ִ��SQL����PreparedStatement����
+		 * 创建一个执行SQL语句的对象
+		 * @return 执行SQL语句的PreparedStatement对象
 		 */
 		PreparedStatement CreateStatement();
 		/**
-		 * ����һ��ִ��SQL���Ķ��󣬲���׼�������SQL���
-		 * @param sql_stmt_string Ҫ׼��ִ�е�SQL���
-		 * @return ִ��SQL����PreparedStatement���󣬲���������Ѿ�׼���ã�����ֱ�����ò�����������
+		 * 创建一个执行SQL语句的对象，并且准备传入的SQL语句
+		 * @param sql_stmt_string 要准备执行的SQL语句
+		 * @return 执行SQL语句的PreparedStatement对象，并且其语句已经准备好，可以直接设置参数和运行了
 		 */
 		PreparedStatement prepare_statement(const char *sql_stmt_string);
 		/**
-		 * �����������ʼһ������
-		 * @return ����֧�ֶ༶������������򣬷��ص�ǰ����ļ���
+		 * 事务管理：开始一个事务
+		 * @return 对于支持多级事务的驱动程序，返回当前事务的级别
 		 */
 		long begin_trans() { return conn_ado->BeginTrans(); }
 		/**
-		 * ����������ύ(ȷ��)����
-		 * @return ����֧�ֶ༶������������򣬷��ص�ǰ����ļ���
+		 * 事务管理：提交(确认)事务
+		 * @return 对于支持多级事务的驱动程序，返回当前事务的级别
 		 */
 		long commit_trans() { return conn_ado->CommitTrans(); }
 		/**
-		 * �����������������
-		 * @return ����֧�ֶ༶������������򣬷��ص�ǰ����ļ���
+		 * 事务管理：撤消事务
+		 * @return 对于支持多级事务的驱动程序，返回当前事务的级别
 		 */
 		long rollback_trans() { return conn_ado->RollbackTrans(); }
 
@@ -119,156 +119,156 @@ namespace ADO_WRAPPER {
 		IDispatch* GetDispatch() { return conn_ado; }
 
 		/**
-		* ��ȡADO��Error�ӿ�
-		* �ýӿڿ��Ի�ȡsql�����룬���_com_error�಻�ܵõ�ADO SQLState������
+		* 获取ADO的Error接口
+		* 该接口可以获取sql错误码，解决_com_error类不能得到ADO SQLState的问题
 		*/
 		ADODB::ErrorsPtr GetErrors() { return conn_ado->GetErrors(); }
 	};
 
 	/**
-	 * ִ�����ݿ�SQL�����
+	 * 执行数据库SQL的语句
 	 */
 	class DBTOOL_API PreparedStatement {
-		Connection conn; // ���ݿ�����
-		ADODB::_CommandPtr stmt; // ׼���õ�SQL���
-		ADODB::ParametersPtr para; // �����Ҫ���õĲ���
-		// (oledb)Provider��֧�ֲ�����Ϣ����ʱ�������ֶ����������ò���
-		std::map<long, ADODB::_ParameterPtr> man_para; // �ֶ����õĲ�����
-		bool params_refresh; // �Ƿ�֧�ֲ�����Ϣ������
+		Connection conn; // 数据库连接
+		ADODB::_CommandPtr stmt; // 准备好的SQL语句
+		ADODB::ParametersPtr para; // 语句需要设置的参数
+		// (oledb)Provider不支持参数信息导出时，必须手动创建并设置参数
+		std::map<long, ADODB::_ParameterPtr> man_para; // 手动设置的参数集
+		bool params_refresh; // 是否支持参数信息导出？
 		void set_param_value(long index, _variant_t value, size_t data_len);
 	public:
 		/**
-		 * ���캯��������������
-		 * @param conn ���ݿ����Ӷ���ע������ʹ�õ���һ�����󣬶�����һ��ָ��(Ϊ����ǰ�ڴ������)��
+		 * 构造函数：创建语句对象
+		 * @param conn 数据库连接对象。注意我们使用的是一个对象，而不是一个指针(为了与前期代码兼容)。
 		 */
 		PreparedStatement(Connection conn);
 		/**
-		 * ������������������
+		 * 析构函数：清理工作
 		 */
 		~PreparedStatement();
 		/**
-		 * ֱ��ִ��(û��Prepare)һ��SQL��䡣
-		 * ����û�в�����Ҫ���ã�һ����ִ�е���䣬ʹ�����������
-		 * @param sqlString Ҫִ�е���䡣
-		 * @return ����ǲ�ѯ(SELECT)��䣬����һ���������
-		 * ��������ݸ���(INSERT/UPDATE)��䣬�����ؽ�������붪�����صĶ���
+		 * 直接执行(没有Prepare)一个SQL语句。
+		 * 对于没有参数需要设置，一次性执行的语句，使用这个方法。
+		 * @param sqlString 要执行的语句。
+		 * @return 如果是查询(SELECT)语句，返回一个结果集；
+		 * 如果是数据更新(INSERT/UPDATE)语句，不返回结果集，请丢弃返回的对象。
 		 */
 		ResultSet execute(const char *sqlString);
 		/**
-		 * ׼��(Prepare)һ��SQL��䡣
-		 * ������Ҫ���ò���(��̬SQL)��������Ҫ����ִ�е���䣬�����ȵ���Prepare(const char*)��
-		 * Ȼ��(����)����set<Type>(long,<type>)��Execute()ִ��SQL��䡣
-		 * @param sqlString Ҫ׼������䡣
-		 * @return ����ǲ�ѯ(SELECT)��䣬����һ���������
-		 * ��������ݸ���(INSERT/UPDATE)��䣬�����ؽ�������붪�����صĶ���
+		 * 准备(Prepare)一个SQL语句。
+		 * 对于需要设置参数(动态SQL)，或者需要反复执行的语句，可以先调用Prepare(const char*)，
+		 * 然后(反复)调用set<Type>(long,<type>)与Execute()执行SQL语句。
+		 * @param sqlString 要准备的语句。
+		 * @return 如果是查询(SELECT)语句，返回一个结果集；
+		 * 如果是数据更新(INSERT/UPDATE)语句，不返回结果集，请丢弃返回的对象。
 		 */
 		void prepare(const char *sqlString);
 		/**
-		 * ���ò�����ʱʱ��,�������ã�ADOĬ�ϵ���30s
-		 * \param timeout ��ʱֵ����λ��s��0��ʾ���޳���ֱ�����������������
+		 * 设置操作超时时间,若不设置，ADO默认的是30s
+		 * \param timeout 超时值，单位是s，0表示无限长（直到操作结束或出错）
 		 */
 		void set_timeout( long timeout );
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��short���͵�ֵ
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个short类型的值
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void set_short(long index, short value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��long���͵�ֵ
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个long类型的值
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void set_long(long index, long value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��bigInt���͵�ֵ
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个bigInt类型的值
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void set_bigInt(long index, __int64 value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��float���͵ĸ�����
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个float类型的浮点数
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void set_float(long index, float value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��double���͵ĸ�����
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个double类型的浮点数
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void set_double(long index, double value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��bool���͵��߼�ֵ
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个bool类型的逻辑值
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void set_bool(long index, bool value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ���ַ���
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ(C++���͵��ַ���)
+		 * 设置已准备好的动态SQL语句的参数为一个字符串
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值(C++类型的字符串)
 		 */
 		void set_string(long index, string value) { set_string(index,value.c_str()); }
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ���ַ���
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ(C���͵��ַ���)
+		 * 设置已准备好的动态SQL语句的参数为一个字符串
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值(C类型的字符串)
 		 */
 		void set_string(long index, const char *value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ���ַ���
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ(COM���͵��ַ���)
+		 * 设置已准备好的动态SQL语句的参数为一个字符串
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值(COM类型的字符串)
 		 */
 		void set_string(long index, const _bstr_t &value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��ʮ������(DECIMAL)
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个十进制数(DECIMAL)
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void setDecimal(long index, const DECIMAL &value);
 		/**
-		 * ������׼���õĶ�̬SQL���Ĳ���Ϊһ��COM����
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param value ������ȡֵ
+		 * 设置已准备好的动态SQL语句的参数为一个COM类型
+		 * @param index 参数的位置，从0开始计数
+		 * @param value 参数的取值
 		 */
 		void setVariant(long index, const _variant_t &value);
 		/**
-		 * ������׼���õĶ�̬SQL������ֵΪһ������������(�ֽڴ�)
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param data �����ֽڴ���λ��
-		 * @param data_len ���ݵĳ���(�ֽ���)
+		 * 设置已准备好的动态SQL语句参数值为一个二进制数据(字节串)
+		 * @param index 参数的位置，从0开始计数
+		 * @param data 数据字节串的位置
+		 * @param data_len 数据的长度(字节数)
 		 */
 		void set_bytes(long index, const char *data, size_t data_len);
 		/**
-		 * ������׼���õĶ�̬SQL������ֵΪһ������������(�ֽڴ�)
-		 * ����һ��C++���ã��������ù̶����ȵ����ݡ�
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param data �ַ�����
-		 * @tparam data_len ���ݵĳ���(�ֽ���)
+		 * 设置已准备好的动态SQL语句参数值为一个二进制数据(字节串)
+		 * 这是一个C++调用，方便设置固定长度的数据。
+		 * @param index 参数的位置，从0开始计数
+		 * @param data 字符数组
+		 * @tparam data_len 数据的长度(字节数)
 		 */
 		template<size_t data_len>
 		void set_bytes(long index, const unsigned char (&data)[data_len]) {
 			set_bytes(index, reinterpret_cast<const char *>(data), data_len);
 		}
 		/**
-		 * ������׼���õĶ�̬SQL��������ֵΪ��(NULL)ֵ
-		 * @param index ������λ�ã���0��ʼ����
+		 * 设置已准备好的动态SQL语句参数的值为空(NULL)值
+		 * @param index 参数的位置，从0开始计数
 		 */
 		void set_null(long index);
 		/**
-		 * ִ��һ����׼����(���������˺��ʵĲ���)��SQL��䡣
-		 * ������Ҫ���ò���(��̬SQL)��������Ҫ����ִ�е���䣬�����ȵ���Prepare(const char*)��
-		 * Ȼ��(����)����set<Type>(long,<type>)��Execute()ִ��SQL��䡣
-		 * ���ڶ�̬SQL��䣬�ڵ���Execute()֮ǰ������ÿ�������������á�
-		 * @return ����ǲ�ѯ(SELECT)��䣬����һ���������
-		 * ��������ݸ���(INSERT/UPDATE)��䣬�����ؽ�������붪�����صĶ���
+		 * 执行一个已准备好(并且设置了合适的参数)的SQL语句。
+		 * 对于需要设置参数(动态SQL)，或者需要反复执行的语句，可以先调用Prepare(const char*)，
+		 * 然后(反复)调用set<Type>(long,<type>)与Execute()执行SQL语句。
+		 * 对于动态SQL语句，在调用Execute()之前，必须每个参数都被设置。
+		 * @return 如果是查询(SELECT)语句，返回一个结果集；
+		 * 如果是数据更新(INSERT/UPDATE)语句，不返回结果集，请丢弃返回的对象。
 		 */
 		ResultSet execute();
 		/**
-		* ִ��һ����׼����(���������˺��ʵĲ���)��SQL��䡣
-		* �����ؽ����
+		* 执行一个已准备好(并且设置了合适的参数)的SQL语句。
+		* 不返回结果集
 		*/
 		void execute_noRecords();
 
@@ -279,154 +279,154 @@ namespace ADO_WRAPPER {
 	};
 
 	/**
-	 * SQL��ѯ��䷵�صĽ������
-	 * ע�����ǽ�ResultSet������(ADO��)RecordSet����Ϊ����ֻ������ȡ��ѯ�Ľ�����������������޸����ݿ����ݡ�
+	 * SQL查询语句返回的结果集。
+	 * 注意我们叫ResultSet而不是(ADO的)RecordSet，因为我们只用它来取查询的结果，而不能用它来修改数据库内容。
 	 */
 	class DBTOOL_API ResultSet {
 		friend ResultSet PreparedStatement::execute();
 		friend ResultSet PreparedStatement::execute(const char *);
-		bool lastFieldGetWasNull; // �����ȡ��(�ֶ�)ֵ�Ƿ�ΪNULL
-		ADODB::_RecordsetPtr rs; // ����װ��ADO��¼��
-		ADODB::FieldsPtr flds; // ���������(�ֶ�)
+		bool lastFieldGetWasNull; // 最后所取列(字段)值是否为NULL
+		ADODB::_RecordsetPtr rs; // 所包装的ADO记录集
+		ADODB::FieldsPtr flds; // 结果集的列(字段)
 		/**
-		 * ���캯������������
-		 * ������Ϊprivate����Ϊ�˽�ֹ�û��Լ����������������ֻ����PreparedStatement���󷵻ء�
+		 * 构造函数：创建对象。
+		 * 被定义为private，是为了禁止用户自己创建。结果集对象只能由PreparedStatement对象返回。
 		 */
 		ResultSet(ADODB::_RecordsetPtr r) : rs(r), flds(r->Fields), lastFieldGetWasNull(true) {}
 	public:
 		/**
-		 * ������������Դ����������
+		 * 析构函数：资源清理工作。
 		 */
 		~ResultSet() { rs = NULL; flds = NULL; }
 		/**
-		 * �Ƿ��ѵ����ݼ��ϵ�ĩβ��
-		 * @return �������true����ʾ�ѵ������ĩβ��û����Ч�������п��ã�
-		 * �������false������һ������(MoveNext()���ߴ򿪽��������)ȡ������Ч�������С�
+		 * 是否已到数据集合的末尾。
+		 * @return 如果返回true，表示已到结果集末尾，没有有效的数据行可用；
+		 * 如果返回false，则上一个操作(MoveNext()或者打开结果集操作)取得了有效的数据行。
 		 */
 		bool db_eof() { return rs->AdoEOF != 0; }
 		/**
-		 * ����Ƿ��ѵ����ݼ��϶��ˡ�
-		 * @return �������true����ʾ�ѵ���������ˣ���һ��MovePrev()û��ȡ����Ч�������У�
-		 * �������false����ʶ��һ��MovePrev()����ȡ������Ч��������
+		 * 结果是否已到数据集合顶端。
+		 * @return 如果返回true，表示已到结果集顶端，上一个MovePrev()没有取得有效的数据行；
+		 * 如果返回false，标识上一个MovePrev()操作取得了有效的数据行
 		 */
 		bool db_bof() { return rs->BOF != 0; }
 		/**
-		 * �رս������
-		 * ����Դ�����ĽǶȣ���������ĵ��ú���Ҫ������û��Ѿ�����ʹ��һ���������Ӧ�ùر�����
+		 * 关闭结果集。
+		 * 从资源管理的角度，这个方法的调用很重要。如果用户已经不再使用一个结果集，应该关闭它。
 		 */
 		void close() {
 			if ( rs->GetState() == ADODB::adStateOpen )
 				rs->Close();
 		}
 		/**
-		 * ��������������(��ǰ�����ƶ�)������һ�����ݡ�
-		 * move_next()֮��Ӧ�õ���DBEOF()���ж��Ƿ�ȡ����Ч�����ݡ�
+		 * 结果集浏览：正序(从前往后移动)访问下一行数据。
+		 * move_next()之后，应该调用DBEOF()来判读是否取得有效的数据。
 		 */
 		void move_next() { rs->MoveNext(); }
 		/**
-		 * ��������������(�Ӻ���ǰ�ƶ�)������һ�����ݡ�
-		 * MovePrev()֮��Ӧ�õ���BOF()���ж��Ƿ�ȡ����Ч�����ݡ�
+		 * 结果集浏览：逆序(从后往前移动)访问下一行数据。
+		 * MovePrev()之后，应该调用BOF()来判读是否取得有效的数据。
 		 */
 		void move_prev() { rs->MovePrevious(); }
 		/**
-		 * ��������������(�Ӻ���ǰ�ƶ�)���ʵ�һ�����ݡ�
-		 * MoveFirst()֮��Ӧ�õ���BOF()���ж��Ƿ�ȡ����Ч�����ݡ�
+		 * 结果集浏览：逆序(从后往前移动)访问第一行数据。
+		 * MoveFirst()之后，应该调用BOF()来判读是否取得有效的数据。
 		 */
 		void move_first() { rs->MoveFirst(); }
 		/**
-		 * ��������������(��ǰ�����ƶ�)�������һ�����ݡ�
-		 * MoveLastt()֮��Ӧ�õ���DBEOF()���ж��Ƿ�ȡ����Ч�����ݡ�
+		 * 结果集浏览：正序(从前往后移动)访问最后一行数据。
+		 * MoveLastt()之后，应该调用DBEOF()来判读是否取得有效的数据。
 		 */
 		void move_last() { rs->MoveLast(); }
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��Ϊshort���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为short类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
 		 */
 		short get_short(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��Ϊlong���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为long类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		long get_long(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��Ϊbigint���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为bigint类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		__int64 get_bigInt(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��Ϊfloat���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为float类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		float get_float(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��Ϊdouble���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为double类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		double get_double(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��Ϊbool���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为bool类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		bool get_bool(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��ΪDECIMAL���͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为DECIMAL类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		DECIMAL getDecimal(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)������ȡ�õ�ֵת��ΪCOM�ַ������͡�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ�����ڿɿյ��У���Ҫ�����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并把取得的值转换为COM字符串类型。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值，对于可空的列，需要紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		string get_string(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)��������COM��ͨ�����ͷ��ء�
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @return ȡ�õ���ֵ��
-		 * ���ڿɿյ��У����Խ����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，并且用COM的通用类型返回。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @return 取得的列值。
+		 * 对于可空的列，可以紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		_variant_t getVariant(long index);
 		/**
-		 * �ӵ�ǰ�л�ȡ�����ֶ�(��ֵ)�����ǰ���ֵ����һ������������(�ֽڴ�)����ȡ��
-		 * ע�⣬�ⲻ��ת����������ݿ��ﶨ����в��Ƕ��������ݣ��������쳣��
-		 * @param index Ҫ���ʵ����ڽ������λ�ã���0��ʼ������
-		 * @param buffer ��Ž�������ڴ���getBytes()���䣬�ɵ����߸����ͷ�(��delete[])��
-		 * @return ȡ�õĶ��������ݵ��ֽ�����
-		 * ���ڿɿյ��У����Խ����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 从当前行获取数据字段(列值)，这是把列值当成一个二进制数据(字节串)来获取。
+		 * 注意，这不是转换，如果数据库里定义的列不是二进制数据，会引发异常。
+		 * @param index 要访问的列在结果集中位置，从0开始计数。
+		 * @param buffer 存放结果。其内存由getBytes()分配，由调用者负责释放(用delete[])。
+		 * @return 取得的二进制数据的字节数。
+		 * 对于可空的列，可以紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		size_t get_bytes(long index, char *&buffer);
 		/**
-		 * ��ȡָ�����ȵĶ���������(�ֽڴ�)
-		 * ����һ��C++���ã������ù̶��̶����Ȼ���ȥ������ݡ�
-		 * @param index ������λ�ã���0��ʼ����
-		 * @param data �ַ�����
-		 * @tparam data_len ���ݵĳ���(�ֽ���)
+		 * 获取指定长度的二进制数据(字节串)
+		 * 这是一个C++调用，方便用固定固定长度豁出去获得数据。
+		 * @param index 参数的位置，从0开始计数
+		 * @param data 字符数组
+		 * @tparam data_len 数据的长度(字节数)
 		 */
 		template<size_t data_len>
 		size_t get_bytes(long index, unsigned char (&data)[data_len]);
 		/**
-		 * ���һ�ε���get<Type>(long...)�������ص���ֵ�Ƿ�Ϊ��(NULL)ֵ��
-		 * ע����wasNull()������isNull()������һ��Ҫ�ȵ���get<Type>(long...)������
-		 * @return true��ʶ��󷵻��е�ֵΪNULL��false��ʶ��󷵻���ֵ��Ч��
-		 * ���ڿɿյ��У����Խ����ŵ���wasNull()���ж��Ƿ�ΪNULL��
+		 * 最后一次调用get<Type>(long...)方法返回的列值是否为空(NULL)值？
+		 * 注意是wasNull()而不是isNull()，所以一定要先调用get<Type>(long...)方法。
+		 * @return true标识最后返回列的值为NULL，false标识最后返回列值有效。
+		 * 对于可空的列，可以紧跟着调用wasNull()来判断是否为NULL。
 		 */
 		bool was_null() { return lastFieldGetWasNull; }
 		/**
-		 * �����������
-		 * @return ���ؽ�������ֶ�(��)����Ŀ��
+		 * 结果集的列数
+		 * @return 返回结果集中字段(列)的数目。
 		 */
 		long col_count() { return flds->Count; }
 	};
 }
 
 //================================================================
-// ����Ϊʵ�֡����������¿���;-)
+// 以下为实现。不必再往下看了;-)
 inline ADO_WRAPPER::Connection::Connection(const char *conn_str, const char *usr, const char *passwd)
 	: conn_ado("ADODB.Connection"), created_new_conn(false)
 {
@@ -461,8 +461,8 @@ inline void ADO_WRAPPER::Connection::CreateConnection(const char *c, const char 
 		_com_issue_error(hr);
 	else
 		created_new_conn = true;
-	//ʹ�ÿͻ����α�
-	//Ĭ������Ƿ��������α꣺adUseServer�����α겻֧��MovePrevious�Ȳ�����
+	//使用客户端游标
+	//默认情况是服务器端游标：adUseServer，该游标不支持MovePrevious等操作。
 //	hr = conn_ado->put_CursorLocation(ADODB::adUseClient);
 // 	if ( FAILED(hr) )
 // 		_com_issue_error(hr);
@@ -562,7 +562,7 @@ inline void ADO_WRAPPER::PreparedStatement::set_long(long index, long v) {
 	set_param_value(index, v, sizeof v);
 }
 inline void ADO_WRAPPER::PreparedStatement::set_bigInt(long index, __int64 v) {
-	// VC < 7����ֱ�Ӵ���__int64:(����DECIMAL
+	// VC < 7不能直接处理__int64:(借用DECIMAL
 #if _MSC_VER < 0x1300
 	DECIMAL dec;
 	dec.signscale = 0;
@@ -637,7 +637,7 @@ inline void ADO_WRAPPER::PreparedStatement::set_bytes(long index, const char *da
 //==================
 inline __int64 ADO_WRAPPER::ResultSet::get_bigInt(long index) {
 	const _variant_t &v = getVariant(index);
-	// VC < 7����ֱ�Ӵ���__int64:(����DECIMAL
+	// VC < 7不能直接处理__int64:(借用DECIMAL
 #if _MSC_VER < 1300
 	return v.operator DECIMAL().Lo64;
 #else
@@ -721,11 +721,11 @@ size_t ADO_WRAPPER::ResultSet::get_bytes(long index, unsigned char (&data)[data_
 
 #endif
 
-/*�������ò���(�����������ڱ��⡢���ġ���������������Ϣ��)�鱱�����ƻ���ռ似�����޹�˾���У����ҽ����������ƻ���ռ似�����޹�˾�����ض���;������������Ҫ���Ա��ܡ�
-*�κνӴ������ͻ���ʹ�ø����ϵ���Ա�����Ż��ߵ�λ�����뱣�ܺ�������ر��ܹ涨��δ����˾��������ϵ�˵��������ɲ���й¶���������κ�������;��
-*�κθ��ˡ����Ż��ߵ�λ���ܸ��ơ������������ϣ�Ҳ���ܽ��з����롢���򹤳̡��ֲ��޸Ļ������κ����ϻ��߲������ϡ�
-*�Ͻ�δ����Ȩʹ����Щ���ϻ��߲������ϡ� 
-*These materials including, but not limited to data��datum, document, reference, 
+/*声明：该材料(包括但不限于标题、正文、附件、附件内信息等)归北京国科环宇空间技术有限公司所有，并且仅供北京国科环宇空间技术有限公司用于特定用途。上述资料需要绝对保密。
+*任何接触、运送或者使用该资料的人员、部门或者单位都必须保密和遵守相关保密规定，未经公司、利害关系人的书面许可不得泄露或者用于任何其他用途。
+*任何个人、部门或者单位不能复制、重制上述资料，也不能进行反编译、反向工程、分拆、修改或衍生任何资料或者部分资料。
+*严禁未经授权使用这些资料或者部分资料。 
+*These materials including, but not limited to data，datum, document, reference, 
 *information are owned by Beijing UCAS Space Technology Co.,Ltd, 
 *and can only be used for special purpose by Beijing UCAS Space Technology Co.,Ltd. 
 *Those materials mentioned above are strictly confidential. 

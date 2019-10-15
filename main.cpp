@@ -1,4 +1,4 @@
-﻿#include <QApplication>
+#include <QApplication>
 #include <QMessageBox>
 #include <QDebug>
 #include <QTextCodec>
@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 
 	QApplication a(argc, argv);
 /*
+ *
     // build data
     auto com = new proCompany();
     com->name = QStringLiteral("公司");

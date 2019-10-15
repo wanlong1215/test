@@ -1,4 +1,4 @@
-﻿#ifndef DATABASEPROXY_H
+#ifndef DATABASEPROXY_H
 #define DATABASEPROXY_H
 
 #include <QDateTime>
@@ -15,32 +15,30 @@ public:
         parent = p;
     }
     int id;
-    QString name;//终端名称
-    QString type;//终端类型：高压A 低压B 变压C
-    int index;//终端索引
-    qint64 installTime;//终端安装时间
-    int addr;//终端地址编号
-    int preAddr;//相邻前一个终端编号
-    int nextAddr;//相邻后一个终端编号
-    int ConcentratorAddr;//集中器地址
-    qint64 TerminalCurrentTime;//终端当前信息
-    int RouteState1;//路由节点1
-    int RouteState2;//路由节点2
-    int RouteState3;//路由节点3
-    int RouteState4;//路由节点4
-    int RouteState5;//路由节点5
-    int RouteState6;//路由节点6
+    QString name;
+    QString type;
+    int index;
+    qint64 installTime;
+    int addr;
+    int preAddr;
+    int nextAddr;
+    int ConcentratorAddr;
+    qint64 TerminalCurrentTime;
+    int RouteState1;
+    int RouteState2;
+    int RouteState3;
+    int RouteState4;
+    int RouteState5;
+    int RouteState6;
 
-	//变比参数
-    int highPressureValue;//高压值
-    float highPressureOffset;//高压浮动值
-    int highPressureSymbol;//0:+ 1:- 高压浮动符号
-    int lowPressureValue;//低压值
+    int highPressureValue;
+    float highPressureOffset;
+    int highPressureSymbol;
+    int lowPressureValue;
 
     proMonitor *parent;
 };
 
-// 监测点内包含3个终端
 class proLine;
 class proMonitor
 {
@@ -80,16 +78,12 @@ public:
     }
     int id;
     QString name;
-    int type; // TODO: 高压 低压 变压
+    int type;
     int workerID;
 
 	QString addr;
-    QString preAddr;//相邻前一个终端编号
-    QString nextAddr;//相邻后一个终端编号
-
-    //int iValueA;
-    //int iValueB;
-    //int iValueC;
+    QString preAddr;
+    QString nextAddr;
 
     proConcentrator *parent;
     QList<proMonitor *> lst;
@@ -111,24 +105,24 @@ public:
     QList<proLine *> getSortLine();
 
     int id;
-    QString name;//集中器名称
-    QString destIp;//目标域
-    QString destPort;//目标端口
-    QString type;//连接类型
-    QString installAddr;//安装地点
-    QString apName;//接入点名称
-    QString apProtocol;//接入点协议
-    int terminalTimer;//终端读取间隔
-    int concentratorTimer;//集中器读取间隔
-    int heartTimer;//心跳间隔
-    QString strSimCard;//sim卡号
-    int gprsReConnectTimer;//Gprs掉线重拨间隔-分
-    int gprsSignalStrength;//GPRS信号强度
-    int saveTimer;//存储间隔
-    int wirelessSearchTimer;//无线模组轮寻间隔
-    int concentratorAddr;//集中器地址
-    qint64 ConcentratorCurrentTime;//集中器当前时间
-	int SelfReportOnOff;//自检开关
+    QString name;
+    QString destIp;
+    QString destPort;
+    QString type;
+    QString installAddr;
+    QString apName;
+    QString apProtocol;
+    int terminalTimer;
+    int concentratorTimer;
+    int heartTimer;
+    QString strSimCard;
+    int gprsReConnectTimer;
+    int gprsSignalStrength;
+    int saveTimer;
+    int wirelessSearchTimer;
+    int concentratorAddr;
+    qint64 ConcentratorCurrentTime;
+    int SelfReportOnOff;
 
     proRoute *parent;
     QList<proLine *> lst;
@@ -215,14 +209,14 @@ struct proData
     int DataID;
     int TerminalAddr;
     int ConcentratorAddr;
-    qint64 CollectTime; // 采集时间
-    int relaycnt;//中继次数
-    int relayPosition;//中继位置
-    int GetherUnitAddr;//采集单位地址
-    float vValue;//采集电压值
-    float vAngValue;//采集电压角度
-    float iValue;//采集电流值
-    float iAngValue;//采集电流角度
+    qint64 CollectTime;
+    int relaycnt;
+    int relayPosition;
+    int GetherUnitAddr;
+    float vValue;
+    float vAngValue;
+    float iValue;
+    float iAngValue;
     int intRev1;
     int intRev2;
     int intRev3;
@@ -284,6 +278,13 @@ struct proWorker
 	QString remarks;
 };
 
+struct proCommand 
+{
+	int UserID;
+	QString CommandType;
+	QString CommandInfo;
+};
+
 
 class DatabaseProxy
 {
@@ -291,13 +292,13 @@ public:
 	DatabaseProxy();
     static DatabaseProxy &instance();
 
-    bool connectDB(const QString &ip, const QString &usr, const QString &pwd); // 连接DB
-    bool isDBConnected(); // 当前DB状态是否连接
+    bool connectDB(const QString &ip, const QString &usr, const QString &pwd);
+    bool isDBConnected();
 
-    bool testDB(const QString &ip, const QString &usr, const QString &pwd); // 测试数据库连接
+    bool testDB(const QString &ip, const QString &usr, const QString &pwd);
 
-    int userId(const QString &usr, const QString &pwd); // 根据用户名和密码返回对应的id值
-    int userLevel(int id); // 根据用户ID获取用户级别，错误返回-1
+    int userId(const QString &usr, const QString &pwd);
+    int userLevel(int id);
     int addUser(const QString &usr, const QString &pwd, int level); // 添加用户，返回ID，错误返回-1
     bool modifyUser(int id, const QString &usr, const QString &pwd, int level); // 修改用户信息，错误返回false
     bool delUser(int id); // 删除用户
@@ -324,6 +325,7 @@ public:
     bool addTerminal(proTerminal *o, int parentid);
 	bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
 	bool addWarning(proWarning *o);//添加报警信息
+	bool addCommand(proCommand *o);//添加指令
 
     bool modifyCompany(proCompany *o);
     bool modifySubCompany(proSubCompany *o);
@@ -366,12 +368,16 @@ public:
 	bool historyWarningAll(QList<proWarning> &pDatalist);//获得所有的报警信息，包含已报的和未报的
 	bool historyWarningPoped(QList<proWarning> &pDatalist);//获得已经报过警的信息
 
+	bool realTimeDataByAddr(showData &pShowData, int ConcentratorAddr);//获得实时数据 注意这里传入的是集中器地址
+
     int createId();
 
-private:
+    string ToString(const QString& qstr);
+    QString ToQString(const string& cstr);
 
-	CDATAOperate m_db2;//操作DB2的对象
-	bool m_connectState;//当前数据库的连接状态
+private:
+    CDATAOperate m_db2;
+    bool m_connectState;
 
     QList<proCompany *> _lst;
     QList<int> _ids;//应该没有用了
