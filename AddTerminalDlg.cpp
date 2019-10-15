@@ -61,9 +61,7 @@ void AddTerminalDlg::on_btnOK_clicked()
     _monitor = new proMonitor(line);
 
     _monitor->name = ui->leMonitorName->text();
-    _monitor->addr = ui->leMonitorAddr->text();
-    _monitor->preAddr = ui->lePreMonitorAddr->text();
-    _monitor->nextAddr = ui->leNextMonitorAddr->text();
+    _monitor->addr = ui->leMonitorAddr->text().toInt();
 
     DatabaseProxy::instance().addMonitor(_monitor, _parentId);
 

@@ -144,7 +144,7 @@ struct WARNING
 	string WarningInfo;
 	INT64 SendTime;
 	int SendState;
-
+	int Popuped;
 };
 
 struct USR 
@@ -153,6 +153,15 @@ struct USR
 	string usrName;
 	string usrPassWord;
 	int usrLever;
+};
+
+struct WORKER
+{
+	int id;
+	int amsoId;
+	string name;
+	string phone;
+	string remarks;
 };
 
 
@@ -174,6 +183,7 @@ public:
 	int InsertData(DATA p);
 	int InsertWarning(WARNING p);
 	int InsertUser(string usr, string code, int level);
+	int InsertWorker(WORKER p);
 	///各个表的删除操作，成功返回TURE，失败返回FALSE
 	BOOL DelCompany(int companyID);
 	BOOL DelSubCompany(int subCompanyID);
@@ -185,6 +195,7 @@ public:
 	BOOL DelTerminal(int TerminalID);
 	BOOL DelData(int TerminalAddr);
 	BOOL DelUser(int userID);
+	BOOL DelWorker(int WorkerID);
 	///修改各个表的值，成功返回1，失败返回0
 	int ModifyCompany(COMPANY p, int CompanyID);
 	int ModifySubCompany(SUBCOMPANY p, int SubCompanyID);
@@ -196,6 +207,8 @@ public:
 	int ModifyMonitor(MONITOR p, int MonitorID);
 	int ModifyTerminal(TERMINAL p, int TerminalID);
 	int ModifyUser(int id, string usr, string code, int level);
+	int ModifyWorker(WORKER p, int WorkerID);
+	int ModifyWarningPop(int id);
 	//int ModifyData(int TerminalID, string strValue);
 	///查询各个表的值，成功返回1，失败返回0
 	int GetCompany(COMPANY &p, int CompanyID);
@@ -206,6 +219,7 @@ public:
 	int GetLine(LINE &p, int LineID);
 	int GetMonitor(MONITOR &p, int MonitorID);
 	int GetTerminal(TERMINAL &p, int TerminalID);
+	int GetWorker(WORKER &p, int WorkerID);
 	///返回各个表的所有项，成功返回1，失败返回0
 	int GetAllCompanyID(vector<COMPANY> &v);
 	int GetAllSubCompanyID(vector<SUBCOMPANY> &v);
@@ -214,9 +228,11 @@ public:
 	int GetAllConcentratorID(vector<CONCENTRATOR> &v);
 	int GetAllLineID(vector<LINE> &v);
 	int GetAllTerminalID(vector<TERMINAL> &v);
+	int GetAllWorker(vector<WORKER> &v);
 	///龙哥接口
 	int GetAllSubCompanyByID(vector<SUBCOMPANY> &v, int CompanyID);//通过公司ID获得所有子公司ID
 	int GetAllAMSOByID(vector<AMSO> &v, int subCompanyID);//通过子公司ID获得子公司所有的供电所
+	int GetAllAMSO(vector<AMSO> &v);//获得所有的供电所
 	int GetAllRouteByID(vector<ROUTE> &v, int amsoID);//通过供电所ID获得所有属于供电所的线路
 	int GetAllConcentratorByID(vector<CONCENTRATOR> &v, int routeID);//通过线路ID获得所有该线路上的集中器
 	int GetAllLineByID(vector<LINE> &v, int concentratorID);//通过集中器ID获得集中器上的所有线段
@@ -233,6 +249,10 @@ public:
 	int GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT64 time);
 	//获得所有的报警信息
 	int GetWarning(vector<WARNING> &v);
+	//获得所有的还没报过警的报警信息
+	int GetWarningNopop(vector<WARNING> &v);
+	//获得所有的已经报过警的报警信息
+	int GetWarningPoped(vector<WARNING> &v);
 	//通过用户名和密码获得当前用户在数据库中的ID
 	int GetUserID(string usr, string code);
 	//通过用户ID获取用户级别

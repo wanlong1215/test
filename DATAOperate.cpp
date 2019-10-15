@@ -363,7 +363,7 @@ int CDATAOperate::InsertWarning(WARNING p)
 
 
 		PreparedStatement st(m_conn);
-        const char *sql = "select WarningID from final table (insert into BR_WARNING(WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) )";
+        const char *sql = "select WarningID from final table (insert into BR_WARNING(WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState,Popuped) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) )";
 		st.prepare(sql);
 		st.set_bigInt(0, p.WarningTime);
 		st.set_long( 1, p.WarningLine );
@@ -376,6 +376,7 @@ int CDATAOperate::InsertWarning(WARNING p)
 		st.set_string( 8, p.WarningInfo );
 		st.set_bigInt( 9, p.SendTime );
 		st.set_long( 10, p.SendState );
+		st.set_long(11, p.Popuped);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if( rs.db_eof() )
 		{
@@ -406,6 +407,36 @@ int CDATAOperate::InsertUser(string usr, string code, int level)
 		st.set_string(0, usr);
 		st.set_string( 1, code);
 		st.set_long(2, level);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if( rs.db_eof() )
+		{
+			rs.close();
+			return 0;
+		}
+		int newID;
+		newID = rs.get_long( 0 );
+		rs.close();
+		return newID;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::InsertWorker(WORKER p)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select WorkerID from final table (insert into BR_WORKER(WorkerName,AmsoID,WorkerPosition,WorkerTEL) values (?, ?, ?, ?) )";
+		st.prepare(sql);
+		st.set_string(0, p.name);
+		st.set_long( 1, p.amsoId);
+		st.set_string(2, p.remarks);
+		st.set_string(3, p.phone);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if( rs.db_eof() )
 		{
@@ -588,6 +619,24 @@ BOOL CDATAOperate::DelUser(int userID)
 		const char *sql = "delete from BR_USER where UserID = ?";
 		st.prepare(sql);
 		st.set_long( 0, userID );
+		st.execute();
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CDATAOperate::DelWorker(int WorkerID)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "delete from BR_WORKER where WorkerID = ?";
+		st.prepare(sql);
+		st.set_long( 0, WorkerID );
 		st.execute();
 	}
 	catch (_com_error& e)
@@ -829,6 +878,49 @@ int CDATAOperate::ModifyUser(int id, string usr, string code, int level)
 		st.set_string( 1, code );
 		st.set_long( 2, level );
 		st.set_long( 3, id );
+		st.execute();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::ModifyWorker(WORKER p, int WorkerID)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "update BR_WORKER set WorkerName=?,AmsoID=?,WorkerPosition=?,WorkerTEL=? where WorkerID=?";
+		st.prepare(sql);
+		st.set_string( 0, p.name );
+		st.set_long( 1, p.amsoId );
+		st.set_string( 2, p.remarks );
+		st.set_string( 3, p.phone );
+		st.set_long( 4, WorkerID );
+		st.execute();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+int CDATAOperate::ModifyWarningPop(int id)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "update BR_WARNING set Popuped=? where WarningID=?";
+		st.prepare(sql);
+		st.set_long( 0, 1 );
+		st.set_long( 1, id );
 		st.execute();
 		return 1;
 	}
@@ -1100,6 +1192,35 @@ int CDATAOperate::GetTerminal(TERMINAL &p, int TerminalID)
 	return 0;
 }
 
+int CDATAOperate::GetWorker(WORKER &p, int WorkerID)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select WorkerName,AmsoID,WorkerPosition,WorkerTEL from BR_WORKER where WorkerID = ?";
+		st.prepare(sql);
+		st.set_long( 0, WorkerID );
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if( rs.db_eof() )
+		{
+			rs.close();
+			return 0;
+		}
+		p.name = rs.get_string(0);
+		p.amsoId = rs.get_long(1);
+		p.remarks = rs.get_string(2);
+		p.phone = rs.get_string(3);
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
 int CDATAOperate::GetAllCompanyID(vector<COMPANY> &v)
 {
 	try
@@ -1340,6 +1461,37 @@ int CDATAOperate::GetAllTerminalID(vector<TERMINAL> &v)
 	return 0;
 }
 
+int CDATAOperate::GetAllWorker(vector<WORKER> &v)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select WorkerID,WorkerName,AmsoID,WorkerPosition,WorkerTEL from BR_WORKER";
+		st.prepare(sql);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		v.clear();
+		while( !rs.db_eof() )
+		{
+			WORKER p;
+			p.id = rs.get_long(0);
+			p.name = rs.get_string(1);
+			p.amsoId = rs.get_long(2);
+			p.remarks = rs.get_string(3);
+			p.phone = rs.get_string(4);
+			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
 int CDATAOperate::GetDatabyConcentratorAddr(vector<DATA> &v, int ConAddr)
 {
 	try
@@ -1510,6 +1662,37 @@ int CDATAOperate::GetAllSubCompanyByID(vector<SUBCOMPANY> &v, int CompanyID)
 			SUBCOMPANY p;
 			p.subCompanyID = rs.get_long(0);
 			p.companyID = rs.get_long(1);
+			p.strName = rs.get_string(2);
+			p.strDescribe = rs.get_string(3);
+			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+//获得所有的供电所
+int CDATAOperate::GetAllAMSO(vector<AMSO> &v)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select AmsoID,SubCompanyID,AmsoNAME,SVersion from BR_AMSO";
+		st.prepare(sql);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		v.clear();
+		while( !rs.db_eof() )
+		{
+			AMSO p;
+			p.AMSOID = rs.get_long(0);
+			p.subCompanyID = rs.get_long(1);
 			p.strName = rs.get_string(2);
 			p.strDescribe = rs.get_string(3);
 			v.push_back(p);
@@ -1765,6 +1948,83 @@ int CDATAOperate::GetAllUsers(vector<USR> &v)
 			p.usrName = rs.get_string(1);
 			p.usrPassWord = rs.get_string(2);
 			p.usrLever = rs.get_long(3);
+			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+//获得所有的还没报过警的报警信息
+int CDATAOperate::GetWarningNopop(vector<WARNING> &v)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState from BR_WARNING where Popuped = ?";
+		st.prepare(sql);
+		st.set_long(0, 0);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		v.clear();
+		while( !rs.db_eof() )
+		{
+			WARNING p;
+			p.WarningTime = rs.get_bigInt(0);
+			p.WarningLine = rs.get_long(1);
+			p.MonitorAddr1 = rs.get_long(2);
+			p.MonitorAddr2 = rs.get_long(3);
+			p.Type = rs.get_long(4);
+			p.iValue1 = rs.get_float(5);
+			p.iValue2 = rs.get_float(6);
+			p.WorkerName = rs.get_string(7);
+			p.WarningInfo = rs.get_string(8);
+			p.SendTime = rs.get_bigInt(9);
+			p.SendState = rs.get_long(10);
+			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+//获得所有的已经报过警的报警信息
+int CDATAOperate::GetWarningPoped(vector<WARNING> &v)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select WarningTime,WarningLine,MonitorAddr1,MonitorAddr2,Type,iValue1,iValue2,WorkerName,WarningInfo,SendTime,SendState from BR_WARNING where Popuped = ?";
+		st.prepare(sql);
+		st.set_long(0, 1);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		v.clear();
+		while( !rs.db_eof() )
+		{
+			WARNING p;
+			p.WarningTime = rs.get_bigInt(0);
+			p.WarningLine = rs.get_long(1);
+			p.MonitorAddr1 = rs.get_long(2);
+			p.MonitorAddr2 = rs.get_long(3);
+			p.Type = rs.get_long(4);
+			p.iValue1 = rs.get_float(5);
+			p.iValue2 = rs.get_float(6);
+			p.WorkerName = rs.get_string(7);
+			p.WarningInfo = rs.get_string(8);
+			p.SendTime = rs.get_bigInt(9);
+			p.SendState = rs.get_long(10);
 			v.push_back(p);
 			rs.move_next();
 		}

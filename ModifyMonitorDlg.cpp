@@ -11,9 +11,7 @@ ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
     if (nullptr != _o)
     {
         ui->leMonitorName->setText(_o->name);
-        ui->leMonitorAddr->setText(_o->addr);
-        ui->lePreMonitorAddr->setText(_o->preAddr);
-        ui->leNextMonitorAddr->setText(_o->nextAddr);
+        ui->leMonitorAddr->setText(QString::number(_o->addr));
     }
 }
 
@@ -27,9 +25,7 @@ void ModifyMonitorDlg::on_btnOK_clicked()
     if (nullptr != _o)
     {
         _o->name = ui->leMonitorName->text();
-        _o->addr = ui->leMonitorAddr->text();
-        _o->preAddr =  ui->lePreMonitorAddr->text();
-        _o->nextAddr = ui->leNextMonitorAddr->text();
+        _o->addr = ui->leMonitorAddr->text().toInt();
 
         if (DatabaseProxy::instance().modifyMonitor(_o))
         {

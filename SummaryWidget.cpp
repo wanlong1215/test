@@ -172,6 +172,7 @@ void SummaryWidget::onHistoryQuery()
     {
         ui->tawHistoryDetail->setColumnWidth(i, 150);
     }
+
     if (NULL == _currentConcentrator)
     {
         return;
@@ -179,7 +180,7 @@ void SummaryWidget::onHistoryQuery()
 
     QList<showData> lst;
     if (ui->rbAutoQuery->isChecked()) {
-        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->id);
+        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr);
     } else if (ui->rbQuickQuery->isChecked()) {
         int beginTime = 0;
         int endTime = QDateTime::currentDateTime().toSecsSinceEpoch();
@@ -210,12 +211,12 @@ void SummaryWidget::onHistoryQuery()
             break;
         }
 
-        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->id, beginTime, endTime);
+        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     } else if (ui->rbAbsoluteQuery->isChecked()) {
         int beginTime = ui->dteBegin->dateTime().toSecsSinceEpoch();
         int endTime = ui->dteEnd->dateTime().toSecsSinceEpoch();
 
-        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->id, beginTime, endTime);
+        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     }
 
     ui->tawHistoryDetail->setRowCount(lst.count());

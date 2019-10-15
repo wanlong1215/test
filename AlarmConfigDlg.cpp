@@ -39,7 +39,7 @@ void AlarmConfigDlg::init()
 
     // 添加数据
     QList<proWarning> datas;
-    if (!DatabaseProxy::instance().historyWarning(datas))
+    if (!DatabaseProxy::instance().historyWarningAll(datas))
     {
         return;
     }

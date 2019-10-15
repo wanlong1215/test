@@ -11,7 +11,7 @@ AddWorkerDlg::AddWorkerDlg(QWidget *parent):
     _u = nullptr;
     auto amsos = DatabaseProxy::instance().amsos();
     foreach (auto o, amsos) {
-        _map.insert(o->id, o->name);
+        _map.insert(o.id, o.name);
     }
 
     ui->cbAsmo->addItems(_map.values());
@@ -26,7 +26,7 @@ AddWorkerDlg::AddWorkerDlg(proWorker *u, QWidget *parent) :
     _u = u;
     auto amsos = DatabaseProxy::instance().amsos();
     foreach (auto o, amsos) {
-        _map.insert(o->id, o->name);
+        _map.insert(o.id, o.name);
     }
 
     ui->cbAsmo->addItems(_map.values());

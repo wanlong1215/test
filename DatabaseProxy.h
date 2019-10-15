@@ -16,7 +16,7 @@ public:
     }
     int id;
     QString name;//终端名称
-    QString type;//终端类型：A高压 B低压 C变压
+    QString type;//终端类型：高压A 低压B 变压C
     int index;//终端索引
     qint64 installTime;//终端安装时间
     int addr;//终端地址编号
@@ -60,9 +60,7 @@ public:
 
     int id;
     QString name;
-    QString addr;
-    QString preAddr;
-    QString nextAddr;
+	int addr;
     QList<proTerminal *> lst;
 
     proLine *parent;
@@ -251,7 +249,7 @@ struct proWarning
 	QString WarningInfo;
 	INT64 SendTime;
 	int SendState;
-    int isPopup; // 客户端是否弹窗，默认0，弹出后客户端修改成1
+	int Popuped;
 };
 
 
@@ -279,12 +277,13 @@ struct proUser
 
 struct proWorker
 {
-    int id;
-    int amsoId;
-    QString name;
-    QString phone;
-    QString remarks;
+	int id;
+	int amsoId;
+	QString name;
+	QString phone;
+	QString remarks;
 };
+
 
 class DatabaseProxy
 {
@@ -304,12 +303,13 @@ public:
     bool delUser(int id); // 删除用户
 
     QList<proUser> users();
+	QList<proAmso> amsos();
 
-    QList<proWorker> workers();
-    bool worker(int id, proWorker &worker);
-    int addWorker(proWorker *u);
-    bool delWorker(int id);
-    bool modifyWorker(proWorker *u); // 以ID为准修改其他信息
+	QList<proWorker> workers();
+	bool worker(int id, proWorker &worker);
+	int addWorker(proWorker *u);
+	bool delWorker(int id);
+	bool modifyWorker(proWorker *u); // 以ID为准修改其他信息
 
     QList<proCompany *> getOrganizations();//获得所有的组织架构，在获得之前需要清楚组织架构，另外，获得组织架构之前应该先连接数据库，不应该在这个函数里，你看看在哪里合适吧
 	void clearOrganizations();//清除组织架构，但是没有清数据库。
@@ -322,8 +322,8 @@ public:
     bool addLine(proLine *o, int parentid);
     bool addMonitor(proMonitor *o, int parentid);
     bool addTerminal(proTerminal *o, int parentid);
-    bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
-    bool addWarning(proWarning *o);     //添加报警信息，这里客户端不调用，统一从服务端插入
+	bool addData(proData *o);//添加一条终端的数据，这里的时间需要注意一下，小帅那边应该都把秒去掉了
+	bool addWarning(proWarning *o);//添加报警信息
 
     bool modifyCompany(proCompany *o);
     bool modifySubCompany(proSubCompany *o);
@@ -333,7 +333,7 @@ public:
     bool modifyLine(proLine *o);
     bool modifyMonitor(proMonitor *o);
     bool modifyTerminal(proTerminal *o);
-    bool modifyWarningPopuped(int id);  // 客户端只修改报警数据中的字段isPopup=1
+	bool modifyWarningPopuped(int id);  // 客户端只修改报警数据中的字段isPopup=1
 
     bool delCompany(int id);
     bool delSubCompany(int id);
@@ -344,7 +344,7 @@ public:
 	bool delMonitor(int id);
     bool delTerminal(int id);
 
-	void GetShowDataInfoByConcentratorID(showData &sData, int ConcentratorId);//这个函数是通过组织架构寻找需要显示的信息中的各个名称
+	void GetShowDataInfoByConcentratorAddr(showData &sData, int ConcentratorAddr);//这个函数是通过组织架构寻找需要显示的信息中的各个名称
 
     proCompany *company(int id);
     proSubCompany *subCompany(int id);
@@ -354,16 +354,17 @@ public:
     proLine *line(int id);
     proMonitor *monitor(int id);
     proTerminal *terminal(int id);
-
-    QList<proAmso *> amsos();
+	proConcentrator *concentratorAddr(int addr);
 
     proConcentrator *firstConcentrator();
 
     QList<proData> historyData(int ConcentratorId, QDateTime begin, QDateTime end);//我没用
 
-	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorId);//获得所有的历史数据
-	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorId, INT64 begin, INT64 end);//通过时间查询历史数据，这里注意传入的时间是转换后的64位int
-    bool historyWarning(QList<proWarning> &pDatalist, bool containsPopup = true);//获得历史报警信息
+	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr);//获得所有的历史数据 注意这里传入的是集中器地址
+	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr, INT64 begin, INT64 end);//通过时间查询历史数据，这里注意传入的时间是转换后的64位int
+	bool historyWarningNopop(QList<proWarning> &pDatalist);//获得没有报警信息
+	bool historyWarningAll(QList<proWarning> &pDatalist);//获得所有的报警信息，包含已报的和未报的
+	bool historyWarningPoped(QList<proWarning> &pDatalist);//获得已经报过警的信息
 
     int createId();
 

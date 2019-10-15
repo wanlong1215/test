@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
-    <height>127</height>
+    <width>307</width>
+    <height>89</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout_5">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="leMonitorName"/>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
@@ -23,8 +26,8 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="leMonitorName"/>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="leMonitorAddr"/>
      </item>
      <item row="0" column="2">
       <widget class="QLabel" name="label_6">
@@ -32,29 +35,6 @@
         <string>检测点地址</string>
        </property>
       </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="leMonitorAddr"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>上一个地址</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lePreMonitorAddr"/>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>下一个地址</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="leNextMonitorAddr"/>
      </item>
     </layout>
    </item>

@@ -60,6 +60,23 @@ bool DatabaseProxy::delUser(int id)
     return true;
 }
 
+QList<proAmso> DatabaseProxy::amsos()
+{
+	QList<proAmso> ams;
+	vector<AMSO> vAmso;
+	m_db2.GetAllAMSO(vAmso);
+	for (int i = 0; i < vAmso.size(); i++)
+	{
+		proAmso pAmso(NULL);
+		pAmso.id = vAmso[i].AMSOID;
+		pAmso.name = QString::fromStdString(vAmso[i].strName);
+		pAmso.desc = QString::fromStdString(vAmso[i].strDescribe);
+		ams<<pAmso;
+	}
+
+	return ams;
+}
+
 QList<proUser> DatabaseProxy::users()
 {
     // 胖子
@@ -81,28 +98,67 @@ QList<proUser> DatabaseProxy::users()
 
 QList<proWorker> DatabaseProxy::workers()
 {
-    QList<proWorker> lst;
-    return lst;
+	QList<proWorker> lst;
+	vector<WORKER> vWorker;
+	m_db2.GetAllWorker(vWorker);
+	for (int i = 0; i < vWorker.size(); i++)
+	{
+		proWorker pWorker;
+		pWorker.id = vWorker[i].id;
+		pWorker.amsoId = vWorker[i].amsoId;
+		pWorker.name = QString::fromStdString(vWorker[i].name);
+		pWorker.remarks = QString::fromStdString(vWorker[i].remarks);
+		pWorker.phone = QString::fromStdString(vWorker[i].phone);
+		lst<<pWorker;
+	}
+	
+	return lst;
 }
 
 bool DatabaseProxy::worker(int id, proWorker &worker)
 {
-    return true;
+	WORKER pWorker;
+	m_db2.GetWorker(pWorker, id);
+	worker.id = id;
+	worker.name = QString::fromStdString(pWorker.name);
+	worker.amsoId = pWorker.amsoId;
+	worker.remarks = QString::fromStdString(pWorker.remarks);
+	worker.phone = QString::fromStdString(pWorker.phone);
+	return true;
 }
 
 int DatabaseProxy::addWorker(proWorker *u)
 {
-    return 1;
+	WORKER worker;
+	worker.amsoId = u->amsoId;
+	worker.name = u->name.toStdString();
+	worker.remarks = u->remarks.toStdString();
+	worker.phone = u->phone.toStdString();
+	m_db2.InsertWorker(worker);
+	return 1;
 }
 
 bool DatabaseProxy::delWorker(int id)
 {
-    return true;
+	m_db2.DelWorker(id);
+	return true;
 }
 
 bool DatabaseProxy::modifyWorker(proWorker *u)
 {
-    return true;
+	WORKER worker;
+	worker.amsoId = u->amsoId;
+	worker.name = u->name.toStdString();
+	worker.remarks = u->remarks.toStdString();
+	worker.phone = u->phone.toStdString();
+	m_db2.ModifyWorker(worker, u->id);
+	return true;
+}
+
+bool DatabaseProxy::modifyWarningPopuped(int id)  // 客户端只修改报警数据中的字段isPopup=1
+{
+	m_db2.ModifyWarningPop(id);
+	return true;
 }
 
 void DatabaseProxy::clearOrganizations()
@@ -377,7 +433,7 @@ bool DatabaseProxy::addMonitor(proMonitor *o, int parentid)
 	MONITOR monitor;
 	monitor.lineID = parentid;
 	monitor.strName = o->name.toStdString();
-    monitor.MonitorAddr = o->addr.toInt();
+	monitor.MonitorAddr = o->addr;
 	o->id = m_db2.InsertMonitor(monitor,parentid);
 
     proLine *po = line(parentid);
@@ -394,8 +450,8 @@ bool DatabaseProxy::addTerminal(proTerminal *o, int parentid)
 {
 	TERMINAL terminal;
 	terminal.MonitorID = parentid;
-    terminal.strName = o->name.toStdString();
-    terminal.strType = o->type.toStdString();
+	terminal.strName = o->name.toStdString();
+	terminal.strType = o->type.toStdString();
 	terminal.index = o->index;
 	terminal.installTime = o->installTime;
 	terminal.addr = o->addr;
@@ -462,6 +518,7 @@ bool DatabaseProxy::addWarning(proWarning *o)
 	w.WarningInfo = o->WarningInfo.toStdString();
 	w.SendTime = o->SendTime;
 	w.SendState = o->SendState;
+	w.Popuped = o->Popuped;
 	m_db2.InsertWarning(w);
     return true;
 }
@@ -559,6 +616,7 @@ bool DatabaseProxy::modifyMonitor(proMonitor *o)
 	monitor.MonitorID = o->id;
 	monitor.lineID = o->parent->id;
 	monitor.strName = o->name.toStdString();
+	monitor.MonitorAddr = o->addr;
 	o->id = m_db2.ModifyMonitor(monitor,monitor.MonitorID);
     return true;
 }
@@ -568,8 +626,8 @@ bool DatabaseProxy::modifyTerminal(proTerminal *o)
 	TERMINAL terminal;
 	terminal.TerminalID = o->id;
 	terminal.MonitorID = o->parent->id;
-    terminal.strName = o->name.toStdString();
-    terminal.strType = o->type.toStdString();
+	terminal.strName = o->name.toStdString();
+	terminal.strType = o->type.toStdString();
 	terminal.index = o->index;
 	terminal.installTime = o->installTime;
 	terminal.addr = o->addr;
@@ -1424,6 +1482,35 @@ proRoute *DatabaseProxy::route(int id)
     return NULL;
 }
 
+proConcentrator *DatabaseProxy::concentratorAddr(int addr)
+{
+	for (int i = 0; i < _lst.size(); i++)
+	{
+		proCompany *pCompany = _lst.at(i);
+		for (int i = 0; i < pCompany->lst.size(); i++)
+		{
+			proSubCompany *pSubCompany = pCompany->lst.at(i);
+			for (int i = 0; i < pSubCompany->lst.size(); i++)
+			{
+				proAmso *pAmso = pSubCompany->lst.at(i);
+				for (int i = 0; i < pAmso->lst.size(); i++)
+				{
+					proRoute *pRoute = pAmso->lst.at(i);
+					for (int i = 0; i < pRoute->lst.size(); i++)
+					{
+						proConcentrator *pConcentrator = pRoute->lst.at(i);
+						if (pConcentrator->concentratorAddr == addr)
+						{
+							return pConcentrator;
+						}
+					}
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
 proConcentrator *DatabaseProxy::concentrator(int id)
 {
 	for (int i = 0; i < _lst.size(); i++)
@@ -1432,7 +1519,7 @@ proConcentrator *DatabaseProxy::concentrator(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
+			for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				for (int i = 0; i < pAmso->lst.size(); i++)
@@ -1636,20 +1723,6 @@ proTerminal *DatabaseProxy::terminal(int id)
     return NULL;
 }
 
-QList<proAmso *> DatabaseProxy::amsos()
-{
-    QList<proAmso *> lst;
-    foreach(proCompany * o1, _lst) {
-        foreach(proSubCompany * o2, o1->lst) {
-            foreach(proAmso * o3, o2->lst) {
-                lst.append(o3);
-            }
-        }
-    }
-
-    return lst;
-}
-
 proConcentrator *DatabaseProxy::firstConcentrator()
 {
     foreach(proCompany * o1, _lst) {
@@ -1685,7 +1758,7 @@ QList<proData> DatabaseProxy::historyData(int ConcentratorId, QDateTime begin, Q
 }
 
 
-void DatabaseProxy::GetShowDataInfoByConcentratorID(showData &sData, int ConcentratorId)
+void DatabaseProxy::GetShowDataInfoByConcentratorAddr(showData &sData, int ConcentratorAddr)
 {
 	for (int i = 0; i < _lst.size(); i++)
 	{
@@ -1695,7 +1768,7 @@ void DatabaseProxy::GetShowDataInfoByConcentratorID(showData &sData, int Concent
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
 			sData.subCompany = pSubCompany->name;
-			for (int i = 0; pSubCompany->lst.size(); i++)
+			for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				sData.amso = pAmso->name;
@@ -1707,7 +1780,7 @@ void DatabaseProxy::GetShowDataInfoByConcentratorID(showData &sData, int Concent
 					{
 						proConcentrator *pConcentrator = pRoute->lst.at(i);
 						sData.concentrator = pConcentrator->name;
-						if (pConcentrator->id == ConcentratorId)
+						if (pConcentrator->concentratorAddr == ConcentratorAddr)
 						{
 							return;
 						}
@@ -1720,11 +1793,15 @@ void DatabaseProxy::GetShowDataInfoByConcentratorID(showData &sData, int Concent
 
 bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr)
 {
-	vector<DATA> vdata;
-	m_db2.GetDatabyConcentratorAddr(vdata, ConcentratorAddr);
+	//vector<DATA> vdata;
+	//m_db2.GetDatabyConcentratorAddr(vdata, ConcentratorAddr);
 	showData sData;
-	GetShowDataInfoByConcentratorID(sData, ConcentratorAddr);
-	proConcentrator *pConcentrator =  concentrator(ConcentratorAddr);
+	GetShowDataInfoByConcentratorAddr(sData, ConcentratorAddr);
+	proConcentrator *pConcentrator =  concentratorAddr(ConcentratorAddr);
+	if (pConcentrator ==  NULL)
+	{
+		return false;
+	}
 	for (int i = 0; i < pConcentrator->lst.size(); i++)
 	{
 		proLine *pLine = pConcentrator->lst.at(i);
@@ -1786,11 +1863,16 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 
 bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr, INT64 begin, INT64 end)
 {
-	vector<DATA> vdata;
-	m_db2.GetDatabyConcentratorAddr(vdata, ConcentratorAddr);
+	//vector<DATA> vdata;
+	//m_db2.GetDatabyConcentratorAddr(vdata, ConcentratorAddr);
 	showData sData;
-	GetShowDataInfoByConcentratorID(sData, ConcentratorAddr);
-	proConcentrator *pConcentrator =  concentrator(ConcentratorAddr);
+	GetShowDataInfoByConcentratorAddr(sData, ConcentratorAddr);
+	proConcentrator *pConcentrator =  concentratorAddr(ConcentratorAddr);
+	if (pConcentrator ==  NULL)
+	{
+		return false;
+	}
+	
 	for (int i = 0; i < pConcentrator->lst.size(); i++)
 	{
 		proLine *pLine = pConcentrator->lst.at(i);
@@ -1849,10 +1931,57 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 	return true;
 }
 
-bool DatabaseProxy::historyWarning(QList<proWarning> &pDatalist, bool containsPopup)
+//获得所有的报警信息，包含已报的和未报的
+bool DatabaseProxy::historyWarningAll(QList<proWarning> &pDatalist)
 {
 	vector<WARNING> vdata;
 	m_db2.GetWarning(vdata);
+	for (int i = 0; i < vdata.size(); i++)
+	{
+		proWarning pWarning;
+		pWarning.WarningTime = vdata[i].WarningTime;
+		pWarning.WarningLine = vdata[i].WarningLine;
+		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
+		pWarning.MonitorAddr2 = vdata[i].MonitorAddr2;
+		pWarning.Type = vdata[i].Type;
+		pWarning.iValue1 = vdata[i].iValue1;
+		pWarning.iValue2 = vdata[i].iValue2;
+		pWarning.WorkerName = QString::fromStdString(vdata[i].WorkerName);
+		pWarning.WarningInfo = QString::fromStdString(vdata[i].WarningInfo);
+		pWarning.SendTime = vdata[i].SendTime;
+		pWarning.SendState = vdata[i].SendState;
+		pDatalist<<pWarning;
+	}
+	return true;
+}
+//获得已经报过警的信息
+bool DatabaseProxy::historyWarningPoped(QList<proWarning> &pDatalist)
+{
+	vector<WARNING> vdata;
+	m_db2.GetWarningPoped(vdata);
+	for (int i = 0; i < vdata.size(); i++)
+	{
+		proWarning pWarning;
+		pWarning.WarningTime = vdata[i].WarningTime;
+		pWarning.WarningLine = vdata[i].WarningLine;
+		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
+		pWarning.MonitorAddr2 = vdata[i].MonitorAddr2;
+		pWarning.Type = vdata[i].Type;
+		pWarning.iValue1 = vdata[i].iValue1;
+		pWarning.iValue2 = vdata[i].iValue2;
+		pWarning.WorkerName = QString::fromStdString(vdata[i].WorkerName);
+		pWarning.WarningInfo = QString::fromStdString(vdata[i].WarningInfo);
+		pWarning.SendTime = vdata[i].SendTime;
+		pWarning.SendState = vdata[i].SendState;
+		pDatalist<<pWarning;
+	}
+	return true;
+}
+
+bool DatabaseProxy::historyWarningNopop(QList<proWarning> &pDatalist)
+{
+	vector<WARNING> vdata;
+	m_db2.GetWarningNopop(vdata);
 	for (int i = 0; i < vdata.size(); i++)
 	{
 		proWarning pWarning;

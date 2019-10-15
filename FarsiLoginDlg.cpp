@@ -156,7 +156,13 @@ void FarsiLoginDlg::getConnectInfo(QString &ip, QString &usr, QString &pwd)
 
 void FarsiLoginDlg::on_btnLogin_clicked()
 {
-    QString usr = ui->leUser->text();
+    QString dbIP, dbUsr, dbPwd;
+    getConnectInfo(dbIP, dbUsr, dbPwd);
+    if (!DatabaseProxy::instance().connectDB(dbIP, dbUsr, dbPwd))
+    {
+        //
+    }
+    /*QString usr = ui->leUser->text();
     QString pwd = ui->lePwd->text();
 
     if (usr.isEmpty())
@@ -201,7 +207,7 @@ void FarsiLoginDlg::on_btnLogin_clicked()
     AppSession::instance().user.id = id;
     AppSession::instance().user.level = DatabaseProxy::instance().userLevel(id);
 
-    updateUsersOfXml();
+    updateUsersOfXml();*/
 
 	accept();
 }
