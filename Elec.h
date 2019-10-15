@@ -2,6 +2,7 @@
 #define ELEC_H
 
 #include <QMainWindow>
+#include <QTimer>
 #include "ui_Elec.h"
 
 class Elec : public QMainWindow
@@ -27,8 +28,6 @@ private slots:
 
     void on_btnQuit_clicked();
 
-    void on_pushButton_clicked();
-
     void onRemovePopupWidget(QWidget *obj);
 
     void on_btnAlarm_clicked();
@@ -38,11 +37,13 @@ private slots:
 private:
     void updateCheckStatus(QPushButton *btn);
 
+    void showWarning(const QString &str);
 private:
 	Ui::ElecClass ui;
 
     QList<QWidget *> _lstPopupWidget;
     QList<QPushButton *> _lstMenuButton;
+    QTimer *_timer;
 };
 
 #endif // ELEC_H

@@ -133,3 +133,15 @@ void WorkerConfigDlg::on_btnDelete_clicked()
         ui->tableWidget->removeRow(row);
     }
 }
+
+void WorkerConfigDlg::on_leFilter_textChanged(const QString &arg1)
+{
+    for (int i = 0; i < ui->tableWidget->rowCount(); i++)
+    {
+        auto item = ui->tableWidget->item(i, 1);
+        if (nullptr != item)
+        {
+            ui->tableWidget->setRowHidden(i, !item->text().contains(arg1));
+        }
+    }
+}

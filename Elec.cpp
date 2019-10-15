@@ -17,6 +17,20 @@ Elec::Elec(QWidget *parent)
     _lstMenuButton << ui.btnSummary << ui.btnConfigure;
     on_btnSummary_clicked();
 
+    _timer = new QTimer(this);
+    _timer->setInterval(30*1000);
+    connect(_timer, &QTimer::timeout, this, [this](){
+        QList<proWarning> lst;
+        if (DatabaseProxy::instance().historyWarningNopop( lst ))
+        {
+            foreach (auto data, lst) {
+                showWarning(data.WarningInfo);
+                DatabaseProxy::instance().modifyWarningPopuped(data.WarningID);
+            }
+        }
+    });
+    _timer->start();
+
     this->resize(1366, 768);
 }
 
@@ -26,6 +40,9 @@ Elec::~Elec()
     {
         delete _lstPopupWidget.takeFirst();
     }
+
+    _timer->stop();
+    _timer->deleteLater();
 }
 
 void Elec::on_btnSummary_clicked()
@@ -76,10 +93,9 @@ void Elec::on_btnQuit_clicked()
     deleteLater();
 }
 
-void Elec::on_pushButton_clicked()
+void Elec::showWarning(const QString &str)
 {
-    PopupInformation *w = new PopupInformation();
-
+    PopupInformation *w = new PopupInformation(str);
     connect(w, SIGNAL(beforeClose(QWidget*)), this, SLOT(onRemovePopupWidget(QWidget*)));
 
     _lstPopupWidget.append(w);

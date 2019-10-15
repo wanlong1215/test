@@ -66,3 +66,15 @@ void AlarmConfigDlg::init()
         i++;
     }
 }
+
+void AlarmConfigDlg::on_leFilter_textChanged(const QString &arg1)
+{
+    for (int i = 0; i < ui->tableWidget->rowCount(); i++)
+    {
+        auto item = ui->tableWidget->item(i, 8);
+        if (nullptr != item)
+        {
+            ui->tableWidget->setRowHidden(i, !item->text().contains(arg1));
+        }
+    }
+}

@@ -12,7 +12,7 @@ class PopupInformation : public QWidget
     Q_OBJECT
 
 public:
-    explicit PopupInformation(QWidget *parent = 0);
+    explicit PopupInformation(const QString &str, QWidget *parent = 0);
     ~PopupInformation();
 
 signals:

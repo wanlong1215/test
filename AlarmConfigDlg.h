@@ -15,6 +15,9 @@ public:
     explicit AlarmConfigDlg(QWidget *parent = 0);
     ~AlarmConfigDlg();
 
+private slots:
+    void on_leFilter_textChanged(const QString &arg1);
+
 private:
     void init();
 

@@ -75,7 +75,7 @@ void SummaryWidget::init()
     }
 
     _timer = new QTimer(this);
-    _timer->setInterval(30);
+    _timer->setInterval(30*1000);
     connect(_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
     connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));

@@ -1,13 +1,14 @@
 ﻿#include "PopupInformation.h"
 #include "ui_PopupInformation.h"
 
-PopupInformation::PopupInformation(QWidget *parent) :
+PopupInformation::PopupInformation(const QString &str, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PopupInformation)
 {
     ui->setupUi(this);
 
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    ui->label->setText(str);
 }
 
 PopupInformation::~PopupInformation()

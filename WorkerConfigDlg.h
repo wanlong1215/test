@@ -22,6 +22,8 @@ private slots:
 
     void on_btnDelete_clicked();
 
+    void on_leFilter_textChanged(const QString &arg1);
+
 private:
     void init();
 

@@ -78,7 +78,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="leFilter">
        <property name="font">
         <font>
          <pointsize>13</pointsize>
