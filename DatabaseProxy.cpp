@@ -69,8 +69,8 @@ QList<proAmso> DatabaseProxy::amsos()
 	{
 		proAmso pAmso(NULL);
 		pAmso.id = vAmso[i].AMSOID;
-		pAmso.name = QString(QString::fromLocal8Bit(vAmso[i].strName.c_str()));//QString::fromStdString(vAmso[i].strName);
-		pAmso.desc = QString(QString::fromLocal8Bit(vAmso[i].strDescribe.c_str()));//QString::fromStdString(vAmso[i].strDescribe);
+        pAmso.name = ToQString(vAmso[i].strName);//(vAmso[i].strName);
+        pAmso.desc = ToQString(vAmso[i].strDescribe);//(vAmso[i].strDescribe);
 		ams<<pAmso;
 	}
 
@@ -87,8 +87,8 @@ QList<proUser> DatabaseProxy::users()
 	{
 		proUser pUsr;
 		pUsr.id = vUsr[i].usrID;
-		pUsr.name = QString(QString::fromLocal8Bit(vUsr[i].usrName.c_str()));//QString::fromStdString(vUsr[i].usrName);
-		pUsr.pwd = QString(QString::fromLocal8Bit(vUsr[i].usrPassWord.c_str()));//QString::fromStdString(vUsr[i].usrPassWord);
+        pUsr.name = ToQString(vUsr[i].usrName);//(vUsr[i].usrName);
+        pUsr.pwd = ToQString(vUsr[i].usrPassWord);//(vUsr[i].usrPassWord);
 		pUsr.level = vUsr[i].usrLever;
 		usrs<<pUsr;
 	}
@@ -106,9 +106,9 @@ QList<proWorker> DatabaseProxy::workers()
 		proWorker pWorker;
 		pWorker.id = vWorker[i].id;
 		pWorker.amsoId = vWorker[i].amsoId;
-		pWorker.name = QString(QString::fromLocal8Bit(vWorker[i].name.c_str()));//QString::fromStdString(vWorker[i].name);
-		pWorker.remarks = QString(QString::fromLocal8Bit(vWorker[i].remarks.c_str()));//QString::fromStdString(vWorker[i].remarks);
-		pWorker.phone = QString(QString::fromLocal8Bit(vWorker[i].phone.c_str()));//QString::fromStdString(vWorker[i].phone);
+        pWorker.name = ToQString(vWorker[i].name);//(vWorker[i].name);
+        pWorker.remarks = ToQString(vWorker[i].remarks);//(vWorker[i].remarks);
+        pWorker.phone = ToQString(vWorker[i].phone);//(vWorker[i].phone);
 		lst<<pWorker;
 	}
 	
@@ -120,10 +120,10 @@ bool DatabaseProxy::worker(int id, proWorker &worker)
 	WORKER pWorker;
 	m_db2.GetWorker(pWorker, id);
 	worker.id = id;
-	worker.name = QString(QString::fromLocal8Bit(pWorker.name.c_str()));//QString::fromStdString(pWorker.name);
+    worker.name = ToQString(pWorker.name);//(pWorker.name);
 	worker.amsoId = pWorker.amsoId;
-	worker.remarks = QString(QString::fromLocal8Bit(pWorker.remarks.c_str()));//QString::fromStdString(pWorker.remarks);
-	worker.phone = QString(QString::fromLocal8Bit(pWorker.phone.c_str()));//QString::fromStdString(pWorker.phone);
+    worker.remarks = ToQString(pWorker.remarks);//(pWorker.remarks);
+    worker.phone = ToQString(pWorker.phone);//(pWorker.phone);
 	return true;
 }
 
@@ -131,9 +131,9 @@ int DatabaseProxy::addWorker(proWorker *u)
 {
 	WORKER worker;
 	worker.amsoId = u->amsoId;
-	worker.name = string((const char *)u->name.toLocal8Bit());//u->name.toStdString();
-	worker.remarks = string((const char *)u->remarks.toLocal8Bit());//u->remarks.toStdString();
-	worker.phone = string((const char *)u->phone.toLocal8Bit());//u->phone.toStdString();
+    worker.name = ToString(u->name);
+    worker.remarks = ToString(u->remarks);
+    worker.phone = ToString(u->phone);
 	m_db2.InsertWorker(worker);
 	return 1;
 }
@@ -148,9 +148,9 @@ bool DatabaseProxy::modifyWorker(proWorker *u)
 {
 	WORKER worker;
 	worker.amsoId = u->amsoId;
-	worker.name = string((const char *)u->name.toLocal8Bit());//u->name.toStdString();
-	worker.remarks = string((const char *)u->remarks.toLocal8Bit());//u->remarks.toStdString();
-	worker.phone = string((const char *)u->phone.toLocal8Bit());//u->phone.toStdString();
+    worker.name = ToString(u->name);
+    worker.remarks = ToString(u->remarks);
+    worker.phone = ToString(u->phone);
 	m_db2.ModifyWorker(worker, u->id);
 	return true;
 }
@@ -187,8 +187,8 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 		{
 			proSubCompany *pSubCompany = new proSubCompany(pCompany);
 			pSubCompany->id = subCompany[i].subCompanyID;
-			pSubCompany->name = QString(QString::fromLocal8Bit(subCompany[i].strName.c_str()));//QString::fromStdString(subCompany[i].strName);
-			pSubCompany->desc = QString(QString::fromLocal8Bit(subCompany[i].strDescribe.c_str()));//QString::fromStdString(subCompany[i].strDescribe);
+            pSubCompany->name = ToQString(subCompany[i].strName);//(subCompany[i].strName);
+            pSubCompany->desc = ToQString(subCompany[i].strDescribe);//(subCompany[i].strDescribe);
 			
 			vector<AMSO> amso;
 			m_db2.GetAllAMSOByID(amso, subCompany[i].subCompanyID);
@@ -196,8 +196,8 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 			{
 				proAmso *pAmso = new proAmso(pSubCompany);
 				pAmso->id = amso[i].AMSOID;
-				pAmso->name = QString(QString::fromLocal8Bit(amso[i].strName.c_str()));//QString::fromStdString(amso[i].strName);
-				pAmso->desc = QString(QString::fromLocal8Bit(amso[i].strDescribe.c_str()));//QString::fromStdString(amso[i].strDescribe);
+                pAmso->name = ToQString(amso[i].strName);//(amso[i].strName);
+                pAmso->desc = ToQString(amso[i].strDescribe);//(amso[i].strDescribe);
 
 				vector<ROUTE> route;
 				m_db2.GetAllRouteByID(route, amso[i].AMSOID);
@@ -205,8 +205,8 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 				{
 					proRoute *pRoute = new proRoute(pAmso);
 					pRoute->id = route[i].routeID;
-					pRoute->name = QString(QString::fromLocal8Bit(route[i].strName.c_str()));//QString::fromStdString(route[i].strName);
-					pRoute->desc = QString(QString::fromLocal8Bit(route[i].strDescribe.c_str()));//QString::fromStdString(route[i].strDescribe);
+                    pRoute->name = ToQString(route[i].strName);//(route[i].strName);
+                    pRoute->desc = ToQString(route[i].strDescribe);//(route[i].strDescribe);
 
 					vector<CONCENTRATOR> concentrator;
 					m_db2.GetAllConcentratorByID(concentrator, route[i].routeID);
@@ -214,17 +214,17 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 					{
 						proConcentrator *pConcentrator = new proConcentrator(pRoute);
 						pConcentrator->id = concentrator[i].ConcentratorID;
-						pConcentrator->name = QString(QString::fromLocal8Bit(concentrator[i].strName.c_str()));//QString::fromStdString(concentrator[i].strName);
-						pConcentrator->destIp = QString(QString::fromLocal8Bit(concentrator[i].strDestIP.c_str()));//QString::fromStdString(concentrator[i].strDestIP);
-						pConcentrator->destPort = QString(QString::fromLocal8Bit(concentrator[i].strDestPort.c_str()));//QString::fromStdString(concentrator[i].strDestPort);
-						pConcentrator->type = QString(QString::fromLocal8Bit(concentrator[i].strConnectType.c_str()));//QString::fromStdString(concentrator[i].strConnectType);
-						pConcentrator->installAddr = QString(QString::fromLocal8Bit(concentrator[i].strInstallPlace.c_str()));//QString::fromStdString(concentrator[i].strInstallPlace);
-						pConcentrator->apName = QString(QString::fromLocal8Bit(concentrator[i].strAPName.c_str()));//QString::fromStdString(concentrator[i].strAPName);
-						pConcentrator->apProtocol = QString(QString::fromLocal8Bit(concentrator[i].strAPProtocol.c_str()));//QString::fromStdString(concentrator[i].strAPProtocol);
+                        pConcentrator->name = ToQString(concentrator[i].strName);//(concentrator[i].strName);
+                        pConcentrator->destIp = ToQString(concentrator[i].strDestIP);//(concentrator[i].strDestIP);
+                        pConcentrator->destPort = ToQString(concentrator[i].strDestPort);//(concentrator[i].strDestPort);
+                        pConcentrator->type = ToQString(concentrator[i].strConnectType);//(concentrator[i].strConnectType);
+                        pConcentrator->installAddr = ToQString(concentrator[i].strInstallPlace);//(concentrator[i].strInstallPlace);
+                        pConcentrator->apName = ToQString(concentrator[i].strAPName);//(concentrator[i].strAPName);
+                        pConcentrator->apProtocol = ToQString(concentrator[i].strAPProtocol);//(concentrator[i].strAPProtocol);
 						pConcentrator->terminalTimer = concentrator[i].TerminalTimer;
 						pConcentrator->concentratorTimer = concentrator[i].ConcentratorTimer;
 						pConcentrator->heartTimer = concentrator[i].HeartTimer;
-						pConcentrator->strSimCard = QString(QString::fromLocal8Bit(concentrator[i].strSimCard.c_str()));//QString::fromStdString(concentrator[i].strSimCard);
+                        pConcentrator->strSimCard = ToQString(concentrator[i].strSimCard);//(concentrator[i].strSimCard);
 						pConcentrator->gprsReConnectTimer = concentrator[i].GPRSReConnectTimer;
 						pConcentrator->gprsSignalStrength = concentrator[i].GPRSSignalStrength;
 						pConcentrator->saveTimer = concentrator[i].SaveTimer;
@@ -238,11 +238,11 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 						{
 							proLine *pLine = new proLine(pConcentrator);
 							pLine->id = line[i].lineID;
-							pLine->name = QString(QString::fromLocal8Bit(line[i].strName.c_str()));//QString::fromStdString(line[i].strName);
+                            pLine->name = ToQString(line[i].strName);//(line[i].strName);
                             pLine->type = line[i].strType;
-							pLine->addr = QString(QString::fromLocal8Bit(line[i].strAddr.c_str()));//QString::fromStdString(line[i].strAddr);
-							pLine->preAddr = QString(QString::fromLocal8Bit(line[i].strPreAddr.c_str()));//QString::fromStdString(line[i].strPreAddr);
-							pLine->nextAddr = QString(QString::fromLocal8Bit(line[i].strNextAddr.c_str()));//QString::fromStdString(line[i].strNextAddr);
+                            pLine->addr = ToQString(line[i].strAddr);//(line[i].strAddr);
+                            pLine->preAddr = ToQString(line[i].strPreAddr);//(line[i].strPreAddr);
+                            pLine->nextAddr = ToQString(line[i].strNextAddr);//(line[i].strNextAddr);
 							pLine->workerID = line[i].workerID;
 
 							vector<MONITOR> monitor;
@@ -251,7 +251,7 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 							{
 								proMonitor *pMonitor = new proMonitor(pLine);
 								pMonitor->id = monitor[i].MonitorID;
-								pMonitor->name = QString(QString::fromLocal8Bit(monitor[i].strName.c_str()));//QString::fromStdString(monitor[i].strName);
+                                pMonitor->name = ToQString(monitor[i].strName);//(monitor[i].strName);
 
 								vector<TERMINAL> terminal;
 								m_db2.GetAllTerminalByID(terminal, monitor[i].MonitorID);
@@ -259,7 +259,7 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 								{
 									proTerminal *pTerminal = new proTerminal(pMonitor);
 									pTerminal->id = terminal[i].TerminalID;
-									pTerminal->name = QString(QString::fromLocal8Bit(terminal[i].strName.c_str()));//QString::fromStdString(terminal[i].strName);
+                                    pTerminal->name = ToQString(terminal[i].strName);//(terminal[i].strName);
 									pTerminal->type = atoi(terminal[i].strType.c_str());
 									pTerminal->index = terminal[i].index;
 									pTerminal->installTime = terminal[i].installTime;
@@ -317,8 +317,8 @@ bool DatabaseProxy::addSubCompany(proSubCompany *o, int parentid)
 {
 	SUBCOMPANY subCompany;
 	subCompany.companyID = parentid;
-	subCompany.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	subCompany.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    subCompany.strName = ToString(o->name);
+    subCompany.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertSubCompany(subCompany, parentid);
     proCompany *po = company(parentid);
 
@@ -335,8 +335,8 @@ bool DatabaseProxy::addAmso(proAmso *o, int parentid)
 {
 	AMSO amso;
 	amso.subCompanyID = parentid;
-	amso.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	amso.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    amso.strName = ToString(o->name);
+    amso.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertAMSO(amso, parentid);
 
     proSubCompany *po = subCompany(parentid);
@@ -354,8 +354,8 @@ bool DatabaseProxy::addRoute(proRoute *o, int parentid)
 {
 	ROUTE route;
 	route.AMSOID = parentid;
-	route.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	route.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    route.strName = ToString(o->name);
+    route.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertRoute(route, parentid);
     proAmso *po = amso(parentid);
 
@@ -373,16 +373,16 @@ bool DatabaseProxy::addConcentrator(proConcentrator *o, int parentid)
 {
 	CONCENTRATOR concentrator;
 	concentrator.routeID = parentid;
-	concentrator.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	concentrator.strDestIP = string((const char *)o->destIp.toLocal8Bit());//o->destIp.toStdString();
-	concentrator.strDestPort = string((const char *)o->destPort.toLocal8Bit());//o->destPort.toStdString();
-	concentrator.strConnectType = string((const char *)o->type.toLocal8Bit());//o->type.toStdString();
-	concentrator.strInstallPlace = string((const char *)o->installAddr.toLocal8Bit());//o->installAddr.toStdString();
-	concentrator.strAPName = string((const char *)o->apName.toLocal8Bit());//o->apName.toStdString();
-	concentrator.strAPProtocol = string((const char *)o->apProtocol.toLocal8Bit());//o->apProtocol.toStdString();
+    concentrator.strName = ToString(o->name);
+    concentrator.strDestIP = ToString(o->destIp);
+    concentrator.strDestPort = ToString(o->destPort);
+    concentrator.strConnectType = ToString(o->type);
+    concentrator.strInstallPlace = ToString(o->installAddr);
+    concentrator.strAPName = ToString(o->apName);
+    concentrator.strAPProtocol = ToString(o->apProtocol);
 	concentrator.TerminalTimer = o->terminalTimer;
 	concentrator.HeartTimer = o->heartTimer;
-	concentrator.strSimCard = string((const char *)o->strSimCard.toLocal8Bit());//o->strSimCard.toStdString();
+    concentrator.strSimCard = ToString(o->strSimCard);
 	concentrator.GPRSReConnectTimer = o->gprsReConnectTimer;
 	concentrator.GPRSSignalStrength = o->gprsSignalStrength;
 	concentrator.SaveTimer = o->saveTimer;
@@ -409,11 +409,11 @@ bool DatabaseProxy::addLine(proLine *o, int parentid)
 {
 	LINE line;
 	line.ConcentratorID = parentid;
-	line.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
+    line.strName = ToString(o->name);
     line.strType = o->type;
-	line.strAddr = string((const char *)o->addr.toLocal8Bit());//o->addr.toStdString();
-	line.strPreAddr = string((const char *)o->preAddr.toLocal8Bit());//o->preAddr.toStdString();
-	line.strNextAddr = string((const char *)o->nextAddr.toLocal8Bit());//o->nextAddr.toStdString();
+    line.strAddr = ToString(o->addr);
+    line.strPreAddr = ToString(o->preAddr);
+    line.strNextAddr = ToString(o->nextAddr);
 	line.workerID = o->workerID;
 	o->id = m_db2.InsertLine(line, parentid);
 
@@ -432,7 +432,7 @@ bool DatabaseProxy::addMonitor(proMonitor *o, int parentid)
 {
 	MONITOR monitor;
 	monitor.lineID = parentid;
-	monitor.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
+    monitor.strName = ToString(o->name);
 	monitor.MonitorAddr = o->addr;
 	o->id = m_db2.InsertMonitor(monitor,parentid);
 
@@ -450,8 +450,8 @@ bool DatabaseProxy::addTerminal(proTerminal *o, int parentid)
 {
 	TERMINAL terminal;
 	terminal.MonitorID = parentid;
-	terminal.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	terminal.strType = string((const char *)o->type.toLocal8Bit());//o->type.toStdString();
+    terminal.strName = ToString(o->name);
+    terminal.strType = ToString(o->type);
 	terminal.index = o->index;
 	terminal.installTime = o->installTime;
 	terminal.addr = o->addr;
@@ -509,8 +509,8 @@ bool DatabaseProxy::addCommand(proCommand *o)
 {
 	COMMAND cmd;
 	cmd.UserID = o->UserID;
-	cmd.CommandType = string((const char *)o->CommandType.toLocal8Bit());
-	cmd.CommandInfo = string((const char *)o->CommandInfo.toLocal8Bit());
+    cmd.CommandType = ToString(o->CommandType);
+    cmd.CommandInfo = ToString(o->CommandInfo);
 	m_db2.InsertCommand(cmd);
 	return true;
 }
@@ -525,8 +525,8 @@ bool DatabaseProxy::addWarning(proWarning *o)
 	w.Type = o->Type;
 	w.iValue1 = o->iValue1;
 	w.iValue2 = o->iValue2;
-	w.WorkerName = string((const char *)o->WorkerName.toLocal8Bit());//o->WorkerName.toStdString();
-	w.WarningInfo = string((const char *)o->WarningInfo.toLocal8Bit());//o->WarningInfo.toStdString();
+    w.WorkerName = ToString(o->WorkerName);
+    w.WarningInfo = ToString(o->WarningInfo);
 	w.SendTime = o->SendTime;
 	w.SendState = o->SendState;
 	w.Popuped = o->Popuped;
@@ -534,14 +534,12 @@ bool DatabaseProxy::addWarning(proWarning *o)
     return true;
 }
 
-/***************************************************************************************************************/
-// 胖子
 bool DatabaseProxy::modifyCompany(proCompany *o)
 {
 	COMPANY company;
 	company.companyID = o->id;
-	company.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	company.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    company.strName = ToString(o->name);
+    company.strDescribe = ToString(o->desc);
 	o->id = m_db2.ModifyCompany(company, company.companyID);
     return true;
 }
@@ -551,8 +549,8 @@ bool DatabaseProxy::modifySubCompany(proSubCompany *o)
 	SUBCOMPANY subCompany;
 	subCompany.subCompanyID = o->id;
 	subCompany.companyID = o->parent->id;
-	subCompany.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	subCompany.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    subCompany.strName = ToString(o->name);
+    subCompany.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertSubCompany(subCompany, subCompany.subCompanyID);
     return true;
 }
@@ -562,8 +560,8 @@ bool DatabaseProxy::modifyAmso(proAmso *o)
 	AMSO amso;
 	amso.AMSOID = o->id;
 	amso.subCompanyID = o->parent->id;
-	amso.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	amso.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    amso.strName = ToString(o->name);
+    amso.strDescribe = ToString(o->desc);
 	o->id = m_db2.ModifyAMSO(amso, amso.AMSOID);
     return true;
 }
@@ -573,8 +571,8 @@ bool DatabaseProxy::modifyRoute(proRoute *o)
 	ROUTE route;
 	route.routeID = o->id;
 	route.AMSOID = o->parent->id;
-	route.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	route.strDescribe = string((const char *)o->desc.toLocal8Bit());//o->desc.toStdString();
+    route.strName = ToString(o->name);//o->name.toStdString();
+    route.strDescribe = ToString(o->desc);//o->desc.toStdString();
 	o->id = m_db2.ModifyRoute(route, route.routeID);
     return true;
 }
@@ -584,16 +582,16 @@ bool DatabaseProxy::modifyConcentrator(proConcentrator *o)
 	CONCENTRATOR concentrator;
 	concentrator.ConcentratorID = o->id;
 	concentrator.routeID = o->parent->id;
-	concentrator.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	concentrator.strDestIP = string((const char *)o->destIp.toLocal8Bit());//o->destIp.toStdString();
-	concentrator.strDestPort = string((const char *)o->destPort.toLocal8Bit());//o->destPort.toStdString();
-	concentrator.strConnectType = string((const char *)o->type.toLocal8Bit());//o->type.toStdString();
-	concentrator.strInstallPlace = string((const char *)o->installAddr.toLocal8Bit());//o->installAddr.toStdString();
-	concentrator.strAPName = string((const char *)o->apName.toLocal8Bit());//o->apName.toStdString();
-	concentrator.strAPProtocol = string((const char *)o->apProtocol.toLocal8Bit());//o->apProtocol.toStdString();
+    concentrator.strName = ToString(o->name);//o->name.toStdString();
+    concentrator.strDestIP = ToString(o->destIp);//o->destIp.toStdString();
+    concentrator.strDestPort = ToString(o->destPort);//o->destPort.toStdString();
+    concentrator.strConnectType = ToString(o->type);//o->type.toStdString();
+    concentrator.strInstallPlace = ToString(o->installAddr);//o->installAddr.toStdString();
+    concentrator.strAPName = ToString(o->apName);//o->apName.toStdString();
+    concentrator.strAPProtocol = ToString(o->apProtocol);//o->apProtocol.toStdString();
 	concentrator.TerminalTimer = o->terminalTimer;
 	concentrator.HeartTimer = o->heartTimer;
-	concentrator.strSimCard = string((const char *)o->strSimCard.toLocal8Bit());//o->strSimCard.toStdString();
+    concentrator.strSimCard = ToString(o->strSimCard);//o->strSimCard.toStdString();
 	concentrator.GPRSReConnectTimer = o->gprsReConnectTimer;
 	concentrator.GPRSSignalStrength = o->gprsSignalStrength;
 	concentrator.SaveTimer = o->saveTimer;
@@ -611,11 +609,11 @@ bool DatabaseProxy::modifyLine(proLine *o)
 	LINE line;
 	line.lineID = o->id;
 	line.ConcentratorID = o->parent->id;
-	line.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
+    line.strName = ToString(o->name);//o->name.toStdString();
 	line.strType = o->type;
-	line.strAddr = string((const char *)o->addr.toLocal8Bit());//o->addr.toStdString();
-	line.strPreAddr = string((const char *)o->preAddr.toLocal8Bit());//o->preAddr.toStdString();
-	line.strNextAddr = string((const char *)o->nextAddr.toLocal8Bit());//o->nextAddr.toStdString();
+    line.strAddr = ToString(o->addr);//o->addr.toStdString();
+    line.strPreAddr = ToString(o->preAddr);//o->preAddr.toStdString();
+    line.strNextAddr = ToString(o->nextAddr);//o->nextAddr.toStdString();
 	line.workerID = o->workerID;
 	o->id = m_db2.ModifyLine(line, line.lineID);
     return true;
@@ -626,7 +624,7 @@ bool DatabaseProxy::modifyMonitor(proMonitor *o)
 	MONITOR monitor;
 	monitor.MonitorID = o->id;
 	monitor.lineID = o->parent->id;
-	monitor.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
+    monitor.strName = ToString(o->name);//o->name.toStdString();
 	monitor.MonitorAddr = o->addr;
 	o->id = m_db2.ModifyMonitor(monitor,monitor.MonitorID);
     return true;
@@ -637,8 +635,8 @@ bool DatabaseProxy::modifyTerminal(proTerminal *o)
 	TERMINAL terminal;
 	terminal.TerminalID = o->id;
 	terminal.MonitorID = o->parent->id;
-	terminal.strName = string((const char *)o->name.toLocal8Bit());//o->name.toStdString();
-	terminal.strType = string((const char *)o->type.toLocal8Bit());//o->type.toStdString();
+    terminal.strName = ToString(o->name);//o->name.toStdString();
+    terminal.strType = ToString(o->type);//o->type.toStdString();
 	terminal.index = o->index;
 	terminal.installTime = o->installTime;
 	terminal.addr = o->addr;
@@ -2003,8 +2001,8 @@ bool DatabaseProxy::historyWarningAll(QList<proWarning> &pDatalist)
 		pWarning.Type = vdata[i].Type;
 		pWarning.iValue1 = vdata[i].iValue1;
 		pWarning.iValue2 = vdata[i].iValue2;
-		pWarning.WorkerName = QString(QString::fromLocal8Bit(vdata[i].WorkerName.c_str()));//QString::fromStdString(vdata[i].WorkerName);
-		pWarning.WarningInfo = QString(QString::fromLocal8Bit(vdata[i].WarningInfo.c_str()));//QString::fromStdString(vdata[i].WarningInfo);
+        pWarning.WorkerName = ToQString(vdata[i].WorkerName);//(vdata[i].WorkerName);
+        pWarning.WarningInfo = ToQString(vdata[i].WarningInfo);//(vdata[i].WarningInfo);
 		pWarning.SendTime = vdata[i].SendTime;
 		pWarning.SendState = vdata[i].SendState;
 		pDatalist<<pWarning;
@@ -2026,8 +2024,8 @@ bool DatabaseProxy::historyWarningPoped(QList<proWarning> &pDatalist)
 		pWarning.Type = vdata[i].Type;
 		pWarning.iValue1 = vdata[i].iValue1;
 		pWarning.iValue2 = vdata[i].iValue2;
-		pWarning.WorkerName = QString(QString::fromLocal8Bit(vdata[i].WorkerName.c_str()));//QString::fromStdString(vdata[i].WorkerName);
-		pWarning.WarningInfo = QString(QString::fromLocal8Bit(vdata[i].WarningInfo.c_str()));//QString::fromStdString(vdata[i].WarningInfo);
+        pWarning.WorkerName = ToQString(vdata[i].WorkerName);//(vdata[i].WorkerName);
+        pWarning.WarningInfo = ToQString(vdata[i].WarningInfo);//(vdata[i].WarningInfo);
 		pWarning.SendTime = vdata[i].SendTime;
 		pWarning.SendState = vdata[i].SendState;
 		pDatalist<<pWarning;
@@ -2049,8 +2047,8 @@ bool DatabaseProxy::historyWarningNopop(QList<proWarning> &pDatalist)
 		pWarning.Type = vdata[i].Type;
 		pWarning.iValue1 = vdata[i].iValue1;
 		pWarning.iValue2 = vdata[i].iValue2;
-		pWarning.WorkerName = QString(QString::fromLocal8Bit(vdata[i].WorkerName.c_str()));//QString::fromStdString(vdata[i].WorkerName);
-		pWarning.WarningInfo = QString(QString::fromLocal8Bit(vdata[i].WarningInfo.c_str()));//QString::fromStdString(vdata[i].WarningInfo);
+        pWarning.WorkerName = ToQString(vdata[i].WorkerName);//(vdata[i].WorkerName);
+        pWarning.WarningInfo = ToQString(vdata[i].WarningInfo);//(vdata[i].WarningInfo);
 		pWarning.SendTime = vdata[i].SendTime;
 		pWarning.SendState = vdata[i].SendState;
 		pDatalist<<pWarning;
