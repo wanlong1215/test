@@ -10,7 +10,11 @@ class TerminalGraphicsWidget : public QWidget
 public:
     explicit TerminalGraphicsWidget(QWidget *parent = nullptr);
 
+    void setType(bool isHistory);
+
     void init(proConcentrator *o);
+
+    void updateValue();
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -25,6 +29,8 @@ protected:
 
 private:
     proConcentrator *_o;
+
+    bool _isHistory;
 };
 
 #endif // TERMINALGRAPHICSWIDGET_H

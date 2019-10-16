@@ -56,6 +56,10 @@ public:
     QString pressureValueB();
     QString pressureValueC();
 
+    QString rtva;
+    QString rtvb;
+    QString rtvc;
+
     int id;
     QString name;
 	int addr;
@@ -363,6 +367,7 @@ public:
 
     QList<proData> historyData(int ConcentratorId, QDateTime begin, QDateTime end);//我没用
 
+	bool historyDataByTerminalAddr(QList<proData> &pDatalist, int ConcentratorAddr, int TerminalAddr);//获得所有的历史数据 注意这里传入的是终端
 	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr);//获得所有的历史数据 注意这里传入的是集中器地址
 	bool historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr, INT64 begin, INT64 end);//通过时间查询历史数据，这里注意传入的时间是转换后的64位int
 	bool historyWarningNopop(QList<proWarning> &pDatalist);//获得没有报警信息

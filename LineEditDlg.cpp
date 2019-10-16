@@ -39,7 +39,7 @@ void LineEditDlg::on_btnOK_clicked()
     _o->workerID = ui->leWorkId->text().toInt();
 
     if (insert) {
-        DatabaseProxy::instance().addLine(_o, _parentId);
+        //DatabaseProxy::instance().addLine(_o, _parentId);
     } else {
         DatabaseProxy::instance().modifyLine(_o);
     }

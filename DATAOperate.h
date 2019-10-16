@@ -238,6 +238,7 @@ public:
 	int GetAllConcentratorID(vector<CONCENTRATOR> &v);
 	int GetAllLineID(vector<LINE> &v);
 	int GetAllTerminalID(vector<TERMINAL> &v);
+	int GetAllTerminalByConcentratorID(vector<TERMINAL> &v, int ConcentratorAddr);
 	int GetAllWorker(vector<WORKER> &v);
 	///龙哥接口
 	int GetAllSubCompanyByID(vector<SUBCOMPANY> &v, int CompanyID);//通过公司ID获得所有子公司ID

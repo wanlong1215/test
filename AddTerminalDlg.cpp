@@ -1,5 +1,6 @@
 ﻿#include "AddTerminalDlg.h"
 #include "ui_AddTerminalDlg.h"
+#include "AppSession.h"
 
 AddTerminalDlg::AddTerminalDlg(int parentId, QWidget *parent) :
     QDialog(parent),
@@ -44,9 +45,6 @@ proTerminal *AddTerminalDlg::terminal3()
 void AddTerminalDlg::init()
 {
     ui->leMonitorName->setText(QStringLiteral("监测点"));
-    ui->deDate1->setDate(QDate::currentDate());
-    ui->deDate2->setDate(QDate::currentDate());
-    ui->deDate3->setDate(QDate::currentDate());
 }
 
 void AddTerminalDlg::on_btnCancel_clicked()
@@ -71,7 +69,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     _o1->name = QStringLiteral("A相");
     _o1->type = "A";
-    _o1->installTime = ui->deDate1->date().toJulianDay();
+    _o1->installTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
     _o1->addr = ui->leAddr1->text().toInt();
     _o1->preAddr = 0;
     _o1->nextAddr = 0;
@@ -81,16 +79,16 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o1->RouteState4 = ui->leRoute41->text().toInt();
     _o1->RouteState5 = ui->leRoute51->text().toInt();
     _o1->RouteState6 = ui->leRoute61->text().toInt();
+    _o1->index=ui->leTimes1->text().toInt();
     _o1->highPressureValue = 0;
     _o1->highPressureSymbol = 0;
     _o1->highPressureOffset = 0;
     _o1->lowPressureValue = 0;
-    _o1->index=0;
     _o1->TerminalCurrentTime=_o1->installTime;
 
     _o2->name = QStringLiteral("B相");
     _o2->type = "B";
-    _o2->installTime = ui->deDate2->date().toJulianDay();
+    _o2->installTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
     _o2->addr = ui->leAddr2->text().toInt();
     _o2->preAddr = 0;
     _o2->nextAddr = 0;
@@ -100,16 +98,16 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o2->RouteState4 = ui->leRoute42->text().toInt();
     _o2->RouteState5 = ui->leRoute52->text().toInt();
     _o2->RouteState6 = ui->leRoute62->text().toInt();
+    _o2->index = ui->leTimes2->text().toInt();
     _o2->highPressureValue = 0;
     _o2->highPressureSymbol = 0;
     _o2->highPressureOffset = 0;
     _o2->lowPressureValue = 0;
-    _o2->index=0;
     _o2->TerminalCurrentTime=_o2->installTime;
 
     _o3->name = QStringLiteral("C相");
     _o3->type = "C";
-    _o3->installTime = ui->deDate3->date().toJulianDay();
+    _o3->installTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
     _o3->addr = ui->leAddr3->text().toInt();
     _o3->preAddr = 0;
     _o3->nextAddr = 0;
@@ -119,11 +117,11 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o3->RouteState4 = ui->leRoute43->text().toInt();
     _o3->RouteState5 = ui->leRoute53->text().toInt();
     _o3->RouteState6 = ui->leRoute63->text().toInt();
+    _o3->index = ui->leTimes3->text().toInt();
     _o3->highPressureValue = ui->leHighPressureValue->text().toInt();
     _o3->highPressureSymbol = ui->cbHighPressureSymbol->currentIndex();
     _o3->highPressureOffset = ui->leHighPressureOffset->text().toInt();
     _o3->lowPressureValue = ui->leLowPressureValue->text().toInt();
-    _o3->index=0;
     _o3->TerminalCurrentTime=_o3->installTime;
 
     accept();

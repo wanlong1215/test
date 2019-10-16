@@ -9,6 +9,11 @@ TerminalGraphicsWidget::TerminalGraphicsWidget(QWidget *parent) : QWidget(parent
 {
 }
 
+void TerminalGraphicsWidget::setType(bool isHistory)
+{
+    _isHistory = isHistory;
+}
+
 void TerminalGraphicsWidget::init(proConcentrator *o)
 {
     _o = o;
@@ -44,6 +49,11 @@ void TerminalGraphicsWidget::init(proConcentrator *o)
         this->move(0, 0);
     }
 
+    update();
+}
+
+void TerminalGraphicsWidget::updateValue()
+{
     update();
 }
 
@@ -150,9 +160,15 @@ void TerminalGraphicsWidget::drawSimpleLine(QPainter *p, QRect rect, proMonitor 
 
     p->setPen(QPen(Qt::red));
     p->setBrush(QBrush(Qt::red));
-    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.4), monitor->pressureValueA());
-    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.5), monitor->pressureValueB());
-    p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.6), monitor->pressureValueC());
+    if (_isHistory) {
+        p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.4), monitor->pressureValueA());
+        p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.5), monitor->pressureValueB());
+        p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.6), monitor->pressureValueC());
+    } else {
+        p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.4), monitor->rtva);
+        p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.5), monitor->rtvb);
+        p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.6), monitor->rtvc);
+    }
 
     // draw title
     p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.85), monitor->name);

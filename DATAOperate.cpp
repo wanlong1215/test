@@ -1463,6 +1463,55 @@ int CDATAOperate::GetAllLineID(vector<LINE> &v)
 	}
 	return 0;
 }
+
+int CDATAOperate::GetAllTerminalByConcentratorID(vector<TERMINAL> &v, int ConcentratorAddr)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select TerminalID,MonitorID,TerminalNAME,TerminalTYPE,TerminalIndex,TerminalInstallTime,TerminalAddr,TerminalPreAddr,TerminalNextAddr,ConcentratorAddr,TerminalCurrentTime,RouteState1,RouteState2,RouteState3,RouteState4,RouteState5,RouteState6,HighValue,HighOffset,HighSymbol,LowValue from BR_TERMINAL where ConcentratorAddr = ?";
+		st.prepare(sql);
+		st.set_long(0, ConcentratorAddr);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		v.clear();
+		while( !rs.db_eof() )
+		{
+			TERMINAL p;
+			p.TerminalID = rs.get_long(0);
+			p.MonitorID = rs.get_long(1);
+			p.strName = rs.get_string(2);
+			p.strType = rs.get_string(3);
+			p.index = rs.get_long(4);
+			p.installTime = rs.get_bigInt(5);
+			p.addr = rs.get_long(6);
+			p.preAddr = rs.get_long(7);
+			p.nextAddr = rs.get_long(8);
+			p.ConcentratorAddr = rs.get_long(9);
+			p.TerminalCurrentTime = rs.get_bigInt(10);
+			p.RouteState1 = rs.get_long(11);
+			p.RouteState2 = rs.get_long(12);
+			p.RouteState3 = rs.get_long(13);
+			p.RouteState4 = rs.get_long(14);
+			p.RouteState5 = rs.get_long(15);
+			p.RouteState6 = rs.get_long(16);
+			p.HighValue = rs.get_long(17);
+			p.HighOffset = rs.get_float(18);
+			p.HighSymbol = rs.get_long(19);
+			p.LowValue = rs.get_long(20);
+			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
 int CDATAOperate::GetAllTerminalID(vector<TERMINAL> &v)
 {
 	try

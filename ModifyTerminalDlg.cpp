@@ -1,6 +1,7 @@
 ﻿#include "ModifyTerminalDlg.h"
 #include "ui_ModifyTerminalDlg.h"
 #include "DatabaseProxy.h"
+#include "AppSession.h"
 
 ModifyTerminalDlg::ModifyTerminalDlg(proTerminal *o, QWidget *parent) :
     QDialog(parent),
@@ -30,10 +31,8 @@ void ModifyTerminalDlg::init()
     }
     ui->groupBox->setVisible("C" == _o->type);
 
-    ui->deDate1->setDate(QDate::fromJulianDay(_o->installTime));
     ui->leAddr1->setText(QString::number(_o->addr));
-    ui->lePreAddr1->setText(QString::number(_o->preAddr));
-    ui->leNextAddr1->setText(QString::number(_o->nextAddr));
+    ui->leTimes->setText(QString::number(_o->index));
     ui->leRoute11->setText(QString::number(_o->RouteState1));
     ui->leRoute21->setText(QString::number(_o->RouteState2));
     ui->leRoute31->setText(QString::number(_o->RouteState3));
@@ -48,10 +47,8 @@ void ModifyTerminalDlg::init()
 
 void ModifyTerminalDlg::on_btnOK_clicked()
 {
-    _o->installTime = ui->deDate1->date().toJulianDay();
     _o->addr = ui->leAddr1->text().toInt();
-    _o->preAddr = ui->lePreAddr1->text().toInt();
-    _o->nextAddr = ui->leNextAddr1->text().toInt();
+    _o->index = ui->leTimes->text().toInt();
     _o->RouteState1 = ui->leRoute11->text().toInt();
     _o->RouteState2 = ui->leRoute21->text().toInt();
     _o->RouteState3 = ui->leRoute31->text().toInt();

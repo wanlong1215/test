@@ -79,7 +79,7 @@ void ConcentratorEditDlg::on_btnOK_clicked()
     _o->ConcentratorCurrentTime = ui->leTime->dateTime().toMSecsSinceEpoch();
 
     if (insert) {
-        DatabaseProxy::instance().addConcentrator(_o, _parentId);
+        //
     } else {
         DatabaseProxy::instance().modifyConcentrator(_o);
     }

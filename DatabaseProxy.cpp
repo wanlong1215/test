@@ -1808,6 +1808,31 @@ bool DatabaseProxy::realTimeData(vector<DATA> &v)
 	return true;
 }
 
+//获得所有的历史数据 注意这里传入的是终端
+bool DatabaseProxy::historyDataByTerminalAddr(QList<proData> &pDatalist, int ConcentratorAddr, int TerminalAddr)
+{
+	vector<DATA> vData;
+	m_db2.GetDatabyTerminalAddr(vData, ConcentratorAddr, TerminalAddr);
+	for (int i = 0; i < vData.size(); i++)
+	{
+		DATA d = vData[i];
+		proData pData;
+		pData.DataID = d.DataID;
+		pData.CollectTime = d.CollectTime;
+		pData.ConcentratorAddr = d.ConcentratorAddr;
+		pData.GetherUnitAddr = d.GetherUnitAddr;
+		pData.iAngValue = d.iAngValue;
+		pData.iValue = d.iValue;
+		pData.vAngValue = d.vAngValue;
+		pData.vValue = d.vValue;
+		pData.relaycnt = d.relaycnt;
+		pData.relayPosition = d.relayPosition;
+		
+		pDatalist<<pData;
+	}
+	return true;
+}
+
 bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int ConcentratorAddr)
 {
 	//vector<DATA> vdata;
@@ -2048,7 +2073,11 @@ QString proMonitor::pressureValueA()
 {
     if (!lst.isEmpty())
     {
-        return QString::number(lst.first()->highPressureValue);
+        QList<proData> datas;
+        DatabaseProxy::instance().historyDataByTerminalAddr(datas, parent->parent->concentratorAddr, lst.first()->addr);
+        if (!datas.isEmpty()) {
+            return QString::number(datas.last().iValue);
+        }
     }
 
     return QString("-");
@@ -2058,7 +2087,11 @@ QString proMonitor::pressureValueB()
 {
     if (lst.count() > 1)
     {
-        return QString::number(lst.at(1)->highPressureValue);
+        QList<proData> datas;
+        DatabaseProxy::instance().historyDataByTerminalAddr(datas, parent->parent->concentratorAddr, lst.at(1)->addr);
+        if (!datas.isEmpty()) {
+            return QString::number(datas.last().iValue);
+        }
     }
 
     return QString("-");
@@ -2068,7 +2101,11 @@ QString proMonitor::pressureValueC()
 {
     if (lst.count() > 2)
     {
-        return QString::number(lst.at(2)->highPressureValue);
+        QList<proData> datas;
+        DatabaseProxy::instance().historyDataByTerminalAddr(datas, parent->parent->concentratorAddr, lst.at(2)->addr);
+        if (!datas.isEmpty()) {
+            return QString::number(datas.last().iValue);
+        }
     }
 
     return QString("-");
