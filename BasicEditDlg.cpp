@@ -35,7 +35,7 @@ BasicEditDlg::BasicEditDlg(int addType, int pid, QWidget *parent) :
 }
 
 BasicEditDlg::BasicEditDlg(proCompany *o, QWidget *parent) :
-    QDialog(parent), _type(0),
+    QDialog(parent), _type(5),
     ui(new Ui::BasicEditDlg)
 {
     ui->setupUi(this);
@@ -49,7 +49,7 @@ BasicEditDlg::BasicEditDlg(proCompany *o, QWidget *parent) :
 }
 
 BasicEditDlg::BasicEditDlg(proSubCompany *o, QWidget *parent) :
-    QDialog(parent), _type(0),
+    QDialog(parent), _type(6),
     ui(new Ui::BasicEditDlg)
 {
     ui->setupUi(this);
@@ -63,7 +63,7 @@ BasicEditDlg::BasicEditDlg(proSubCompany *o, QWidget *parent) :
 }
 
 BasicEditDlg::BasicEditDlg(proAmso *o, QWidget *parent) :
-    QDialog(parent), _type(0),
+    QDialog(parent), _type(7),
     ui(new Ui::BasicEditDlg)
 {
     ui->setupUi(this);
@@ -77,7 +77,7 @@ BasicEditDlg::BasicEditDlg(proAmso *o, QWidget *parent) :
 }
 
 BasicEditDlg::BasicEditDlg(proRoute *o, QWidget *parent) :
-    QDialog(parent), _type(0),
+    QDialog(parent), _type(8),
     ui(new Ui::BasicEditDlg)
 {
     ui->setupUi(this);
@@ -159,6 +159,25 @@ void BasicEditDlg::on_pushButton_clicked()
     {
         _o4->name = ui->leName->text();
         _o4->desc = ui->teDesc->toPlainText();
+    }
+
+    // modify db
+    switch (_type)
+    {
+    case 5:
+        DatabaseProxy::instance().modifyCompany(_o1);
+        break;
+    case 6:
+        DatabaseProxy::instance().modifySubCompany(_o2);
+        break;
+    case 7:
+        DatabaseProxy::instance().modifyAmso(_o3);
+        break;
+    case 8:
+        DatabaseProxy::instance().modifyRoute(_o4);
+        break;
+    default:
+        break;
     }
 
     accept();

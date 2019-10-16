@@ -1,5 +1,6 @@
 ﻿#include "ModifyTerminalDlg.h"
 #include "ui_ModifyTerminalDlg.h"
+#include "DatabaseProxy.h"
 
 ModifyTerminalDlg::ModifyTerminalDlg(proTerminal *o, QWidget *parent) :
     QDialog(parent),
@@ -27,7 +28,7 @@ void ModifyTerminalDlg::init()
     {
         return;
     }
-    ui->groupBox->setVisible(2 == _o->type);
+    ui->groupBox->setVisible("C" == _o->type);
 
     ui->deDate1->setDate(QDate::fromJulianDay(_o->installTime));
     ui->leAddr1->setText(QString::number(_o->addr));
@@ -62,6 +63,8 @@ void ModifyTerminalDlg::on_btnOK_clicked()
     _o->highPressureSymbol = ui->cbHighPressureSymbol->currentIndex();
     _o->highPressureOffset = ui->leHighPressureOffset->text().toInt();
     _o->lowPressureValue = ui->leLowPressureValue->text().toInt();
+
+    DatabaseProxy::instance().modifyTerminal(_o);
 
     accept();
 }

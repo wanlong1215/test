@@ -4,6 +4,7 @@
 #include "OrganizationTreeWidgetItem.h"
 #include <QTimer>
 #include <QMessageBox>
+#include <QDebug>
 #include "AppSession.h"
 
 SummaryWidget::SummaryWidget(QWidget *parent) :
@@ -266,11 +267,11 @@ void SummaryWidget::onRealtimeQuery()
 
             QTableWidgetItem *item = new QTableWidgetItem("");
             item->setCheckState(Qt::Unchecked);
-            item->setData(10, o->addr);
+            item->setData(10, o->parent->parent->concentratorAddr);
             item->setData(11, o->lst.at(0)->addr);
             item->setData(12, o->lst.at(1)->addr);
             item->setData(13, o->lst.at(2)->addr);
-            ui->tawRealTimeDetail->setItem(i, 0, item);
+           ui->tawRealTimeDetail->setItem(i, 0, item);
             ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(o6->parent->parent->parent->name));
@@ -384,9 +385,10 @@ void SummaryWidget::on_btnReadRealtime_clicked()
         }
     }
 
-    if (commandNum > 0)
-    {
+    if (commandNum > 0) {
         QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("读取指令已下发!"));
+    } else if (commandNum == 0) {
+        QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("请勾选需要读取的监测点!"));
     }
 
     _timer->start();
@@ -413,9 +415,10 @@ void SummaryWidget::on_btnStopRead_clicked()
         }
     }
 
-    if (commandNum > 0)
-    {
+    if (commandNum > 0) {
         QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("停止读取指令已下发!"));
+    } else if (commandNum == 0) {
+        QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("请勾选需要停止读取的监测点!"));
     }
 
     _timer->stop();

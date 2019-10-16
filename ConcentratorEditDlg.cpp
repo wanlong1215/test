@@ -53,8 +53,10 @@ void ConcentratorEditDlg::init()
 
 void ConcentratorEditDlg::on_btnOK_clicked()
 {
+    bool insert = false;
     if (NULL == _o)
     {
+        insert = true;
         _o = new proConcentrator(DatabaseProxy::instance().route(_parentId));
     }
 
@@ -76,6 +78,11 @@ void ConcentratorEditDlg::on_btnOK_clicked()
     _o->concentratorAddr = ui->sbConAddr->value();
     _o->ConcentratorCurrentTime = ui->leTime->dateTime().toMSecsSinceEpoch();
 
+    if (insert) {
+        DatabaseProxy::instance().addConcentrator(_o, _parentId);
+    } else {
+        DatabaseProxy::instance().modifyConcentrator(_o);
+    }
     accept();
 }
 

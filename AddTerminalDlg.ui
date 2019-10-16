@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>438</width>
-    <height>349</height>
+    <width>432</width>
+    <height>331</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,8 +23,8 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="leMonitorName"/>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="leMonitorAddr"/>
      </item>
      <item row="0" column="2">
       <widget class="QLabel" name="label_6">
@@ -33,28 +33,8 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="leMonitorAddr"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>上一个地址</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lePreMonitorAddr"/>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>下一个地址</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="leNextMonitorAddr"/>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="leMonitorName"/>
      </item>
     </layout>
    </item>

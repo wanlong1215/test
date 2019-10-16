@@ -24,8 +24,10 @@ proLine *LineEditDlg::line()
 
 void LineEditDlg::on_btnOK_clicked()
 {
+    bool insert = false;
     if (NULL == _o)
     {
+        insert = true;
         _o = new proLine(DatabaseProxy::instance().concentrator(_parentId));
     }
 
@@ -36,6 +38,11 @@ void LineEditDlg::on_btnOK_clicked()
     _o->nextAddr = ui->leNextId->text();
     _o->workerID = ui->leWorkId->text().toInt();
 
+    if (insert) {
+        DatabaseProxy::instance().addLine(_o, _parentId);
+    } else {
+        DatabaseProxy::instance().modifyLine(_o);
+    }
     accept();
 }
 
