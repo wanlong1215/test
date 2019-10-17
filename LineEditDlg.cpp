@@ -36,7 +36,7 @@ void LineEditDlg::on_btnOK_clicked()
     _o->addr = ui->leAddr->text();
     _o->preAddr = ui->lePreId->text();
     _o->nextAddr = ui->leNextId->text();
-    _o->workerID = ui->leWorkId->text().toInt();
+    _o->workerID = _map.key(ui->cbWorker->currentText());
 
     if (insert) {
         //DatabaseProxy::instance().addLine(_o, _parentId);
@@ -53,6 +53,13 @@ void LineEditDlg::on_btnCancel_clicked()
 
 void LineEditDlg::init()
 {
+    auto workers = DatabaseProxy::instance().workers();
+    foreach (auto worker, workers) {
+        _map.insert(worker.id, worker.name);
+    }
+
+    ui->cbWorker->addItems(_map.values());
+
     if (NULL != _o)
     {
         ui->leName->setText(_o->name);
@@ -60,7 +67,7 @@ void LineEditDlg::init()
         ui->leAddr->setText(_o->addr);
         ui->lePreId->setText(_o->preAddr);
         ui->leNextId->setText(_o->nextAddr);
-        ui->leWorkId->setText(QString::number(_o->workerID));
+        ui->cbWorker->setCurrentText(_map.value(_o->workerID));
     }
     else
     {

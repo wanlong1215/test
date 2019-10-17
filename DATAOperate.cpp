@@ -304,7 +304,7 @@ int CDATAOperate::InsertData(DATA p)
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select DataID from final table (insert into BR_DATA(TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) )";
+        const char *sql = "select DataID from final table (insert into BR_DATA(TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue,intRev1) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) )";
 		st.prepare(sql);
 		st.set_long(0, p.TerminalAddr);
 		st.set_long( 1, p.ConcentratorAddr );
@@ -316,6 +316,7 @@ int CDATAOperate::InsertData(DATA p)
 		st.set_float( 7, p.vAngValue );
 		st.set_float( 8, p.iValue );
 		st.set_float( 9, p.iAngValue );
+		st.set_float( 10, p.intRev1 );
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if( rs.db_eof() )
 		{
@@ -1196,6 +1197,51 @@ int CDATAOperate::GetMonitor(MONITOR &p, int MonitorID)
 	}
 	return 0;
 }
+int CDATAOperate::GetTerminalByAddr(TERMINAL &p, int ConcentratorAddr, int TerminalAddr)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select MonitorID,TerminalNAME,TerminalTYPE,TerminalIndex,TerminalInstallTime,TerminalAddr,TerminalPreAddr,TerminalNextAddr,ConcentratorAddr,TerminalCurrentTime,RouteState1,RouteState2,RouteState3,RouteState4,RouteState5,RouteState6,HighValue,HighOffset,HighSymbol,LowValue from BR_TERMINAL where ConcentratorAddr = ? and TerminalID = ?";
+		st.prepare(sql);
+		st.set_long( 0, ConcentratorAddr );
+		st.set_long( 1, TerminalAddr );
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if( rs.db_eof() )
+		{
+			rs.close();
+			return 0;
+		}
+		p.MonitorID = rs.get_long(0);
+		p.strName = rs.get_string(1);
+		p.strType = rs.get_string(2);
+		p.index = rs.get_long(3);
+		p.installTime = rs.get_bigInt(4);
+		p.addr = rs.get_long(5);
+		p.preAddr = rs.get_long(6);
+		p.nextAddr = rs.get_long(7);
+		p.ConcentratorAddr = rs.get_long(8);
+		p.TerminalCurrentTime = rs.get_bigInt(9);
+		p.RouteState1 = rs.get_long(10);
+		p.RouteState2 = rs.get_long(11);
+		p.RouteState3 = rs.get_long(12);
+		p.RouteState4 = rs.get_long(13);
+		p.RouteState5 = rs.get_long(14);
+		p.RouteState6 = rs.get_long(15);
+		p.HighValue = rs.get_long(16);
+		p.HighOffset = rs.get_float(17);
+		p.HighSymbol = rs.get_long(18);
+		p.LowValue = rs.get_long(19);
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
 int CDATAOperate::GetTerminal(TERMINAL &p, int TerminalID)
 {
 	try
@@ -1722,7 +1768,7 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue from BR_DATA where TerminalAddr = ? and CollectTime = ?";
+        const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue,intRev1 from BR_DATA where TerminalAddr = ? and CollectTime = ?";
 		st.prepare(sql);
 		st.set_long( 0, TerminalAddr );
 		st.set_bigInt( 1, time );
@@ -1740,6 +1786,7 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
 			data.vAngValue = rs.get_float(8);
 			data.iValue = rs.get_float(9);
 			data.iAngValue = rs.get_float(10);
+			data.intRev1 = rs.get_long(11);
 			rs.move_next();
 		}
 		rs.close();

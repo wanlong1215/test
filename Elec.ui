@@ -321,8 +321,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="styleSheet">
-       <string notr="true">QStackedWidget#stackedWidget{
-border-image: url(:/resource/content.jpg);}</string>
+       <string notr="true"/>
       </property>
       <property name="currentIndex">
        <number>1</number>

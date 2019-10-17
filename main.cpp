@@ -13,7 +13,9 @@ int main(int argc, char *argv[])
 
 	QApplication a(argc, argv);
 
-    QString fileName = ":/resource/css/blue.css";
+    //QString fileName = ":/resource/css/blue.css";
+    QString fileName = ":/resource/css/flatwhite.css";
+    //QString fileName = ":/resource/css/lightblue.css";
     if (!fileName.isEmpty())
     {
         QFile file(fileName);

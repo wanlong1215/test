@@ -30,6 +30,7 @@ private:
 
     int _parentId;
     proLine *_o;
+    QMap<int, QString> _map;
 };
 
 #endif // LINEEDITDLG_H

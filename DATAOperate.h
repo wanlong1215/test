@@ -122,7 +122,7 @@ struct DATA
 	float vAngValue;
 	float iValue;
 	float iAngValue;
-	int intRev1;
+	int intRev1;//这个预留作为异常标志
 	int intRev2;
 	int intRev3;
 	int intRev4;
@@ -229,6 +229,7 @@ public:
 	int GetLine(LINE &p, int LineID);
 	int GetMonitor(MONITOR &p, int MonitorID);
 	int GetTerminal(TERMINAL &p, int TerminalID);
+	int GetTerminalByAddr(TERMINAL &p, int ConcentratorAddr, int TerminalAddr);
 	int GetWorker(WORKER &p, int WorkerID);
 	///返回各个表的所有项，成功返回1，失败返回0
 	int GetAllCompanyID(vector<COMPANY> &v);

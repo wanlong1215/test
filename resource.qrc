@@ -22,5 +22,43 @@
         <file>resource/header.jpg</file>
         <file>resource/home.png</file>
         <file>resource/content.jpg</file>
+        <file>resource/css/flatwhite.css</file>
+        <file>resource/css/flatwhite/add_bottom.png</file>
+        <file>resource/css/flatwhite/add_left.png</file>
+        <file>resource/css/flatwhite/add_right.png</file>
+        <file>resource/css/flatwhite/add_top.png</file>
+        <file>resource/css/flatwhite/branch_close.png</file>
+        <file>resource/css/flatwhite/branch_open.png</file>
+        <file>resource/css/flatwhite/calendar_nextmonth.png</file>
+        <file>resource/css/flatwhite/calendar_prevmonth.png</file>
+        <file>resource/css/flatwhite/checkbox_checked.png</file>
+        <file>resource/css/flatwhite/checkbox_checked_disable.png</file>
+        <file>resource/css/flatwhite/checkbox_parcial.png</file>
+        <file>resource/css/flatwhite/checkbox_parcial_disable.png</file>
+        <file>resource/css/flatwhite/checkbox_unchecked.png</file>
+        <file>resource/css/flatwhite/checkbox_unchecked_disable.png</file>
+        <file>resource/css/flatwhite/radiobutton_checked.png</file>
+        <file>resource/css/flatwhite/radiobutton_checked_disable.png</file>
+        <file>resource/css/flatwhite/radiobutton_unchecked.png</file>
+        <file>resource/css/flatwhite/radiobutton_unchecked_disable.png</file>
+        <file>resource/css/lightblue.css</file>
+        <file>resource/css/lightblue/add_bottom.png</file>
+        <file>resource/css/lightblue/add_left.png</file>
+        <file>resource/css/lightblue/add_right.png</file>
+        <file>resource/css/lightblue/add_top.png</file>
+        <file>resource/css/lightblue/branch_close.png</file>
+        <file>resource/css/lightblue/branch_open.png</file>
+        <file>resource/css/lightblue/calendar_nextmonth.png</file>
+        <file>resource/css/lightblue/calendar_prevmonth.png</file>
+        <file>resource/css/lightblue/checkbox_checked.png</file>
+        <file>resource/css/lightblue/checkbox_checked_disable.png</file>
+        <file>resource/css/lightblue/checkbox_parcial.png</file>
+        <file>resource/css/lightblue/checkbox_parcial_disable.png</file>
+        <file>resource/css/lightblue/checkbox_unchecked.png</file>
+        <file>resource/css/lightblue/checkbox_unchecked_disable.png</file>
+        <file>resource/css/lightblue/radiobutton_checked.png</file>
+        <file>resource/css/lightblue/radiobutton_checked_disable.png</file>
+        <file>resource/css/lightblue/radiobutton_unchecked.png</file>
+        <file>resource/css/lightblue/radiobutton_unchecked_disable.png</file>
     </qresource>
 </RCC>
