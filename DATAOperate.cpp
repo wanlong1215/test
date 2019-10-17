@@ -1773,6 +1773,11 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
 		st.set_long( 0, TerminalAddr );
 		st.set_bigInt( 1, time );
 		ADO_WRAPPER::ResultSet rs = st.execute();
+		if (rs.db_eof())
+		{
+			return 0 ;
+		}
+		
 		while( !rs.db_eof() )
 		{
 			data.DataID = rs.get_long(0);

@@ -29,6 +29,8 @@ void SummaryWidget::init()
     ui->trwOrganization->clear();
     ui->tawHistoryDetail->clear();
     ui->tawRealTimeDetail->clear();
+    ui->wgtHistoryGraphics->init(nullptr);
+    ui->wgtGraphics->init(nullptr);
 
     QList<proCompany *> lstCompany = DatabaseProxy::instance().getOrganizations();
 
@@ -76,7 +78,7 @@ void SummaryWidget::init()
     }
 
     _timer = new QTimer(this);
-    _timer->setInterval(30*1000);
+    _timer->setInterval(5*1000);
     connect(_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
     connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
@@ -86,6 +88,31 @@ void SummaryWidget::init()
     ui->dteBegin->setDateTime(QDateTime::currentDateTime().addSecs(-60 * 60));
     ui->dteEnd->setDateTime(QDateTime::currentDateTime());
     ui->rbAutoQuery->setChecked(true);
+
+    if (1) {
+        QStringList lstHeader;
+        ui->tawHistoryDetail->setColumnCount(11);
+        lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+        ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
+        ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
+        for (int i = 0; i < 11; i++)
+        {
+            ui->tawHistoryDetail->setColumnWidth(i, 150);
+        }
+    }
+
+    if (1) {
+        QStringList lstHeader;
+
+        ui->tawRealTimeDetail->setColumnCount(11);
+        lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
+        ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
+        ui->tawRealTimeDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
+        for (int i = 0; i < 11; i++)
+        {
+            ui->tawRealTimeDetail->setColumnWidth(i, i==0?80:150);
+        }
+    }
 
     ui->wgtHistoryGraphics->setType(true);
     ui->wgtGraphics->setType(false);
@@ -149,17 +176,6 @@ void SummaryWidget::onHistoryQuery()
         ui->scrollAreaWidgetContents_2->setFixedWidth(ui->wgtHistoryGraphics->width());
     }
 
-    QStringList lstHeader;
-
-    ui->tawHistoryDetail->setColumnCount(10);
-    lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
-    ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
-    ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
-    for (int i = 0; i < 10; i++)
-    {
-        ui->tawHistoryDetail->setColumnWidth(i, 150);
-    }
-
     if (NULL == _currentConcentrator)
     {
         return;
@@ -221,6 +237,16 @@ void SummaryWidget::onHistoryQuery()
         ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.valueA.iValue)));
         ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueB.iValue)));
         ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueC.iValue)));
+        qint64 showTime = data.valueA.CollectTime;
+        showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
+        showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
+        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
+
+        if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
+            for (int j = 0; j < 10; j++) {
+                ui->tawHistoryDetail->item(i, j)->setBackgroundColor(QColor(255, 105, 180));
+            }
+        }
     }
 }
 
@@ -237,16 +263,6 @@ void SummaryWidget::onRealtimeQuery()
         ui->scrollAreaWidgetContents->setFixedWidth(ui->wgtGraphics->width());
     }
 
-    QStringList lstHeader;
-
-    ui->tawRealTimeDetail->setColumnCount(11);
-    lstHeader << QStringLiteral("选择") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流");// << QStringLiteral("采集时间");
-    ui->tawRealTimeDetail->setHorizontalHeaderLabels(lstHeader);
-    ui->tawRealTimeDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
-    for (int i = 0; i < 11; i++)
-    {
-        ui->tawRealTimeDetail->setColumnWidth(i, i==0?80:150);
-    }
     if (NULL == _currentConcentrator)
     {
         return;
@@ -274,6 +290,7 @@ void SummaryWidget::onRealtimeQuery()
             item->setData(12, o->lst.at(0)->addr);
             item->setData(13, o->lst.at(1)->addr);
             item->setData(14, o->lst.at(2)->addr);
+            item->setData(15, o->id);
            ui->tawRealTimeDetail->setItem(i, 0, item);
             ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
@@ -302,7 +319,7 @@ void SummaryWidget::onTimeout()
             for (int j = 0; j < ui->tawRealTimeDetail->rowCount(); j++) {
                 auto item = ui->tawRealTimeDetail->item(j, 0);
                 if (item->checkState() == Qt::Checked && item->data(10).toInt() == dt.ConcentratorAddr) {
-                    auto monitor = DatabaseProxy::instance().monitor(item->data(11).toInt());
+                    auto monitor = DatabaseProxy::instance().monitor(item->data(15).toInt());
 
                     if (item->data(12).toInt() == dt.TerminalAddr) {
                         if (nullptr != monitor) monitor->rtva = QString::number(dt.iValue);

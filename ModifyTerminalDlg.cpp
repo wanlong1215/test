@@ -29,7 +29,7 @@ void ModifyTerminalDlg::init()
     {
         return;
     }
-    ui->groupBox->setVisible("C" == _o->type);
+    //ui->groupBox->setVisible("C" == _o->type);
 
     ui->leAddr1->setText(QString::number(_o->addr));
     ui->leTimes->setText(QString::number(_o->index));

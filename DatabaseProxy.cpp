@@ -1623,7 +1623,7 @@ proMonitor *DatabaseProxy::monitor(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
+			for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				for (int i = 0; i < pAmso->lst.size(); i++)
@@ -1679,7 +1679,7 @@ proTerminal *DatabaseProxy::terminal(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
+			for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				for (int i = 0; i < pAmso->lst.size(); i++)

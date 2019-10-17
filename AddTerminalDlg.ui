@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>432</width>
-    <height>331</height>
+    <width>407</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>添加终端</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <layout class="QGridLayout" name="gridLayout_5">
      <item row="0" column="0">
@@ -47,86 +47,161 @@
       <attribute name="title">
        <string>A</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_19">
-         <property name="text">
-          <string>路由1</string>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="groupBox_6">
+         <property name="title">
+          <string>基础信息</string>
          </property>
+         <layout class="QGridLayout" name="gridLayout_9">
+          <item row="3" column="4">
+           <widget class="QLineEdit" name="leRoute61"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_59">
+            <property name="text">
+             <string>终端地址</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="label_60">
+            <property name="text">
+             <string>路由6</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="leRoute11"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leAddr1"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_61">
+            <property name="text">
+             <string>路由1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="leRoute31"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_62">
+            <property name="text">
+             <string>路由2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_63">
+            <property name="text">
+             <string>中继次数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_64">
+            <property name="text">
+             <string>路由5</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLineEdit" name="leRoute21"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_65">
+            <property name="text">
+             <string>路由4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_66">
+            <property name="text">
+             <string>路由3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLineEdit" name="leRoute41"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="leRoute51"/>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLineEdit" name="leTimes1"/>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_18">
-         <property name="text">
-          <string>终端地址</string>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string> 变比</string>
          </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>高压侧：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leHighPressureValue1"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QComboBox" name="cbHighPressureSymbol1">
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>+</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>-</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="leHighPressureOffset1"/>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>%  (kv)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>低压侧：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="leLowPressureValue1"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>(kv)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="leRoute11"/>
-       </item>
-       <item row="1" column="4">
-        <widget class="QLineEdit" name="leRoute21"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_20">
-         <property name="text">
-          <string>路由2</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="leAddr1"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_21">
-         <property name="text">
-          <string>路由3</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_22">
-         <property name="text">
-          <string>路由4</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="leRoute31"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>中继次数</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4">
-        <widget class="QLineEdit" name="leRoute41"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_23">
-         <property name="text">
-          <string>路由5</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLabel" name="label_24">
-         <property name="text">
-          <string>路由6</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="leRoute51"/>
-       </item>
-       <item row="3" column="4">
-        <widget class="QLineEdit" name="leRoute61"/>
-       </item>
-       <item row="0" column="4">
-        <widget class="QLineEdit" name="leTimes1"/>
        </item>
       </layout>
      </widget>
@@ -134,86 +209,161 @@
       <attribute name="title">
        <string>B</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="4">
-        <widget class="QLineEdit" name="leRoute22"/>
-       </item>
-       <item row="3" column="4">
-        <widget class="QLineEdit" name="leRoute62"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_33">
-         <property name="text">
-          <string>路由2</string>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>基础信息</string>
          </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="3" column="4">
+           <widget class="QLineEdit" name="leRoute62"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_51">
+            <property name="text">
+             <string>终端地址</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="label_52">
+            <property name="text">
+             <string>路由6</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="leRoute12"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leAddr2"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_53">
+            <property name="text">
+             <string>路由1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="leRoute32"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_54">
+            <property name="text">
+             <string>路由2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_55">
+            <property name="text">
+             <string>中继次数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_56">
+            <property name="text">
+             <string>路由5</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLineEdit" name="leRoute22"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_57">
+            <property name="text">
+             <string>路由4</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_58">
+            <property name="text">
+             <string>路由3</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLineEdit" name="leRoute42"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="leRoute52"/>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLineEdit" name="leTimes2"/>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="2" column="4">
-        <widget class="QLineEdit" name="leRoute42"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="leRoute12"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_30">
-         <property name="text">
-          <string>中继次数</string>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string> 变比</string>
          </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>高压侧：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leHighPressureValue2"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QComboBox" name="cbHighPressureSymbol2">
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>+</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>-</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="leHighPressureOffset2"/>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>%  (kv)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>低压侧：</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="leLowPressureValue2"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>(kv)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_31">
-         <property name="text">
-          <string>终端地址</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="leAddr2"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_36">
-         <property name="text">
-          <string>路由5</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="leRoute52"/>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_35">
-         <property name="text">
-          <string>路由4</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="leRoute32"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_34">
-         <property name="text">
-          <string>路由3</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLabel" name="label_37">
-         <property name="text">
-          <string>路由6</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_32">
-         <property name="text">
-          <string>路由1</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <widget class="QLineEdit" name="leTimes2"/>
        </item>
       </layout>
      </widget>
@@ -221,19 +371,7 @@
       <attribute name="title">
        <string>C</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QGroupBox" name="groupBox_2">
          <property name="title">
@@ -337,10 +475,16 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="leHighPressureValue"/>
+           <widget class="QLineEdit" name="leHighPressureValue3"/>
           </item>
           <item row="0" column="2">
-           <widget class="QComboBox" name="cbHighPressureSymbol">
+           <widget class="QComboBox" name="cbHighPressureSymbol3">
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <item>
              <property name="text">
               <string>+</string>
@@ -354,7 +498,7 @@
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QLineEdit" name="leHighPressureOffset"/>
+           <widget class="QLineEdit" name="leHighPressureOffset3"/>
           </item>
           <item row="0" column="4">
            <widget class="QLabel" name="label_2">
@@ -371,7 +515,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="leLowPressureValue"/>
+           <widget class="QLineEdit" name="leLowPressureValue3"/>
           </item>
           <item row="1" column="2">
            <widget class="QLabel" name="label_4">
