@@ -1573,7 +1573,7 @@ proLine *DatabaseProxy::line(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
+            for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				for (int i = 0; i < pAmso->lst.size(); i++)
@@ -1844,60 +1844,32 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 	{
 		return false;
 	}
-	for (int i = 0; i < pConcentrator->lst.size(); i++)
+	vector<TIME_ID> vTime;
+	m_db2.GetCollectTimeAndMoniterID(vTime);
+	for (int i = 0; i < vTime.size(); i++)
 	{
-		proLine *pLine = pConcentrator->lst.at(i);
-		sData.line = pLine->name;
-		for (int i = 0; i < pLine->lst.size(); i++)
+		proMonitor *mo = monitor(vTime[i].MonitorID);
+		sData.line = mo->parent->name;
+		sData.monitor = mo->name;
+		if (mo->lst.size() != 3)
 		{
-			proMonitor *pMonitor = pLine->lst.at(i);
-			sData.monitor = pMonitor->name;
-
-			if (pMonitor->lst.size() == 1)
-			{
-				proTerminal *pTerminal = pMonitor->lst.at(0);
-				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalAddr(terminalData1, ConcentratorAddr, pTerminal->addr);
-				for (int i = 0; i < terminalData1.size(); i++)
-				{
-					DATA d = terminalData1[i];
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminal->addr, d.CollectTime);
-					pDatalist<<sData;
-				}
-				
-			}
-			else if (pMonitor->lst.size() == 2)
-			{
-				proTerminal *pTerminal1 = pMonitor->lst.at(0);
-				proTerminal *pTerminal2 = pMonitor->lst.at(1);
-				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalAddr(terminalData1, ConcentratorAddr, pTerminal1->addr);
-				for (int i = 0; i < terminalData1.size(); i++)
-				{
-					DATA d = terminalData1[i];
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminal1->addr, d.CollectTime);
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminal2->addr, d.CollectTime);
-					pDatalist<<sData;
-				}
-			}
-			else
-			{
-				proTerminal *pTerminal1 = pMonitor->lst.at(0);
-				proTerminal *pTerminal2 = pMonitor->lst.at(1);
-				proTerminal *pTerminal3 = pMonitor->lst.at(2);
-				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalAddr(terminalData1, ConcentratorAddr, pTerminal1->addr);
-				for (int i = 0; i < terminalData1.size(); i++)
-				{
-					DATA d = terminalData1[i];
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminal1->addr, d.CollectTime);
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminal2->addr, d.CollectTime);
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueC, pTerminal3->addr, d.CollectTime);
-					pDatalist<<sData;
-				}
-			}
+			continue;
 		}
-		
+		proTerminal *pTerminalA = mo->lst.at(0);
+		proTerminal *pTerminalB = mo->lst.at(1);
+		proTerminal *pTerminalC = mo->lst.at(2);
+
+		memset(&sData.valueA, 0, sizeof(DATA));
+		memset(&sData.valueB, 0, sizeof(DATA));
+		memset(&sData.valueC, 0, sizeof(DATA));
+		//获得A数据
+		m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminalA->addr, vTime[i].CollectTime);
+		//获得B数据
+		m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminalB->addr, vTime[i].CollectTime);
+		//获得C数据
+		m_db2.GetDatabyTerminalAddrAndTime(sData.valueC, pTerminalC->addr, vTime[i].CollectTime);
+
+		pDatalist<<sData;
 	}
 	return true;
 }
@@ -1914,61 +1886,40 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 	{
 		return false;
 	}
-	
-	for (int i = 0; i < pConcentrator->lst.size(); i++)
+	vector<TIME_ID> vTime;
+	m_db2.GetCollectTimeAndMoniterID(vTime);
+	for (int i = 0; i < vTime.size(); i++)
 	{
-		proLine *pLine = pConcentrator->lst.at(i);
-		sData.line = pLine->name;
-		for (int i = 0; i < pLine->lst.size(); i++)
+		if (begin > vTime[i].CollectTime)
 		{
-			proMonitor *pMonitor = pLine->lst.at(i);
-			sData.monitor = pMonitor->name;
-
-			if (pMonitor->lst.size() == 1)
-			{
-				proTerminal *pTerminal = pMonitor->lst.at(0);
-				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalAddrAndDate(terminalData1, ConcentratorAddr, pTerminal->addr, begin, end);
-				for (int i = 0; i < terminalData1.size(); i++)
-				{
-					DATA d = terminalData1[i];
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminal->addr, d.CollectTime);
-					pDatalist<<sData;
-				}
-
-			}
-			else if (pMonitor->lst.size() == 2)
-			{
-				proTerminal *pTerminal1 = pMonitor->lst.at(0);
-				proTerminal *pTerminal2 = pMonitor->lst.at(1);
-				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalAddrAndDate(terminalData1, ConcentratorAddr, pTerminal1->addr, begin, end);
-				for (int i = 0; i < terminalData1.size(); i++)
-				{
-					DATA d = terminalData1[i];
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminal1->addr, d.CollectTime);
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminal2->addr, d.CollectTime);
-					pDatalist<<sData;
-				}
-			}
-			else
-			{
-				proTerminal *pTerminal1 = pMonitor->lst.at(0);
-				proTerminal *pTerminal2 = pMonitor->lst.at(1);
-				proTerminal *pTerminal3 = pMonitor->lst.at(2);
-				vector<DATA> terminalData1;
-				m_db2.GetDatabyTerminalAddrAndDate(terminalData1, ConcentratorAddr, pTerminal1->addr, begin, end);
-				for (int i = 0; i < terminalData1.size(); i++)
-				{
-					DATA d = terminalData1[i];
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminal1->addr, d.CollectTime);
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminal2->addr, d.CollectTime);
-					m_db2.GetDatabyTerminalAddrAndTime(sData.valueC, pTerminal3->addr, d.CollectTime);
-					pDatalist<<sData;
-				}
-			}
+			continue;
 		}
+		if (end < vTime[i].CollectTime)
+		{
+			continue;
+		}
+		proMonitor *mo = monitor(vTime[i].MonitorID);
+		sData.line = mo->parent->name;
+		sData.monitor = mo->name;
+		if (mo->lst.size() != 3)
+		{
+			continue;
+		}
+		proTerminal *pTerminalA = mo->lst.at(0);
+		proTerminal *pTerminalB = mo->lst.at(1);
+		proTerminal *pTerminalC = mo->lst.at(2);
 
+		memset(&sData.valueA, 0, sizeof(DATA));
+		memset(&sData.valueB, 0, sizeof(DATA));
+		memset(&sData.valueC, 0, sizeof(DATA));
+		//获得A数据
+		m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminalA->addr, vTime[i].CollectTime);
+		//获得B数据
+		m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminalB->addr, vTime[i].CollectTime);
+		//获得C数据
+		m_db2.GetDatabyTerminalAddrAndTime(sData.valueC, pTerminalC->addr, vTime[i].CollectTime);
+
+		pDatalist<<sData;
 	}
 	return true;
 }

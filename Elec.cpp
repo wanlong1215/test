@@ -18,7 +18,7 @@ Elec::Elec(QWidget *parent)
     on_btnSummary_clicked();
 
     _timer = new QTimer(this);
-    _timer->setInterval(30*1000);
+    _timer->setInterval(5*1000);
     connect(_timer, &QTimer::timeout, this, [this](){
         QList<proWarning> lst;
         if (DatabaseProxy::instance().historyWarningNopop( lst ))

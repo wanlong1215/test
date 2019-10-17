@@ -172,6 +172,12 @@ struct COMMAND
 	int Commandtype;
 };
 
+struct TIME_ID 
+{
+	int MonitorID;
+	INT64 CollectTime;
+};
+
 
 class CDATAOperate
 {
@@ -275,6 +281,10 @@ public:
 	int GetRealData(vector<DATA> &v);
 	//获得实时指令 -1表示目前库中没有指令 0表示sql有错误, 1表示读取成功
 	int GetCommand(vector<COMMAND> &v);
+	//获得数据表中的时间，并以集中器分组
+	int GetCollectTimeAndMoniterID(vector<TIME_ID> &v);
+	//获得数据表中的时间，并以集中器分组
+	int GetDataByCollectTimeAndMonitorID(DATA &A, DATA &B, DATA &C, TIME_ID ti);
 
 
 private:

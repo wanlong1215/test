@@ -1202,7 +1202,7 @@ int CDATAOperate::GetTerminalByAddr(TERMINAL &p, int ConcentratorAddr, int Termi
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "select MonitorID,TerminalNAME,TerminalTYPE,TerminalIndex,TerminalInstallTime,TerminalAddr,TerminalPreAddr,TerminalNextAddr,ConcentratorAddr,TerminalCurrentTime,RouteState1,RouteState2,RouteState3,RouteState4,RouteState5,RouteState6,HighValue,HighOffset,HighSymbol,LowValue from BR_TERMINAL where ConcentratorAddr = ? and TerminalID = ?";
+		const char *sql = "select MonitorID,TerminalNAME,TerminalTYPE,TerminalIndex,TerminalInstallTime,TerminalAddr,TerminalPreAddr,TerminalNextAddr,ConcentratorAddr,TerminalCurrentTime,RouteState1,RouteState2,RouteState3,RouteState4,RouteState5,RouteState6,HighValue,HighOffset,HighSymbol,LowValue from BR_TERMINAL where ConcentratorAddr = ? and TerminalAddr = ?";
 		st.prepare(sql);
 		st.set_long( 0, ConcentratorAddr );
 		st.set_long( 1, TerminalAddr );
@@ -1661,6 +1661,79 @@ int CDATAOperate::GetDatabyConcentratorAddr(vector<DATA> &v, int ConAddr)
 			p.iValue = rs.get_float(9);
 			p.iAngValue = rs.get_float(10);
 			v.push_back(p);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+//获得数据表中的时间，并以集中器分组
+int CDATAOperate::GetDataByCollectTimeAndMonitorID(DATA &A, DATA &B, DATA &C, TIME_ID ti)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select TerminalAddr where MonitorID = ?";
+		st.prepare(sql);
+		st.set_long(0, ti.MonitorID);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if (rs.db_eof())
+		{
+			rs.close();
+			return -1;
+		}
+		int addr[3] = {-1};
+		int index = 0;
+		while( !rs.db_eof() )
+		{
+			if (index >= 3)
+			{
+				break;
+			}
+			addr[index++] = rs.get_long(0);
+			rs.move_next();			
+		}
+		rs.close();
+
+
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+//获得数据表中的时间，并以集中器分组
+int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr group by a.MonitorID, b.CollectTime order by b.CollectTime";
+		st.prepare(sql);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if (rs.db_eof())
+		{
+			rs.close();
+			return -1;
+		}
+
+		while( !rs.db_eof() )
+		{
+			TIME_ID time_id;
+			time_id.MonitorID = rs.get_long(0);
+			time_id.CollectTime = rs.get_bigInt(1);
+			v.push_back(time_id);
 			rs.move_next();
 		}
 		rs.close();
