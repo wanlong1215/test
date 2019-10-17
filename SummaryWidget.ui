@@ -14,6 +14,21 @@
    <string>Form</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QTreeWidget" name="trwOrganization">
      <property name="maximumSize">
@@ -26,6 +41,9 @@
       <font>
        <pointsize>18</pointsize>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
      <column>
       <property name="text">
@@ -81,6 +99,9 @@
            <height>200</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -92,6 +113,9 @@
             <width>939</width>
             <height>198</height>
            </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
           </property>
           <widget class="TerminalGraphicsWidget" name="wgtHistoryGraphics" native="true">
            <property name="geometry">

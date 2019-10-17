@@ -260,7 +260,7 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 									proTerminal *pTerminal = new proTerminal(pMonitor);
 									pTerminal->id = terminal[i].TerminalID;
                                     pTerminal->name = ToQString(terminal[i].strName);//(terminal[i].strName);
-									pTerminal->type = atoi(terminal[i].strType.c_str());
+                                    pTerminal->type = ToQString(terminal[i].strType);
 									pTerminal->index = terminal[i].index;
 									pTerminal->installTime = terminal[i].installTime;
 									pTerminal->addr = terminal[i].addr;

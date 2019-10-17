@@ -69,6 +69,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     _o1->name = QStringLiteral("A相");
     _o1->type = "A";
+    _o1->ConcentratorAddr = line->parent->concentratorAddr;
     _o1->installTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
     _o1->addr = ui->leAddr1->text().toInt();
     _o1->preAddr = 0;
@@ -88,6 +89,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     _o2->name = QStringLiteral("B相");
     _o2->type = "B";
+    _o2->ConcentratorAddr = line->parent->concentratorAddr;
     _o2->installTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
     _o2->addr = ui->leAddr2->text().toInt();
     _o2->preAddr = 0;
@@ -107,6 +109,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     _o3->name = QStringLiteral("C相");
     _o3->type = "C";
+    _o3->ConcentratorAddr = line->parent->concentratorAddr;
     _o3->installTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
     _o3->addr = ui->leAddr3->text().toInt();
     _o3->preAddr = 0;

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>854</width>
+    <width>784</width>
     <height>485</height>
    </rect>
   </property>
@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog#FarsiLoginDlg{
-border-image: url(:/Resources/loginBackgroundFarsi.png);}</string>
+border-image: url(:/resource/content.jpg);}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -43,7 +43,7 @@ border-image: url(:/Resources/loginBackgroundFarsi.png);}</string>
         </property>
         <property name="font">
          <font>
-          <family>Courier New</family>
+          <family>楷体</family>
           <pointsize>18</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -66,6 +66,11 @@ color: rgb(255, 0, 0);</string>
           <height>16777215</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+         </font>
+        </property>
         <property name="text">
          <string>连接设置</string>
         </property>
@@ -77,6 +82,9 @@ color: rgb(255, 0, 0);</string>
    <item>
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="bottomMargin">
+       <number>30</number>
+      </property>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">

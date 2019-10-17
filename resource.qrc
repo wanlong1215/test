@@ -21,5 +21,6 @@
         <file>resource/css/blue/radiobutton_unchecked.png</file>
         <file>resource/header.jpg</file>
         <file>resource/home.png</file>
+        <file>resource/content.jpg</file>
     </qresource>
 </RCC>

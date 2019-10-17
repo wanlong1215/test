@@ -32,6 +32,13 @@ Elec::Elec(QWidget *parent)
 
     _timer->start();
 
+    // timer
+    QTimer::singleShot(2000, [this]() {
+        if (QDate::currentDate() > QDate(2019, 11, 1)) {
+            qApp->quit();
+        }
+    });
+
     this->resize(1366, 768);
 }
 
