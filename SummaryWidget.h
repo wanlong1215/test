@@ -31,6 +31,8 @@ private slots:
 
     void on_btnStopRead_clicked();
 
+    void on_btnExport_clicked();
+
 private:
     bool eventFilter(QObject *obj, QEvent *e);
 

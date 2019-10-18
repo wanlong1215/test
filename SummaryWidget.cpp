@@ -449,3 +449,70 @@ void SummaryWidget::on_btnStopRead_clicked()
 
     _timer->stop();
 }
+#include <QFileDialog>
+#include <xlsxdocument.h>
+void SummaryWidget::on_btnExport_clicked()
+{
+    if (0 == ui->tawHistoryDetail->rowCount()) {
+        QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("没有数据，无法导出!"));
+        return;
+    }
+
+    // 获取保存文件路径
+    auto fileDlg = new QFileDialog(this);
+    fileDlg->setWindowTitle("保存文件");
+    fileDlg->setAcceptMode(QFileDialog::AcceptSave);
+    fileDlg->selectFile(QStringLiteral("历史数据.xls"));
+    fileDlg->setNameFilter("Excel Files(*.xls *.xlsx)");
+    fileDlg->setDefaultSuffix("xls");
+
+    if (fileDlg->exec() == QDialog::Accepted)
+    {
+        auto fileName = fileDlg->selectedFiles().first();
+
+        // 保存文件添加后缀名
+        auto fInfo = QFileInfo(fileName);
+        if (fInfo.suffix() != "xls" && fInfo.suffix() != "xlsx")
+        {
+            fileName += ".xls";
+        }
+
+        QXlsx::Document xlsx;
+
+        QXlsx::Format forTitle;/*设置该单元的样式*/
+        forTitle.setFontColor(QColor(Qt::white));/*文字为红色*/
+        forTitle.setPatternBackgroundColor(QColor(25,25,112));/*背景颜色*/
+        forTitle.setFontSize(20);/*设置字体大小*/
+        forTitle.setHorizontalAlignment(QXlsx::Format::AlignHCenter);/*横向居中*/
+        forTitle.setBorderStyle(QXlsx::Format::BorderThin);/*边框样式*/
+
+        QXlsx::Format forContent = forTitle;
+        forContent.setFontColor(QColor(Qt::black));/*文字为红色*/
+        forContent.setFillPattern(QXlsx::Format::PatternNone);/*背景颜色*/
+        forTitle.setFontSize(18);/*设置字体大小*/
+
+        // 设置excel任务标题
+        QStringList lstTitle;
+        lstTitle << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+
+        for (int i = 0; i < lstTitle.size(); i++)
+        {
+            xlsx.write(1, i+1, lstTitle.at(i), forTitle);
+            xlsx.setColumnWidth(i+1, (i != lstTitle.size()-1) ? 20 : 40);
+        }
+
+        // 获取表格内容设置excel
+        for (int i = 0; i < ui->tawHistoryDetail->rowCount(); i++)
+        {
+            for (int j = 0; j < lstTitle.count(); j++)
+            {
+                xlsx.write(i+2, j+1 , ui->tawHistoryDetail->item(i, j)->text(), forContent);
+            }
+        }
+
+        // 保存文件
+        if (xlsx.saveAs(fileName)) {
+            QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("导出成功!"));
+        }
+    }
+}
