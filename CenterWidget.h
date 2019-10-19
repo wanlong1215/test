@@ -30,6 +30,8 @@ protected:
 
 private:
 	Ui::CenterWidget *ui;
+
+    QList<proCompany *> _org;
 };
 
 #endif // CENTERWIDGET_H

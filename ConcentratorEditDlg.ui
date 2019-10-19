@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>370</height>
+    <width>658</width>
+    <height>414</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>13</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>集中器</string>
@@ -36,7 +42,7 @@
      <item row="0" column="2">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>目标域</string>
+        <string>IP地址</string>
        </property>
       </widget>
      </item>
@@ -54,7 +60,11 @@
       <widget class="QLineEdit" name="leInstallAddr"/>
      </item>
      <item row="1" column="3">
-      <widget class="QLineEdit" name="leType"/>
+      <widget class="QLineEdit" name="leType">
+       <property name="text">
+        <string>TCP</string>
+       </property>
+      </widget>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_5">
@@ -70,7 +80,11 @@
       <widget class="QLineEdit" name="leApName"/>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="leApProtocol"/>
+      <widget class="QLineEdit" name="leApProtocol">
+       <property name="text">
+        <string>TCP</string>
+       </property>
+      </widget>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_7">
@@ -102,14 +116,14 @@
      <item row="4" column="0">
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>终端读取间隔</string>
+        <string>终端读取间隔( s )</string>
        </property>
       </widget>
      </item>
      <item row="4" column="2">
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>集中器读取间隔</string>
+        <string>集中器读取间隔( s )</string>
        </property>
       </widget>
      </item>
@@ -132,7 +146,7 @@
      <item row="5" column="0">
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>心跳间隔</string>
+        <string>心跳间隔( s )</string>
        </property>
       </widget>
      </item>
@@ -149,7 +163,7 @@
      <item row="6" column="2">
       <widget class="QLabel" name="label_14">
        <property name="text">
-        <string>存储间隔</string>
+        <string>存储间隔( s )</string>
        </property>
       </widget>
      </item>
@@ -179,12 +193,33 @@
      <item row="8" column="0">
       <widget class="QLabel" name="label_17">
        <property name="text">
-        <string>集中器时间</string>
+        <string>系统时间</string>
        </property>
       </widget>
      </item>
      <item row="8" column="1">
       <widget class="QDateTimeEdit" name="leTime"/>
+     </item>
+     <item row="8" column="2">
+      <widget class="QLabel" name="label_18">
+       <property name="text">
+        <string>自报开关</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="3">
+      <widget class="QComboBox" name="cbPower">
+       <item>
+        <property name="text">
+         <string>关</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>开</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </item>

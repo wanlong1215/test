@@ -8,11 +8,16 @@
 #include <QFile>
 #include "AlarmConfigDlg.h"
 #include "ConcentratorConfigDlg.h"
+#include "TerminalQueryDlg.h"
+#include "AppSession.h"
 
 Elec::Elec(QWidget *parent)
     : QMainWindow(parent)
 {
 	ui.setupUi(this);
+
+    ui.btnUser->setVisible(AppSession::instance().user.level == 1);
+    ui.btnConfigure->setVisible(AppSession::instance().user.level == 1);
 
     _lstMenuButton << ui.btnSummary << ui.btnConfigure;
     on_btnSummary_clicked();
@@ -147,5 +152,11 @@ void Elec::on_btnConcentrator_clicked()
 {
     ConcentratorConfigDlg *dlg = new ConcentratorConfigDlg(this);
 
+    dlg->exec();
+}
+
+void Elec::on_btnTerminalQuery_clicked()
+{
+    auto dlg = new TerminalQueryDlg(this);
     dlg->exec();
 }

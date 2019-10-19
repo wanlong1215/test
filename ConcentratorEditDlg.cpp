@@ -43,6 +43,9 @@ void ConcentratorEditDlg::init()
         ui->sbLoopTimer->setValue(_o->wirelessSearchTimer);
         ui->sbConAddr->setValue(_o->concentratorAddr);
         ui->leTime->setDateTime(QDateTime::fromMSecsSinceEpoch(_o->ConcentratorCurrentTime));
+        if (_o->SelfReportOnOff == 0 || _o->SelfReportOnOff == 1) {
+            ui->cbPower->setCurrentIndex(_o->SelfReportOnOff);
+        }
     }
     else
     {
@@ -77,6 +80,7 @@ void ConcentratorEditDlg::on_btnOK_clicked()
     _o->wirelessSearchTimer = ui->sbLoopTimer->value();
     _o->concentratorAddr = ui->sbConAddr->value();
     _o->ConcentratorCurrentTime = ui->leTime->dateTime().toMSecsSinceEpoch();
+    _o->SelfReportOnOff = ui->cbPower->currentIndex();
 
     if (insert) {
         //

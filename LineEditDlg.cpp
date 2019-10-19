@@ -33,10 +33,9 @@ void LineEditDlg::on_btnOK_clicked()
 
     _o->name = ui->leName->text();
     _o->type = ui->cbType->currentIndex();
-    _o->addr = ui->leAddr->text();
-    _o->preAddr = ui->lePreId->text();
-    _o->nextAddr = ui->leNextId->text();
+    _o->preAddr = _mapLine.key(ui->cbPreLine->currentText());
     _o->workerID = _map.key(ui->cbWorker->currentText());
+    _o->Ratio = ui->leRatio->text().toDouble();
 
     if (insert) {
         //DatabaseProxy::instance().addLine(_o, _parentId);
@@ -60,17 +59,41 @@ void LineEditDlg::init()
 
     ui->cbWorker->addItems(_map.values());
 
+    auto lst = DatabaseProxy::instance().getOrganizations();
+    foreach (auto o1, lst) {
+        foreach (auto o2, o1->lst) {
+            foreach (auto o3, o2->lst) {
+                foreach (auto o4, o3->lst) {
+                    foreach (auto o5, o4->lst) {
+                        foreach (auto o6, o5->lst) {
+                            _mapLine.insert(o6->id, o6->name);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ui->cbPreLine->addItems(_mapLine.values());
+
     if (NULL != _o)
     {
         ui->leName->setText(_o->name);
         ui->cbType->setCurrentIndex(_o->type);
-        ui->leAddr->setText(_o->addr);
-        ui->lePreId->setText(_o->preAddr);
-        ui->leNextId->setText(_o->nextAddr);
+        ui->cbPreLine->setCurrentText(_mapLine.value(_o->preAddr.toInt()));
         ui->cbWorker->setCurrentText(_map.value(_o->workerID));
+        ui->leRatio->setText(QString::number(_o->Ratio));
     }
     else
     {
         ui->leName->setText(QStringLiteral("线段"));
+        on_cbType_currentIndexChanged(0);
     }
+}
+
+void LineEditDlg::on_cbType_currentIndexChanged(int index)
+{
+    ui->lbRatio->setVisible(2 == index);
+    ui->leRatio->setVisible(2 == index);
+    ui->lbRatio1->setVisible(2 == index);
 }

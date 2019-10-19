@@ -25,6 +25,7 @@ private:
     Ui::ModifyMonitorDlg *ui;
 
     proMonitor *_o;
+    QMap<int, QString> _map;
 };
 
 #endif // MODIFYMONITORDLG_H

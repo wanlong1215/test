@@ -2,6 +2,7 @@
 #define SUMMARYWIDGET_H
 
 #include <QWidget>
+#include <QMap>
 
 namespace Ui {
 class SummaryWidget;
@@ -33,6 +34,8 @@ private slots:
 
     void on_btnExport_clicked();
 
+    void onSubCompayChanged();
+
 private:
     bool eventFilter(QObject *obj, QEvent *e);
 
@@ -41,6 +44,7 @@ private:
 
     proConcentrator *_currentConcentrator;
     QTimer *_timer;
+    QMap<QString, QStringList> _map; // subCompany concentrator
 };
 
 #endif // SUMMARYWIDGET_H

@@ -168,6 +168,10 @@ void DatabaseProxy::clearOrganizations()
 
 QList<proCompany *> DatabaseProxy::getOrganizations()
 {
+    if (!_lst.isEmpty()) {
+        return _lst;
+    }
+
     // read from db;
 	clearOrganizations();
 
@@ -243,6 +247,7 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
                             pLine->preAddr = ToQString(line[i].strPreAddr);//(line[i].strPreAddr);
                             pLine->nextAddr = ToQString(line[i].strNextAddr);//(line[i].strNextAddr);
 							pLine->workerID = line[i].workerID;
+							pLine->Ratio = line[i].Ratio;
 
 							vector<MONITOR> monitor;
 							m_db2.GetAllMonitorByID(monitor, line[i].lineID);
@@ -250,8 +255,9 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 							{
 								proMonitor *pMonitor = new proMonitor(pLine);
 								pMonitor->id = monitor[i].MonitorID;
-								pMonitor->addr = monitor[i].MonitorAddr;
+								pMonitor->addr = ToQString(monitor[i].MonitorAddr);
                                 pMonitor->name = ToQString(monitor[i].strName);//(monitor[i].strName);
+								pMonitor->PreMonitorID = monitor[i].PreMonitorID;
 
 								vector<TERMINAL> terminal;
 								m_db2.GetAllTerminalByID(terminal, monitor[i].MonitorID);
@@ -308,6 +314,9 @@ bool DatabaseProxy::addCompany(proCompany *o)
     company.strName = ToString(o->name);
     company.strDescribe = ToString(o->desc);
     o->id = m_db2.InsertCompany(company);
+    if (0 == o->id) {
+        return false;
+    }
     _lst.append(o);
 
     return true;
@@ -320,6 +329,9 @@ bool DatabaseProxy::addSubCompany(proSubCompany *o, int parentid)
     subCompany.strName = ToString(o->name);
     subCompany.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertSubCompany(subCompany, parentid);
+    if (0 == o->id) {
+        return false;
+    }
     proCompany *po = company(parentid);
 
     if (NULL != po)
@@ -338,6 +350,9 @@ bool DatabaseProxy::addAmso(proAmso *o, int parentid)
     amso.strName = ToString(o->name);
     amso.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertAMSO(amso, parentid);
+    if (0 == o->id) {
+        return false;
+    }
 
     proSubCompany *po = subCompany(parentid);
 
@@ -357,6 +372,9 @@ bool DatabaseProxy::addRoute(proRoute *o, int parentid)
     route.strName = ToString(o->name);
     route.strDescribe = ToString(o->desc);
 	o->id = m_db2.InsertRoute(route, parentid);
+    if (0 == o->id) {
+        return false;
+    }
     proAmso *po = amso(parentid);
 
     if (NULL != po)
@@ -392,7 +410,9 @@ bool DatabaseProxy::addConcentrator(proConcentrator *o, int parentid)
 	concentrator.SelfReportOnOff = o->SelfReportOnOff;
     concentrator.ConcentratorTimer = o->concentratorTimer;
 	o->id = m_db2.InsertConcentrator(concentrator, parentid);
-
+    if (0 == o->id) {
+        return false;
+    }
 
     proRoute *po = route(parentid);
 
@@ -415,7 +435,11 @@ bool DatabaseProxy::addLine(proLine *o, int parentid)
     line.strPreAddr = ToString(o->preAddr);
     line.strNextAddr = ToString(o->nextAddr);
 	line.workerID = o->workerID;
+	line.Ratio = o->Ratio;
 	o->id = m_db2.InsertLine(line, parentid);
+    if (0 == o->id) {
+        return false;
+    }
 
     proConcentrator *po = concentrator(parentid);
 
@@ -433,8 +457,12 @@ bool DatabaseProxy::addMonitor(proMonitor *o, int parentid)
 	MONITOR monitor;
 	monitor.lineID = parentid;
     monitor.strName = ToString(o->name);
-	monitor.MonitorAddr = o->addr;
+	monitor.MonitorAddr = ToString(o->addr);
+	monitor.PreMonitorID = o->PreMonitorID;
 	o->id = m_db2.InsertMonitor(monitor,parentid);
+    if (0 == o->id) {
+        return false;
+    }
 
     proLine *po = line(parentid);
 
@@ -470,6 +498,9 @@ bool DatabaseProxy::addTerminal(proTerminal *o, int parentid)
 	terminal.HighSymbol = o->highPressureSymbol;
 	terminal.LowValue = o->lowPressureValue;
 	o->id = m_db2.InsertTerminal(terminal, parentid);
+    if (0 == o->id) {
+        return false;
+    }
 
     proMonitor *po = monitor(parentid);
 
@@ -521,8 +552,8 @@ bool DatabaseProxy::addWarning(proWarning *o)
 	WARNING w;
 	w.WarningTime = o->WarningTime;
 	w.WarningLine = o->WarningLine;
-	w.MonitorAddr1 = o->MonitorAddr1;
-	w.MonitorAddr2 = o->MonitorAddr2;
+	w.MonitorAddr1 = ToString(o->MonitorAddr1);
+	w.MonitorAddr2 = ToString(o->MonitorAddr2);
 	w.Type = o->Type;
 	w.iValue1 = o->iValue1;
 	w.iValue2 = o->iValue2;
@@ -616,6 +647,7 @@ bool DatabaseProxy::modifyLine(proLine *o)
     line.strPreAddr = ToString(o->preAddr);//o->preAddr.toStdString();
     line.strNextAddr = ToString(o->nextAddr);//o->nextAddr.toStdString();
 	line.workerID = o->workerID;
+	line.Ratio = o->Ratio;
 	o->id = m_db2.ModifyLine(line, line.lineID);
     return true;
 }
@@ -626,7 +658,8 @@ bool DatabaseProxy::modifyMonitor(proMonitor *o)
 	monitor.MonitorID = o->id;
 	monitor.lineID = o->parent->id;
     monitor.strName = ToString(o->name);//o->name.toStdString();
-	monitor.MonitorAddr = o->addr;
+	monitor.MonitorAddr = ToString(o->addr);
+	monitor.PreMonitorID = o->PreMonitorID;
 	o->id = m_db2.ModifyMonitor(monitor,monitor.MonitorID);
     return true;
 }
@@ -1350,14 +1383,14 @@ bool DatabaseProxy::delTerminal(int id)
                                         }
 
                                         // if monitor child num = 0, delete monitor
-                                        if (o7->lst.isEmpty())
-                                        {
-                                            if (m_db2.DelMonitor(o7->id))
-                                            {
-                                                o6->lst.removeOne(o7);
-                                                delete o7;
-                                            }
-                                        }
+//                                        if (o7->lst.isEmpty())
+//                                        {
+//                                            if (m_db2.DelMonitor(o7->id))
+//                                            {
+//                                                o6->lst.removeOne(o7);
+//                                                delete o7;
+//                                            }
+//                                        }
 
                                         return true;
                                     }
@@ -1429,7 +1462,7 @@ proAmso *DatabaseProxy::amso(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
+            for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				if (pAmso->id == id)
@@ -1462,7 +1495,7 @@ proRoute *DatabaseProxy::route(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-			for (int i = 0; pSubCompany->lst.size(); i++)
+            for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				for (int i = 0; i < pAmso->lst.size(); i++)
@@ -1573,7 +1606,7 @@ proLine *DatabaseProxy::line(int id)
 		for (int i = 0; i < pCompany->lst.size(); i++)
 		{
 			proSubCompany *pSubCompany = pCompany->lst.at(i);
-            for (int i = 0; i < pSubCompany->lst.size(); i++)
+			for (int i = 0; i < pSubCompany->lst.size(); i++)
 			{
 				proAmso *pAmso = pSubCompany->lst.at(i);
 				for (int i = 0; i < pAmso->lst.size(); i++)
@@ -1935,8 +1968,8 @@ bool DatabaseProxy::historyWarningAll(QList<proWarning> &pDatalist)
 		pWarning.WarningID = vdata[i].WarningID;
 		pWarning.WarningTime = vdata[i].WarningTime;
 		pWarning.WarningLine = vdata[i].WarningLine;
-		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
-		pWarning.MonitorAddr2 = vdata[i].MonitorAddr2;
+		pWarning.MonitorAddr1 = ToQString(vdata[i].MonitorAddr1);
+		pWarning.MonitorAddr2 = ToQString(vdata[i].MonitorAddr2);
 		pWarning.Type = vdata[i].Type;
 		pWarning.iValue1 = vdata[i].iValue1;
 		pWarning.iValue2 = vdata[i].iValue2;
@@ -1959,8 +1992,8 @@ bool DatabaseProxy::historyWarningPoped(QList<proWarning> &pDatalist)
 		pWarning.WarningID = vdata[i].WarningID;
 		pWarning.WarningTime = vdata[i].WarningTime;
 		pWarning.WarningLine = vdata[i].WarningLine;
-		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
-		pWarning.MonitorAddr2 = vdata[i].MonitorAddr2;
+		pWarning.MonitorAddr1 = ToQString(vdata[i].MonitorAddr1);
+		pWarning.MonitorAddr2 = ToQString(vdata[i].MonitorAddr2);
 		pWarning.Type = vdata[i].Type;
 		pWarning.iValue1 = vdata[i].iValue1;
 		pWarning.iValue2 = vdata[i].iValue2;
@@ -1983,8 +2016,8 @@ bool DatabaseProxy::historyWarningNopop(QList<proWarning> &pDatalist)
 		pWarning.WarningID = vdata[i].WarningID;
 		pWarning.WarningTime = vdata[i].WarningTime;
 		pWarning.WarningLine = vdata[i].WarningLine;
-		pWarning.MonitorAddr1 = vdata[i].MonitorAddr1;
-		pWarning.MonitorAddr2 = vdata[i].MonitorAddr2;
+		pWarning.MonitorAddr1 = ToQString(vdata[i].MonitorAddr1);
+		pWarning.MonitorAddr2 = ToQString(vdata[i].MonitorAddr2);
 		pWarning.Type = vdata[i].Type;
 		pWarning.iValue1 = vdata[i].iValue1;
 		pWarning.iValue2 = vdata[i].iValue2;

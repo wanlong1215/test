@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>360</height>
+    <width>446</width>
+    <height>445</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>13</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>添加终端</string>
@@ -23,8 +29,8 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="leMonitorAddr"/>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="leMonitorName"/>
      </item>
      <item row="0" column="2">
       <widget class="QLabel" name="label_6">
@@ -33,8 +39,18 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="leMonitorName"/>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="leMonitorAddr"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>上一个监测点</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="cbPreMonitor"/>
      </item>
     </layout>
    </item>
@@ -143,60 +159,31 @@
           <string> 变比</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>高压侧：</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="leHighPressureValue1"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QComboBox" name="cbHighPressureSymbol1">
-            <property name="maximumSize">
-             <size>
-              <width>30</width>
-              <height>16777215</height>
-             </size>
+           <widget class="QLineEdit" name="leHighPressureValue1">
+            <property name="text">
+             <string>1</string>
             </property>
-            <item>
-             <property name="text">
-              <string>+</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>-</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QLineEdit" name="leHighPressureOffset1"/>
+           <widget class="QLineEdit" name="leHighPressureOffset1">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
           </item>
-          <item row="0" column="4">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>变比值</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
            <widget class="QLabel" name="label_12">
             <property name="text">
-             <string>%  (kv)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>低压侧：</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="leLowPressureValue1"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>(kv)</string>
+             <string>偏移量</string>
             </property>
            </widget>
           </item>
@@ -305,60 +292,31 @@
           <string> 变比</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leHighPressureValue2">
+            <property name="text">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>高压侧：</string>
+             <string>变比值</string>
             </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="leHighPressureValue2"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QComboBox" name="cbHighPressureSymbol2">
-            <property name="maximumSize">
-             <size>
-              <width>30</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <item>
-             <property name="text">
-              <string>+</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>-</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QLineEdit" name="leHighPressureOffset2"/>
+           <widget class="QLineEdit" name="leHighPressureOffset2">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
           </item>
-          <item row="0" column="4">
+          <item row="0" column="2">
            <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>%  (kv)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>低压侧：</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="leLowPressureValue2"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>(kv)</string>
+             <string>偏移量</string>
             </property>
            </widget>
           </item>
@@ -470,57 +428,28 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>高压侧：</string>
+             <string>变比值</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="leHighPressureValue3"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QComboBox" name="cbHighPressureSymbol3">
-            <property name="maximumSize">
-             <size>
-              <width>30</width>
-              <height>16777215</height>
-             </size>
+           <widget class="QLineEdit" name="leHighPressureValue3">
+            <property name="text">
+             <string>1</string>
             </property>
-            <item>
-             <property name="text">
-              <string>+</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>-</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QLineEdit" name="leHighPressureOffset3"/>
+           <widget class="QLineEdit" name="leHighPressureOffset3">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
           </item>
-          <item row="0" column="4">
+          <item row="0" column="2">
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>%  (kv)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>低压侧：</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="leLowPressureValue3"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>(kv)</string>
+             <string>偏移量</string>
             </property>
            </widget>
           </item>

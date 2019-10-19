@@ -50,7 +50,8 @@ SOURCES += \
     DATAOperate.cpp \
     AppSession.cpp \
     ModifyMonitorDlg.cpp \
-    AddWorkerDlg.cpp
+    AddWorkerDlg.cpp \
+    TerminalQueryDlg.cpp
 
 HEADERS += \
     TerminalGraphicsWidget.h \
@@ -77,7 +78,8 @@ HEADERS += \
     dbtool_ado.h \
     AppSession.h \
     ModifyMonitorDlg.h \
-    AddWorkerDlg.h
+    AddWorkerDlg.h \
+    TerminalQueryDlg.h
 
 FORMS += \
     Elec.ui \
@@ -97,7 +99,8 @@ FORMS += \
     ConcentratorConfigDlg.ui \
     AlarmConfigDlg.ui \
     ModifyMonitorDlg.ui \
-    AddWorkerDlg.ui
+    AddWorkerDlg.ui \
+    TerminalQueryDlg.ui
 
 RESOURCES += \
     resource.qrc

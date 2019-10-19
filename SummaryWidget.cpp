@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QDebug>
 #include "AppSession.h"
+#include <QFileDialog>
+#include <xlsxdocument.h>
 
 SummaryWidget::SummaryWidget(QWidget *parent) :
     QWidget(parent),
@@ -26,6 +28,7 @@ SummaryWidget::~SummaryWidget()
 void SummaryWidget::init()
 {
     // clear first
+    _map.clear();
     ui->trwOrganization->clear();
     ui->tawHistoryDetail->clear();
     ui->tawRealTimeDetail->clear();
@@ -41,6 +44,7 @@ void SummaryWidget::init()
         ui->trwOrganization->addTopLevelItem(i1);
 
         // add subcompany, level=2
+        QStringList lstConcentrator;
         foreach(proSubCompany * o2, o1->lst) {
             OrganizationTreeWidgetItem *i2 = new OrganizationTreeWidgetItem(o2, i1);
 
@@ -62,6 +66,7 @@ void SummaryWidget::init()
                     foreach(proConcentrator * o5, o4->lst) {
                         OrganizationTreeWidgetItem *i5 = new OrganizationTreeWidgetItem(o5, i4);
 
+                        lstConcentrator.append(o5->name);
                         i4->addChild(i5);
                     }
 
@@ -72,6 +77,7 @@ void SummaryWidget::init()
             }
 
             i2->setExpanded(true);
+            _map.insert(o2->name, lstConcentrator);
         }
 
         i1->setExpanded(true);
@@ -89,10 +95,24 @@ void SummaryWidget::init()
     ui->dteEnd->setDateTime(QDateTime::currentDateTime());
     ui->rbAutoQuery->setChecked(true);
 
+    QStringList subNames = _map.keys();
+    subNames.prepend(QStringLiteral("全部"));
+    QStringList conNames;
+    foreach (auto child, _map.values()) {
+        conNames.append(child);
+    }
+    conNames.prepend(QStringLiteral("全部"));
+    ui->cbSubCompany->clear();
+    ui->cbConcentrator->clear();
+    ui->cbSubCompany->addItems(subNames);
+    ui->cbConcentrator->addItems(conNames);
+    connect(ui->cbSubCompany, SIGNAL(currentIndexChanged(int)), this, SLOT(onSubCompayChanged()));
+    connect(ui->cbConcentrator, SIGNAL(currentIndexChanged(int)), this, SLOT(onHistoryQuery()));
+
     if (1) {
         QStringList lstHeader;
-        ui->tawHistoryDetail->setColumnCount(11);
-        lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+        ui->tawHistoryDetail->setColumnCount(12);
+        lstHeader << QStringLiteral("序号") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
         ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
         ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
         for (int i = 0; i < 11; i++)
@@ -222,32 +242,51 @@ void SummaryWidget::onHistoryQuery()
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     }
 
+    int realCount = 0;
     ui->tawHistoryDetail->setRowCount(lst.count());
     ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
     for (int i = 0; i < lst.count(); i++)
     {
         showData data = lst.at(i);
-        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(data.company));
-        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.subCompany));
-        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.amso));
-        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.route));
-        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.concentrator));
-        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.line));
-        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.monitor));
-        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.valueA.iValue)));
-        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueB.iValue)));
-        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueC.iValue)));
+
+        if (ui->cbSubCompany->currentIndex() == 0) {
+            //
+        } else if (ui->cbSubCompany->currentText() != data.subCompany) {
+            continue;
+        }
+
+        // filter concentrator
+        if (ui->cbConcentrator->currentIndex() == 0) {
+            //
+        } else if (ui->cbConcentrator->currentText() != data.concentrator) {
+            continue;
+        }
+
+        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(QString::number(realCount+1)));
+        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.company));
+        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.subCompany));
+        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.amso));
+        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.route));
+        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.concentrator));
+        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.line));
+        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(data.monitor));
+        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueA.iValue)));
+        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueB.iValue)));
+        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QString::number(data.valueC.iValue)));
         qint64 showTime = data.valueA.CollectTime;
         showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
         showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
-        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
+        ui->tawHistoryDetail->setItem(i, 11, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
 
         if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
             for (int j = 0; j < 10; j++) {
                 ui->tawHistoryDetail->item(i, j)->setBackgroundColor(QColor(255, 105, 180));
             }
         }
+
+        realCount++;
     }
+    ui->tawHistoryDetail->setRowCount(realCount);
 }
 
 void SummaryWidget::onRealtimeQuery()
@@ -283,7 +322,7 @@ void SummaryWidget::onRealtimeQuery()
                 continue;
             }
 
-            QTableWidgetItem *item = new QTableWidgetItem("");
+            QTableWidgetItem *item = new QTableWidgetItem(QString::number(i+1));
             item->setCheckState(Qt::Unchecked);
             item->setData(10, o->parent->parent->concentratorAddr);
             item->setData(11, o->addr);
@@ -291,7 +330,7 @@ void SummaryWidget::onRealtimeQuery()
             item->setData(13, o->lst.at(1)->addr);
             item->setData(14, o->lst.at(2)->addr);
             item->setData(15, o->id);
-           ui->tawRealTimeDetail->setItem(i, 0, item);
+            ui->tawRealTimeDetail->setItem(i, 0, item);
             ui->tawRealTimeDetail->setItem(i, 1, new QTableWidgetItem(o6->parent->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 2, new QTableWidgetItem(o6->parent->parent->parent->parent->name));
             ui->tawRealTimeDetail->setItem(i, 3, new QTableWidgetItem(o6->parent->parent->parent->name));
@@ -449,8 +488,7 @@ void SummaryWidget::on_btnStopRead_clicked()
 
     _timer->stop();
 }
-#include <QFileDialog>
-#include <xlsxdocument.h>
+
 void SummaryWidget::on_btnExport_clicked()
 {
     if (0 == ui->tawHistoryDetail->rowCount()) {
@@ -460,7 +498,7 @@ void SummaryWidget::on_btnExport_clicked()
 
     // 获取保存文件路径
     auto fileDlg = new QFileDialog(this);
-    fileDlg->setWindowTitle("保存文件");
+    fileDlg->setWindowTitle(QStringLiteral("保存文件"));
     fileDlg->setAcceptMode(QFileDialog::AcceptSave);
     fileDlg->selectFile(QStringLiteral("历史数据.xls"));
     fileDlg->setNameFilter("Excel Files(*.xls *.xlsx)");
@@ -515,4 +553,22 @@ void SummaryWidget::on_btnExport_clicked()
             QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("导出成功!"));
         }
     }
+}
+
+void SummaryWidget::onSubCompayChanged()
+{
+    ui->cbConcentrator->clear();
+    if (0 == ui->cbSubCompany->currentIndex()) {
+        QStringList conNames;
+        foreach (auto child, _map.values()) {
+            conNames.append(child);
+        }
+        conNames.prepend(QStringLiteral("全部"));
+    } else {
+        QStringList conNames = _map.value(ui->cbSubCompany->currentText());
+        conNames.prepend(QStringLiteral("全部"));
+        ui->cbConcentrator->addItems(conNames);
+    }
+
+    onHistoryQuery();
 }

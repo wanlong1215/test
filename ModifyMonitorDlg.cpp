@@ -11,8 +11,27 @@ ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
     if (nullptr != _o)
     {
         ui->leMonitorName->setText(_o->name);
-        ui->leMonitorAddr->setText(QString::number(_o->addr));
+        ui->leMonitorAddr->setText(_o->addr);
     }
+
+    auto lst = DatabaseProxy::instance().getOrganizations();
+    foreach (auto o1, lst) {
+        foreach (auto o2, o1->lst) {
+            foreach (auto o3, o2->lst) {
+                foreach (auto o4, o3->lst) {
+                    foreach (auto o5, o4->lst) {
+                        foreach (auto o6, o5->lst) {
+                            foreach (auto o7, o6->lst) {
+                                _map.insert(o7->id, o7->name);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ui->cbPreMonitor->addItems(_map.values());
 }
 
 ModifyMonitorDlg::~ModifyMonitorDlg()
@@ -25,7 +44,8 @@ void ModifyMonitorDlg::on_btnOK_clicked()
     if (nullptr != _o)
     {
         _o->name = ui->leMonitorName->text();
-        _o->addr = ui->leMonitorAddr->text().toInt();
+        _o->addr = ui->leMonitorAddr->text();
+        _o->PreMonitorID = _map.key(ui->cbPreMonitor->currentText());
 
         if (DatabaseProxy::instance().modifyMonitor(_o))
         {

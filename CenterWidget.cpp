@@ -19,7 +19,7 @@ CenterWidget::CenterWidget(QWidget *parent) :
 	ui->setupUi(this);
 
 	ui->trwOrganization->setHeaderHidden(true);
-	ui->trwDetail->setHeaderHidden(true);
+    //ui->trwDetail->setHeaderHidden(true);
     ui->trwDetail->setColumnCount(8);
 
 	ui->trwOrganization->viewport()->installEventFilter(this);
@@ -37,10 +37,21 @@ void CenterWidget::init()
     ui->trwDetail->clear();
     ui->trwOrganization->clear();
 
-    QList<proCompany *> lstCompany = DatabaseProxy::instance().getOrganizations();
+    QStringList lstTitle;
+    lstTitle << QStringLiteral("监测点") << QStringLiteral("终端") << QStringLiteral("通讯地址")
+             << QStringLiteral("路由1") << QStringLiteral("路由2") << QStringLiteral("路由3") << QStringLiteral("路由4") << QStringLiteral("路由5") << QStringLiteral("路由6")
+             << QStringLiteral("变比") << QStringLiteral("偏移量");
+
+    ui->trwDetail->setHeaderLabels(lstTitle);
+    ui->trwDetail->header()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
+    for (int i = 0; i < lstTitle.count(); i++) {
+        ui->trwDetail->setColumnWidth(i, 150);
+    }
+
+    _org = DatabaseProxy::instance().getOrganizations();
 
     // add company, level=1
-    foreach(proCompany * o1, lstCompany) {
+    foreach(proCompany * o1, _org) {
         OrganizationTreeWidgetItem *i1 = new OrganizationTreeWidgetItem(o1, ui->trwOrganization);
 
         ui->trwOrganization->addTopLevelItem(i1);
@@ -286,7 +297,7 @@ void CenterWidget::addItem(QTreeWidgetItem *clickItem)
     }
     else if (7 == dlgType)
     {
-        AddTerminalDlg *dlg = new AddTerminalDlg(pId, this);
+        AddTerminalDlg *dlg = new AddTerminalDlg(_org, pId, this);
 
         if (dlg->exec() == QDialog::Accepted)
         {
@@ -412,7 +423,7 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
                 ui->trwOrganization->takeTopLevelItem(ui->trwOrganization->indexOfTopLevelItem(itemO));
             }
         }
-        if (7 == itemO->_level)
+        if (8 == itemO->_level)
         {
             if (DatabaseProxy::instance().delTerminal(itemO->id()))
             {
@@ -460,6 +471,14 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
         }
         break;
         case 7: {
+            for (int i = 0; i < ui->trwDetail->topLevelItemCount(); i++) {
+                auto itemDetail = ui->trwDetail->topLevelItem(i);
+                auto itemDetailO = dynamic_cast<OrganizationTreeWidgetItem *>(itemDetail);
+                DatabaseProxy::instance().delTerminal(itemDetailO->id());
+            }
+
+            ui->trwDetail->clear();
+
             if (DatabaseProxy::instance().delMonitor(itemO->id()))
             {
                 itemO->parent()->removeChild(itemO);

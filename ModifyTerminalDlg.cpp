@@ -40,9 +40,7 @@ void ModifyTerminalDlg::init()
     ui->leRoute51->setText(QString::number(_o->RouteState5));
     ui->leRoute61->setText(QString::number(_o->RouteState6));
     ui->leHighPressureValue->setText(QString::number(_o->highPressureValue));
-    ui->cbHighPressureSymbol->setCurrentIndex(_o->highPressureSymbol);
     ui->leHighPressureOffset->setText(QString::number(_o->highPressureOffset));
-    ui->leLowPressureValue->setText(QString::number(_o->lowPressureValue));
 }
 
 void ModifyTerminalDlg::on_btnOK_clicked()
@@ -57,9 +55,7 @@ void ModifyTerminalDlg::on_btnOK_clicked()
     _o->RouteState6 = ui->leRoute61->text().toInt();
 
     _o->highPressureValue = ui->leHighPressureValue->text().toInt();
-    _o->highPressureSymbol = ui->cbHighPressureSymbol->currentIndex();
     _o->highPressureOffset = ui->leHighPressureOffset->text().toInt();
-    _o->lowPressureValue = ui->leLowPressureValue->text().toInt();
 
     DatabaseProxy::instance().modifyTerminal(_o);
 

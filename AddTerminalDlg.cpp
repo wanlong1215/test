@@ -2,12 +2,13 @@
 #include "ui_AddTerminalDlg.h"
 #include "AppSession.h"
 
-AddTerminalDlg::AddTerminalDlg(int parentId, QWidget *parent) :
+AddTerminalDlg::AddTerminalDlg(QList<proCompany *> lst, int parentId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddTerminalDlg)
 {
     ui->setupUi(this);
 
+    _com = lst;
     _parentId = parentId;
     _monitor = nullptr;
     _o1 = NULL;
@@ -45,6 +46,28 @@ proTerminal *AddTerminalDlg::terminal3()
 void AddTerminalDlg::init()
 {
     ui->leMonitorName->setText(QStringLiteral("监测点"));
+
+    QStringList lstName;
+    lstName.append(QStringLiteral("空"));
+    auto lst = _com;
+    foreach (auto o1, lst) {
+        foreach (auto o2, o1->lst) {
+            foreach (auto o3, o2->lst) {
+                foreach (auto o4, o3->lst) {
+                    foreach (auto o5, o4->lst) {
+                        foreach (auto o6, o5->lst) {
+                            foreach (auto o7, o6->lst) {
+                                lstName.append(o7->name);
+                                _map.insert(o7->id, o7->name);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ui->cbPreMonitor->addItems(lstName);
 }
 
 void AddTerminalDlg::on_btnCancel_clicked()
@@ -60,6 +83,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     _monitor->name = ui->leMonitorName->text();
     _monitor->addr = ui->leMonitorAddr->text().toInt();
+    _monitor->PreMonitorID = _map.key(ui->cbPreMonitor->currentText());
 
     DatabaseProxy::instance().addMonitor(_monitor, _parentId);
 
@@ -82,10 +106,10 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o1->RouteState6 = ui->leRoute61->text().toInt();
     _o1->index=ui->leTimes1->text().toInt();
     _o1->highPressureValue = ui->leHighPressureValue1->text().toInt();
-    _o1->highPressureSymbol = ui->cbHighPressureSymbol1->currentIndex();
     _o1->highPressureOffset = ui->leHighPressureOffset1->text().toInt();
-    _o1->lowPressureValue = ui->leLowPressureValue1->text().toInt();
     _o1->TerminalCurrentTime=_o1->installTime;
+    _o1->highPressureSymbol = 0;
+    _o1->lowPressureValue = 0;
 
     _o2->name = QStringLiteral("B相");
     _o2->type = "B";
@@ -102,10 +126,10 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o2->RouteState6 = ui->leRoute62->text().toInt();
     _o2->index = ui->leTimes2->text().toInt();
     _o2->highPressureValue = ui->leHighPressureValue2->text().toInt();
-    _o2->highPressureSymbol = ui->cbHighPressureSymbol2->currentIndex();
     _o2->highPressureOffset = ui->leHighPressureOffset2->text().toInt();
-    _o2->lowPressureValue = ui->leLowPressureValue2->text().toInt();
     _o2->TerminalCurrentTime=_o2->installTime;
+    _o2->highPressureSymbol = 0;
+    _o2->lowPressureValue = 0;
 
     _o3->name = QStringLiteral("C相");
     _o3->type = "C";
@@ -122,10 +146,10 @@ void AddTerminalDlg::on_btnOK_clicked()
     _o3->RouteState6 = ui->leRoute63->text().toInt();
     _o3->index = ui->leTimes3->text().toInt();
     _o3->highPressureValue = ui->leHighPressureValue3->text().toInt();
-    _o3->highPressureSymbol = ui->cbHighPressureSymbol3->currentIndex();
     _o3->highPressureOffset = ui->leHighPressureOffset3->text().toInt();
-    _o3->lowPressureValue = ui->leLowPressureValue3->text().toInt();
     _o3->TerminalCurrentTime=_o3->installTime;
+    _o3->highPressureSymbol = 0;
+    _o3->lowPressureValue = 0;
 
     accept();
 }

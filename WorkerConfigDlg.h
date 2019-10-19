@@ -2,6 +2,7 @@
 #define WORKERCONFIGDLG_H
 
 #include <QDialog>
+#include "DatabaseProxy.h"
 
 namespace Ui {
 class WorkerConfigDlg;
@@ -24,11 +25,20 @@ private slots:
 
     void on_leFilter_textChanged(const QString &arg1);
 
+    void onSubCompayChanged();
+    void onAsmoChanged();
+
+    void onQuery();
+
+    void on_btnExport_clicked();
+
 private:
     void init();
 
 private:
     Ui::WorkerConfigDlg *ui;
+
+    QList<proCompany *> _company; // 临时记录，增加速度
 };
 
 #endif // WORKERCONFIGDLG_H

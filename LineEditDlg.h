@@ -22,6 +22,8 @@ private slots:
     void on_btnOK_clicked();
     void on_btnCancel_clicked();
 
+    void on_cbType_currentIndexChanged(int index);
+
 private:
     void init();
 
@@ -31,6 +33,7 @@ private:
     int _parentId;
     proLine *_o;
     QMap<int, QString> _map;
+    QMap<int, QString> _mapLine;
 };
 
 #endif // LINEEDITDLG_H

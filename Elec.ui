@@ -163,7 +163,7 @@
           </font>
          </property>
          <property name="text">
-          <string>系统配置</string>
+          <string>设备管理</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -221,6 +221,30 @@
          </property>
          <property name="checkable">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnTerminalQuery">
+         <property name="minimumSize">
+          <size>
+           <width>110</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>110</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>终端检索</string>
          </property>
         </widget>
        </item>

@@ -62,7 +62,8 @@ public:
 
     int id;
     QString name;
-	int addr;
+	QString addr;
+	int PreMonitorID;
     QList<proTerminal *> lst;
 
     proLine *parent;
@@ -88,6 +89,7 @@ public:
 	QString addr;
     QString preAddr;
     QString nextAddr;
+	float Ratio;
 
     proConcentrator *parent;
     QList<proMonitor *> lst;
@@ -238,8 +240,8 @@ struct proWarning
 	int WarningID;
 	INT64 WarningTime;
 	int WarningLine;
-	int MonitorAddr1;
-	int MonitorAddr2;
+	QString MonitorAddr1;
+	QString MonitorAddr2;
 	int Type;
 	float iValue1;
 	float iValue2;

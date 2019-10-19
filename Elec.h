@@ -34,6 +34,8 @@ private slots:
 
     void on_btnConcentrator_clicked();
 
+    void on_btnTerminalQuery_clicked();
+
 private:
     void updateCheckStatus(QPushButton *btn);
 

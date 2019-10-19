@@ -74,6 +74,7 @@ struct LINE
 	string strPreAddr;
 	string strNextAddr;
 	int	workerID;
+	float Ratio;
 };
 
 struct MONITOR
@@ -81,7 +82,8 @@ struct MONITOR
 	int MonitorID;
 	int lineID;
 	string strName;
-	int MonitorAddr;
+	string MonitorAddr;
+	int PreMonitorID;
 };
 
 struct TERMINAL 
@@ -135,8 +137,8 @@ struct WARNING
 	int WarningID;
 	INT64 WarningTime;
 	int WarningLine;
-	int MonitorAddr1;
-	int MonitorAddr2;
+	string MonitorAddr1;
+	string MonitorAddr2;
 	int Type;
 	float iValue1;
 	float iValue2;

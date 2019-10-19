@@ -1,23 +1,22 @@
-#ifndef ALARMCONFIGDLG_H
-#define ALARMCONFIGDLG_H
+#ifndef TERMINALQUERYDLG_H
+#define TERMINALQUERYDLG_H
 
 #include <QDialog>
 #include "DatabaseProxy.h"
 
 namespace Ui {
-class AlarmConfigDlg;
+class TerminalQueryDlg;
 }
 
-class AlarmConfigDlg : public QDialog
+class TerminalQueryDlg : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AlarmConfigDlg(QWidget *parent = 0);
-    ~AlarmConfigDlg();
+    explicit TerminalQueryDlg(QWidget *parent = 0);
+    ~TerminalQueryDlg();
 
 private slots:
-    void on_leFilter_textChanged(const QString &arg1);
     void onSubCompayChanged();
     void onAsmoChanged();
     void onLineChanged();
@@ -29,12 +28,12 @@ private slots:
 private:
     void init();
 
-    bool getName(int lineId, QString &subCompany, QString &asmo, QString &lineName);
+    int getTerminalCount();
 
 private:
-    Ui::AlarmConfigDlg *ui;
+    Ui::TerminalQueryDlg *ui;
 
     QList<proCompany *> _company; // 临时记录，增加速度
 };
 
-#endif // ALARMCONFIGDLG_H
+#endif // TERMINALQUERYDLG_H

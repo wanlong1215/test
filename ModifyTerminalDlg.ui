@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>430</width>
-    <height>299</height>
+    <width>369</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -109,54 +109,23 @@
       <string> 变比</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="leLowPressureValue"/>
+      <item row="0" column="3">
+       <widget class="QLineEdit" name="leHighPressureOffset"/>
       </item>
-      <item row="0" column="2">
-       <widget class="QComboBox" name="cbHighPressureSymbol">
-        <item>
-         <property name="text">
-          <string>+</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>-</string>
-         </property>
-        </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>变比值</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="leHighPressureValue"/>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>低压侧：</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>高压侧：</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLineEdit" name="leHighPressureOffset"/>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>(kv)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
+      <item row="0" column="2">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>%  (kv)</string>
+         <string>偏移量</string>
         </property>
        </widget>
       </item>
