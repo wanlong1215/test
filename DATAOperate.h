@@ -62,6 +62,9 @@ struct CONCENTRATOR
 	int reserve2;
 	int reserve3;
 	int reserve4;
+	int heartCount;//心跳计数
+	int conState;//连接状态
+	string selfIP;//自己的IP
 };
 
 struct LINE 
@@ -287,6 +290,8 @@ public:
 	int GetCollectTimeAndMoniterID(vector<TIME_ID> &v);
 	//获得数据表中的时间，并以集中器分组
 	int GetDataByCollectTimeAndMonitorID(DATA &A, DATA &B, DATA &C, TIME_ID ti);
+
+	void WriteLog(string strInfo);
 
 
 private:
