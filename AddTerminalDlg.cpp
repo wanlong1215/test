@@ -2,13 +2,12 @@
 #include "ui_AddTerminalDlg.h"
 #include "AppSession.h"
 
-AddTerminalDlg::AddTerminalDlg(QList<proCompany *> lst, int parentId, QWidget *parent) :
+AddTerminalDlg::AddTerminalDlg(int parentId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddTerminalDlg)
 {
     ui->setupUi(this);
 
-    _com = lst;
     _parentId = parentId;
     _monitor = nullptr;
     _o1 = NULL;
@@ -49,7 +48,7 @@ void AddTerminalDlg::init()
 
     QStringList lstName;
     lstName.append(QStringLiteral("空"));
-    auto lst = _com;
+    auto lst = DatabaseProxy::instance().getOrganizations();
     foreach (auto o1, lst) {
         foreach (auto o2, o1->lst) {
             foreach (auto o3, o2->lst) {

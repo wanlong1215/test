@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>297</width>
-    <height>156</height>
+    <width>318</width>
+    <height>164</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>13</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>数据库配置</string>

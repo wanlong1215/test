@@ -13,7 +13,7 @@ class AddTerminalDlg : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddTerminalDlg(QList<proCompany *> lst, int parentId, QWidget *parent = 0);
+    explicit AddTerminalDlg(int parentId, QWidget *parent = 0);
     ~AddTerminalDlg();
 
     proMonitor *monitor();
@@ -31,7 +31,6 @@ private:
 private:
     Ui::AddTerminalDlg *ui;
 
-    QList<proCompany *> _com;
     int _parentId;
     proMonitor *_monitor;
     proTerminal *_o1;

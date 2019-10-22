@@ -16,8 +16,8 @@ Elec::Elec(QWidget *parent)
 {
 	ui.setupUi(this);
 
-    ui.btnUser->setVisible(AppSession::instance().user.level == 1);
-    ui.btnConfigure->setVisible(AppSession::instance().user.level == 1);
+    ui.btnUser->setVisible(AppSession::instance().user.level <= 1);
+    ui.btnConfigure->setVisible(AppSession::instance().user.level <= 1);
 
     _lstMenuButton << ui.btnSummary << ui.btnConfigure;
     on_btnSummary_clicked();
@@ -39,7 +39,7 @@ Elec::Elec(QWidget *parent)
 
     // timer
     QTimer::singleShot(2000, [this]() {
-        if (QDate::currentDate() > QDate(2019, 11, 1)) {
+        if (QDate::currentDate() > QDate(2019, 12, 1)) {
             qApp->quit();
         }
     });

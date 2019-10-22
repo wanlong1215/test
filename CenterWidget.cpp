@@ -297,7 +297,7 @@ void CenterWidget::addItem(QTreeWidgetItem *clickItem)
     }
     else if (7 == dlgType)
     {
-        AddTerminalDlg *dlg = new AddTerminalDlg(_org, pId, this);
+        AddTerminalDlg *dlg = new AddTerminalDlg(pId, this);
 
         if (dlg->exec() == QDialog::Accepted)
         {

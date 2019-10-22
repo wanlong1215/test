@@ -10,6 +10,12 @@
     <height>229</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>13</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string/>
   </property>

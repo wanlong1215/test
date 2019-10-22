@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>310</width>
-    <height>133</height>
+    <width>315</width>
+    <height>136</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>13</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>报警员</string>

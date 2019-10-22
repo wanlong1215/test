@@ -95,12 +95,14 @@ void WorkerConfigDlg::on_btnModify_clicked()
     if (-1 == row)
     {
         QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("请选中要修改的接警员!"));
+        return;
     }
 
     proWorker worker;
     if (!DatabaseProxy::instance().worker(ui->tableWidget->item(row, 0)->text().toInt(), worker))
     {
         QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("查无此人，当前用户可能已经被其他管理员删除，请刷新数据后再试!"));
+        return;
     }
 
     AddWorkerDlg *dlg = new AddWorkerDlg(&worker, this);
@@ -112,8 +114,15 @@ void WorkerConfigDlg::on_btnModify_clicked()
             ui->tableWidget->item(row, 1)->setText(worker.name);
             ui->tableWidget->item(row, 2)->setText(worker.phone);
             auto amso = DatabaseProxy::instance().amso(worker.amsoId);
-            ui->tableWidget->item(row, 3)->setText((nullptr == amso) ? "" : amso->name);
-            ui->tableWidget->item(row, 4)->setText(worker.remarks);
+            auto itemAm = new QTableWidgetItem( (nullptr == amso) ? "" : amso->name );
+            itemAm->setFlags(itemAm->flags() & (~Qt::ItemIsEditable));
+            ui->tableWidget->setItem(row, 4, itemAm);
+
+            auto itemSub = new QTableWidgetItem( (nullptr == amso) ? "" : amso->parent->name );
+            itemSub->setFlags(itemAm->flags() & (~Qt::ItemIsEditable));
+            ui->tableWidget->setItem(row, 3, itemSub);
+
+            ui->tableWidget->item(row, 5)->setText(worker.remarks);
         }
     }
 }
@@ -124,6 +133,7 @@ void WorkerConfigDlg::on_btnDelete_clicked()
     if (-1 == row)
     {
         QMessageBox::information(this, QStringLiteral("提示"), QStringLiteral("请选中要删除的接警员!"));
+        return;
     }
 
     auto id = ui->tableWidget->item(row, 0)->text().toInt();
@@ -186,9 +196,13 @@ void WorkerConfigDlg::onQuery()
 
         auto itemAm = new QTableWidgetItem( (nullptr == amso) ? "" : amso->name );
         itemAm->setFlags(itemAm->flags() & (~Qt::ItemIsEditable));
-        ui->tableWidget->setItem(i, 3, itemAm);
+        ui->tableWidget->setItem(i, 4, itemAm);
 
-        ui->tableWidget->setItem(i, 4, new QTableWidgetItem( usr.remarks ));
+        auto itemSub = new QTableWidgetItem( (nullptr == amso) ? "" : amso->parent->name );
+        itemSub->setFlags(itemAm->flags() & (~Qt::ItemIsEditable));
+        ui->tableWidget->setItem(i, 3, itemSub);
+
+        ui->tableWidget->setItem(i, 5, new QTableWidgetItem( usr.remarks ));
         i++;
     }
 
