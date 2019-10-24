@@ -56,7 +56,7 @@ int CDATAOperate::InsertCompany(COMPANY p)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë¹«Ë¾Ê§°Ü£¡%s\n", e.Description());
+		sprintf(pLog, "²åÈë¹«Ë¾Ê§°Ü£¡%s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -88,7 +88,7 @@ int CDATAOperate::InsertSubCompany(SUBCOMPANY p, int CompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë×Ó¹«Ë¾Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈë×Ó¹«Ë¾Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -120,7 +120,7 @@ int CDATAOperate::InsertAMSO(AMSO p, int SubCompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë¹©µçËùÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈë¹©µçËùÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -152,7 +152,7 @@ int CDATAOperate::InsertRoute(ROUTE p, int AMSOID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÏßÂ·Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÏßÂ·Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -200,7 +200,7 @@ int CDATAOperate::InsertConcentrator(CONCENTRATOR p, int RouteID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë¼¯ÖÐÆ÷Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈë¼¯ÖÐÆ÷Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -237,7 +237,7 @@ int CDATAOperate::InsertLine(LINE p, int ConcentratorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÏß¶ÎÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÏß¶ÎÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -270,7 +270,7 @@ int CDATAOperate::InsertMonitor(MONITOR p, int LineID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë¼à²âµãÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈë¼à²âµãÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -319,7 +319,7 @@ int CDATAOperate::InsertTerminal(TERMINAL p, int MonitorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÖÕ¶ËÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÖÕ¶ËÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -360,7 +360,7 @@ int CDATAOperate::InsertData(DATA p)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÊý¾ÝÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÊý¾ÝÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -400,7 +400,7 @@ int CDATAOperate::InsertRealData(DATA p)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÊµÊ±Êý¾ÝÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÊµÊ±Êý¾ÝÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -426,7 +426,7 @@ int CDATAOperate::InsertCommand(COMMAND p)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÖ¸ÁîÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÖ¸ÁîÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -479,7 +479,7 @@ int CDATAOperate::InsertWarning(WARNING p)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë¾¯¸æÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈë¾¯¸æÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -511,7 +511,7 @@ int CDATAOperate::InsertUser(string usr, string code, int level)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈëÓÃ»§Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈëÓÃ»§Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -544,7 +544,7 @@ int CDATAOperate::InsertWorker(WORKER p)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "²åÈë½Ó¾¯Ô±Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "²åÈë½Ó¾¯Ô±Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -566,7 +566,7 @@ BOOL CDATAOperate::DelCompany(int companyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ý¹«Ë¾Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ý¹«Ë¾Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -586,7 +586,7 @@ BOOL CDATAOperate::DelSubCompany(int subCompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ý×Ó¹«Ë¾Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ý×Ó¹«Ë¾Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -606,7 +606,7 @@ BOOL CDATAOperate::DelAMSO(int AMSOID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ý¹©µçËùÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ý¹©µçËùÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -626,7 +626,7 @@ BOOL CDATAOperate::DelRoute(int RouteID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ýÏßÂ·Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ýÏßÂ·Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -646,7 +646,7 @@ BOOL CDATAOperate::DelConcentrator(int ConcentratorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ý¼¯ÖÐÆ÷Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ý¼¯ÖÐÆ÷Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -666,7 +666,7 @@ BOOL CDATAOperate::DelLine(int lineID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ýÏß¶ÎÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ýÏß¶ÎÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -686,7 +686,7 @@ BOOL CDATAOperate::DelMonitor(int MonitorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ý¼à²âµãÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ý¼à²âµãÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -706,7 +706,7 @@ BOOL CDATAOperate::DelTerminal(int TerminalID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ýÖÕ¶ËÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ýÖÕ¶ËÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -726,7 +726,7 @@ BOOL CDATAOperate::DelData(int TerminalID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ýÊý¾ÝÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ýÊý¾ÝÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -747,7 +747,7 @@ BOOL CDATAOperate::DelUser(int userID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ýÓÃ»§Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ýÓÃ»§Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -768,7 +768,7 @@ BOOL CDATAOperate::DelWorker(int WorkerID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "É¾³ý½Ó¾¯Ô±Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "É¾³ý½Ó¾¯Ô±Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return FALSE;
@@ -792,7 +792,7 @@ int CDATAOperate::ModifyCompany(COMPANY p, int CompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä¹«Ë¾Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä¹«Ë¾Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -815,7 +815,7 @@ int CDATAOperate::ModifySubCompany(SUBCOMPANY p, int SubCompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä×Ó¹«Ë¾Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä×Ó¹«Ë¾Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -838,7 +838,7 @@ int CDATAOperate::ModifyAMSO(AMSO p, int AMSOID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä¹©µçËùÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä¹©µçËùÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -861,7 +861,7 @@ int CDATAOperate::ModifyRoute(ROUTE p, int RouteID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸ÄÏßÂ·Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸ÄÏßÂ·Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -900,7 +900,7 @@ int CDATAOperate::ModifyConcentrator(CONCENTRATOR p, int ConcentratorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä¼¯ÖÐÆ÷Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä¼¯ÖÐÆ÷Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -925,7 +925,7 @@ int CDATAOperate::ModifyConcentratorReserve(CONCENTRATOR p, int ConcentratorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä¼¯ÖÐÆ÷±£Áô×Ö¶ÎÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä¼¯ÖÐÆ÷±£Áô×Ö¶ÎÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -953,7 +953,7 @@ int CDATAOperate::ModifyLine(LINE p, int LineID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸ÄÏß¶ÎÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸ÄÏß¶ÎÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -977,7 +977,7 @@ int CDATAOperate::ModifyMonitor(MONITOR p, int MonitorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä¼à²âµãÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä¼à²âµãÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1017,7 +1017,7 @@ int CDATAOperate::ModifyTerminal(TERMINAL p, int TerminalID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸ÄÖÕ¶ËÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸ÄÖÕ¶ËÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1042,7 +1042,7 @@ int CDATAOperate::ModifyUser(int id, string usr, string code, int level)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸ÄÓÃ»§Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸ÄÓÃ»§Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1068,7 +1068,7 @@ int CDATAOperate::ModifyWorker(WORKER p, int WorkerID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä½Ó¾¯Ô±Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä½Ó¾¯Ô±Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1091,7 +1091,7 @@ int CDATAOperate::ModifyWarningPop(int id)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "ÐÞ¸Ä±¨¾¯ÐÅÏ¢PopÊ§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "ÐÞ¸Ä±¨¾¯ÐÅÏ¢PopÊ§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1122,7 +1122,7 @@ int CDATAOperate::GetCompany(COMPANY &p, int CompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃ¹«Ë¾ÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃ¹«Ë¾ÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1152,7 +1152,7 @@ int CDATAOperate::GetSubCompany(SUBCOMPANY &p, int SubCompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃ×Ó¹«Ë¾ÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃ×Ó¹«Ë¾ÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1182,7 +1182,7 @@ int CDATAOperate::GetAMSO(AMSO &p, int AMSOID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃ¹©µçËùÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃ¹©µçËùÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1212,7 +1212,7 @@ int CDATAOperate::GetRoute(ROUTE &p, int RouteID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃÏßÂ·ÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃÏßÂ·ÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1263,7 +1263,7 @@ int CDATAOperate::GetConcentrator(CONCENTRATOR &p, int ConcentratorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃ¼¯ÖÐÆ÷ÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃ¼¯ÖÐÆ÷ÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1299,7 +1299,7 @@ int CDATAOperate::GetLine(LINE &p, int LineID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃÏß¶ÎÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃÏß¶ÎÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1330,7 +1330,7 @@ int CDATAOperate::GetMonitor(MONITOR &p, int MonitorID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "»ñµÃ¼à²âµãÐÅÏ¢Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "»ñµÃ¼à²âµãÐÅÏ¢Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1378,7 +1378,7 @@ int CDATAOperate::GetTerminalByAddr(TERMINAL &p, int ConcentratorAddr, int Termi
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetTerminalByAddr Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetTerminalByAddr Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1425,7 +1425,7 @@ int CDATAOperate::GetTerminal(TERMINAL &p, int TerminalID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetTerminal Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetTerminal Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1457,7 +1457,7 @@ int CDATAOperate::GetWorker(WORKER &p, int WorkerID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetWorker Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetWorker Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1489,7 +1489,7 @@ int CDATAOperate::GetAllCompanyID(vector<COMPANY> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllCompanyID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllCompanyID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1521,7 +1521,7 @@ int CDATAOperate::GetAllSubCompanyID(vector<SUBCOMPANY> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllSubCompanyID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllSubCompanyID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1553,7 +1553,7 @@ int CDATAOperate::GetAllAMSOID(vector<AMSO> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllAMSOID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllAMSOID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1585,7 +1585,7 @@ int CDATAOperate::GetAllRouteID(vector<ROUTE> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllRouteID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllRouteID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1633,7 +1633,7 @@ int CDATAOperate::GetAllConcentratorID(vector<CONCENTRATOR> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllConcentratorID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllConcentratorID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1670,7 +1670,7 @@ int CDATAOperate::GetAllLineID(vector<LINE> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllLineID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllLineID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1721,7 +1721,7 @@ int CDATAOperate::GetAllTerminalByConcentratorID(vector<TERMINAL> &v, int Concen
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllTerminalByConcentratorID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllTerminalByConcentratorID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1771,7 +1771,7 @@ int CDATAOperate::GetAllTerminalID(vector<TERMINAL> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllTerminalID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllTerminalID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1805,7 +1805,7 @@ int CDATAOperate::GetAllWorker(vector<WORKER> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllWorker Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllWorker Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1846,7 +1846,7 @@ int CDATAOperate::GetDatabyConcentratorAddr(vector<DATA> &v, int ConAddr)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetDatabyConcentratorAddr Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetDatabyConcentratorAddr Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1888,7 +1888,7 @@ int CDATAOperate::GetDataByCollectTimeAndMonitorID(DATA &A, DATA &B, DATA &C, TI
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetDataByCollectTimeAndMonitorID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetDataByCollectTimeAndMonitorID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1925,7 +1925,7 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetCollectTimeAndMoniterID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetCollectTimeAndMoniterID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -1969,7 +1969,7 @@ int CDATAOperate::GetCommand(vector<COMMAND> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetCommand Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetCommand Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2020,7 +2020,54 @@ int CDATAOperate::GetRealData(vector<DATA> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetRealData Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetRealData Ê§°Ü£¡ %s\n", (char*)e.Description());
+		WriteLog(pLog);
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
+//Í¨¹ý¼¯ÖÐÆ÷ºÍÖÕ¶ËµØÖ·ºÍÊ±¼äÀ´Ñ°ÕÒµ±Ç°µÄÊý¾Ý
+int CDATAOperate::GetDatabyAddrAndTime(DATA &data, int TerminalAddr, int ConAddr, INT64 time)
+{
+	try
+	{
+		PreparedStatement st(m_conn);
+		const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue,intRev1 from BR_DATA where TerminalAddr = ? and ConcentratorAddr = ? and CollectTime = ?";
+		st.prepare(sql);
+		st.set_long( 0, TerminalAddr );
+		st.set_long(1, ConAddr);
+		st.set_bigInt( 2, time );
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		if (rs.db_eof())
+		{
+			return 0 ;
+		}
+
+		while( !rs.db_eof() )
+		{
+			data.DataID = rs.get_long(0);
+			data.TerminalAddr = rs.get_long(1);
+			data.ConcentratorAddr = rs.get_long(2);
+			data.CollectTime = rs.get_bigInt(3);
+			data.relaycnt = rs.get_long(4);
+			data.relayPosition = rs.get_long(5);
+			data.GetherUnitAddr = rs.get_long(6);
+			data.vValue = rs.get_float(7);
+			data.vAngValue = rs.get_float(8);
+			data.iValue = rs.get_float(9);
+			data.iAngValue = rs.get_float(10);
+			data.intRev1 = rs.get_long(11);
+			rs.move_next();
+		}
+		rs.close();
+		return 1;
+	}
+	catch (_com_error& e)
+	{
+		char pLog[2048] = {0};
+		sprintf(pLog, "GetDatabyAddrAndTime Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2065,7 +2112,7 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetDatabyTerminalAddrAndTime Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetDatabyTerminalAddrAndTime Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2109,7 +2156,7 @@ int CDATAOperate::GetDatabyTerminalAddrAndDate(vector<DATA> &v, int ConAddr, int
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetDatabyTerminalAddrAndDate Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetDatabyTerminalAddrAndDate Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2151,7 +2198,7 @@ int CDATAOperate::GetDatabyTerminalAddr(vector<DATA> &v, int ConAddr, int Termin
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetDatabyTerminalAddr Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetDatabyTerminalAddr Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2186,7 +2233,7 @@ int CDATAOperate::GetAllSubCompanyByID(vector<SUBCOMPANY> &v, int CompanyID)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllSubCompanyByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllSubCompanyByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2220,7 +2267,7 @@ int CDATAOperate::GetAllAMSO(vector<AMSO> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllAMSO Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllAMSO Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2254,7 +2301,7 @@ int CDATAOperate::GetAllAMSOByID(vector<AMSO> &v, int subCompanyID)//Â»Ã±ÂµÃƒÂµÂ
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllAMSOByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllAMSOByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2288,7 +2335,7 @@ int CDATAOperate::GetAllRouteByID(vector<ROUTE> &v, int amsoID)//Â»Ã±ÂµÃƒÂµÂ±Ã‡Â
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllRouteByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllRouteByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2338,7 +2385,7 @@ int CDATAOperate::GetAllConcentratorByID(vector<CONCENTRATOR> &v, int routeID)//
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllConcentratorByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllConcentratorByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2377,7 +2424,7 @@ int CDATAOperate::GetAllLineByID(vector<LINE> &v, int concentratorID)//Â»Ã±ÂµÃƒÂ
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllLineByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllLineByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2412,7 +2459,7 @@ int CDATAOperate::GetAllMonitorByID(vector<MONITOR> &v, int lineID)//Â»Ã±ÂµÃƒÂµÂ
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllMonitorByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllMonitorByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2463,7 +2510,7 @@ int CDATAOperate::GetAllTerminalByID(vector<TERMINAL> &v, int MonitorID)//Â»Ã±Âµ
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllTerminalByID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllTerminalByID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2496,7 +2543,7 @@ int CDATAOperate::GetAllUsers(vector<USR> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetAllUsers Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetAllUsers Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2539,7 +2586,7 @@ int CDATAOperate::GetWarningNopop(vector<WARNING> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetWarningNopop Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetWarningNopop Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2581,7 +2628,7 @@ int CDATAOperate::GetWarningPoped(vector<WARNING> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetWarningPoped Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetWarningPoped Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2622,7 +2669,7 @@ int CDATAOperate::GetWarning(vector<WARNING> &v)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetWarning Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetWarning Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2652,7 +2699,7 @@ int CDATAOperate::GetUserID(string usr, string code)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetUserID Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetUserID Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2681,7 +2728,7 @@ int CDATAOperate::GetUserLever(int id)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetUserLever Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetUserLever Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;
@@ -2770,7 +2817,7 @@ int CDATAOperate::GetPreDatabyData(DATA &dest, DATA src)
 	catch (_com_error& e)
 	{
 		char pLog[2048] = {0};
-		sprintf(pLog, "GetPreDatabyData Ê§°Ü£¡ %s\n", e.Description());
+		sprintf(pLog, "GetPreDatabyData Ê§°Ü£¡ %s\n", (char*)e.Description());
 		WriteLog(pLog);
 		OutputDebugString(e.Description());
 		return 0;

@@ -270,6 +270,8 @@ public:
 	int GetDatabyTerminalAddrAndDate(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end);
 	//通过终端地址和时间来寻找当前的数据
 	int GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT64 time);
+	//通过集中器和终端地址和时间来寻找当前的数据
+	int GetDatabyAddrAndTime(DATA &data, int TerminalAddr, int ConAddr, INT64 time);
 	//获得所有的报警信息
 	int GetWarning(vector<WARNING> &v);
 	//获得所有的还没报过警的报警信息
