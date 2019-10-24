@@ -85,7 +85,16 @@ void ConcentratorEditDlg::on_btnOK_clicked()
     if (insert) {
         //
     } else {
-        DatabaseProxy::instance().modifyConcentrator(_o);
+        if (DatabaseProxy::instance().modifyConcentrator(_o) ) {
+            foreach (auto line, _o->lst) {
+                foreach (auto con, line->lst) {
+                    foreach (auto ter, con->lst) {
+                        ter->ConcentratorAddr = _o->concentratorAddr;
+                        DatabaseProxy::instance().modifyTerminal(ter);
+                    }
+                }
+            }
+        }
     }
     accept();
 }
