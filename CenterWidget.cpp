@@ -401,7 +401,10 @@ void CenterWidget::modifyItem(QTreeWidgetItem * clickItem)
     else if (8 == clickItemO->_level)
     {
         ModifyTerminalDlg *dlg = new ModifyTerminalDlg(clickItemO->_o8, this);
-        dlg->exec();
+        if (dlg->exec() == QDialog::Accepted)
+        {
+            clickItemO->updateTerminalText();
+        }
     }
 }
 

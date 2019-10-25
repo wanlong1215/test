@@ -15,6 +15,8 @@ public:
     OrganizationTreeWidgetItem(proMonitor *o, QTreeWidgetItem *parent);
     OrganizationTreeWidgetItem(proTerminal *o, QTreeWidget *parent);
 
+    void updateTerminalText();
+
     bool canAddChild() override;
     QString addMenuText() override;
     QString modifyMenuText() override;

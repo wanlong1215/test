@@ -41,17 +41,35 @@ OrganizationTreeWidgetItem::OrganizationTreeWidgetItem(proMonitor *o, QTreeWidge
 OrganizationTreeWidgetItem::OrganizationTreeWidgetItem(proTerminal *o, QTreeWidget *parent) : BasicTreeWidgetItem(8, parent)
 {
     _o8 = o;
-    setText(0, _o8->parent->name);
-    setText(1, _o8->name);
-    setText(2, QString::number(_o8->addr));
-    setText(3, QString::number(_o8->RouteState1));
-    setText(4, QString::number(_o8->RouteState2));
-    setText(5, QString::number(_o8->RouteState3));
-    setText(6, QString::number(_o8->RouteState4));
-    setText(7, QString::number(_o8->RouteState5));
-    setText(8, QString::number(_o8->RouteState6));
-    setText(9, QString::number(_o8->highPressureValue));
-    setText(10, QString::number(_o8->highPressureOffset));
+    updateTerminalText();
+//    setText(0, _o8->parent->name);
+//    setText(1, _o8->name);
+//    setText(2, QString::number(_o8->addr));
+//    setText(3, QString::number(_o8->RouteState1));
+//    setText(4, QString::number(_o8->RouteState2));
+//    setText(5, QString::number(_o8->RouteState3));
+//    setText(6, QString::number(_o8->RouteState4));
+//    setText(7, QString::number(_o8->RouteState5));
+//    setText(8, QString::number(_o8->RouteState6));
+//    setText(9, QString::number(_o8->highPressureValue));
+//    setText(10, QString::number(_o8->highPressureOffset));
+}
+
+void OrganizationTreeWidgetItem::updateTerminalText()
+{
+    if (8 == _level) {
+        setText(0, _o8->parent->name);
+        setText(1, _o8->name);
+        setText(2, QString::number(_o8->addr));
+        setText(3, QString::number(_o8->RouteState1));
+        setText(4, QString::number(_o8->RouteState2));
+        setText(5, QString::number(_o8->RouteState3));
+        setText(6, QString::number(_o8->RouteState4));
+        setText(7, QString::number(_o8->RouteState5));
+        setText(8, QString::number(_o8->RouteState6));
+        setText(9, QString::number(_o8->highPressureValue));
+        setText(10, QString::number(_o8->highPressureOffset));
+    }
 }
 
 bool OrganizationTreeWidgetItem::canAddChild()

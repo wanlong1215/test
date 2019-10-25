@@ -1,5 +1,6 @@
 ﻿#include "LineEditDlg.h"
 #include "ui_LineEditDlg.h"
+#include <QDebug>
 
 LineEditDlg::LineEditDlg(proLine *o, int parentId, QWidget *parent) :
     QDialog(parent),
@@ -33,10 +34,11 @@ void LineEditDlg::on_btnOK_clicked()
 
     _o->name = ui->leName->text();
     _o->type = ui->cbType->currentIndex();
-    _o->preAddr = _mapLine.key(ui->cbPreLine->currentText());
+    _o->preAddr = QString::number(_mapLine.key(ui->cbPreLine->currentText()));
     _o->workerID = _map.key(ui->cbWorker->currentText());
     _o->Ratio = ui->leRatio->text().toDouble();
 
+    qDebug() << _mapLine << ui->cbPreLine->currentText() << _mapLine.key(ui->cbPreLine->currentText());
     if (insert) {
         //DatabaseProxy::instance().addLine(_o, _parentId);
     } else {
@@ -65,8 +67,19 @@ void LineEditDlg::init()
             foreach (auto o3, o2->lst) {
                 foreach (auto o4, o3->lst) {
                     foreach (auto o5, o4->lst) {
+                        if (nullptr == _o) {
+                            if (o5->id != _parentId) {
+                                continue;
+                            }
+                        } else {
+                            if (o5->id != _o->parent->id) {
+                                continue;
+                            }
+                        }
                         foreach (auto o6, o5->lst) {
-                            _mapLine.insert(o6->id, o6->name);
+                            if (o6 != _o) {
+                                _mapLine.insert(o6->id, o6->name);
+                            }
                         }
                     }
                 }
@@ -74,6 +87,8 @@ void LineEditDlg::init()
         }
     }
 
+    _mapLine.insert(-1, QStringLiteral("空"));
+    qDebug() << _mapLine;
     ui->cbPreLine->addItems(_mapLine.values());
 
     if (NULL != _o)

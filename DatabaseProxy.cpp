@@ -572,7 +572,7 @@ bool DatabaseProxy::modifyCompany(proCompany *o)
 	company.companyID = o->id;
     company.strName = ToString(o->name);
     company.strDescribe = ToString(o->desc);
-	o->id = m_db2.ModifyCompany(company, company.companyID);
+    m_db2.ModifyCompany(company, company.companyID);
     return true;
 }
 
@@ -583,7 +583,7 @@ bool DatabaseProxy::modifySubCompany(proSubCompany *o)
 	subCompany.companyID = o->parent->id;
     subCompany.strName = ToString(o->name);
     subCompany.strDescribe = ToString(o->desc);
-	o->id = m_db2.InsertSubCompany(subCompany, subCompany.subCompanyID);
+    m_db2.InsertSubCompany(subCompany, subCompany.subCompanyID);
     return true;
 }
 
@@ -594,7 +594,7 @@ bool DatabaseProxy::modifyAmso(proAmso *o)
 	amso.subCompanyID = o->parent->id;
     amso.strName = ToString(o->name);
     amso.strDescribe = ToString(o->desc);
-	o->id = m_db2.ModifyAMSO(amso, amso.AMSOID);
+    m_db2.ModifyAMSO(amso, amso.AMSOID);
     return true;
 }
 
@@ -605,7 +605,7 @@ bool DatabaseProxy::modifyRoute(proRoute *o)
 	route.AMSOID = o->parent->id;
     route.strName = ToString(o->name);//o->name.toStdString();
     route.strDescribe = ToString(o->desc);//o->desc.toStdString();
-	o->id = m_db2.ModifyRoute(route, route.routeID);
+    m_db2.ModifyRoute(route, route.routeID);
     return true;
 }
 
@@ -632,7 +632,7 @@ bool DatabaseProxy::modifyConcentrator(proConcentrator *o)
 	concentrator.ConcentratorCurrentTime = o->ConcentratorCurrentTime;
 	concentrator.SelfReportOnOff = o->SelfReportOnOff;
 	concentrator.ConcentratorTimer = o->concentratorTimer;
-	o->id = m_db2.ModifyConcentrator(concentrator, concentrator.ConcentratorID);
+    m_db2.ModifyConcentrator(concentrator, concentrator.ConcentratorID);
     return true;
 }
 
@@ -648,7 +648,7 @@ bool DatabaseProxy::modifyLine(proLine *o)
     line.strNextAddr = ToString(o->nextAddr);//o->nextAddr.toStdString();
 	line.workerID = o->workerID;
 	line.Ratio = o->Ratio;
-	o->id = m_db2.ModifyLine(line, line.lineID);
+    m_db2.ModifyLine(line, line.lineID);
     return true;
 }
 
@@ -660,7 +660,7 @@ bool DatabaseProxy::modifyMonitor(proMonitor *o)
     monitor.strName = ToString(o->name);//o->name.toStdString();
 	monitor.MonitorAddr = ToString(o->addr);
 	monitor.PreMonitorID = o->PreMonitorID;
-	o->id = m_db2.ModifyMonitor(monitor,monitor.MonitorID);
+    m_db2.ModifyMonitor(monitor,monitor.MonitorID);
     return true;
 }
 
@@ -688,7 +688,7 @@ bool DatabaseProxy::modifyTerminal(proTerminal *o)
 	terminal.HighOffset = o->highPressureOffset;
 	terminal.HighSymbol = o->highPressureSymbol;
 	terminal.LowValue = o->lowPressureValue;
-	o->id = m_db2.ModifyTerminal(terminal, terminal.TerminalID);
+    m_db2.ModifyTerminal(terminal, terminal.TerminalID);
     return true;
 }
 /***************************************************************************************************************/
