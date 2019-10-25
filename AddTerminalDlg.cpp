@@ -82,7 +82,7 @@ void AddTerminalDlg::on_btnOK_clicked()
 
     _monitor->name = ui->leMonitorName->text();
     _monitor->addr = ui->leMonitorAddr->text().toInt();
-    _monitor->PreMonitorID = _map.key(ui->cbPreMonitor->currentText());
+    _monitor->PreMonitorID = _map.key(ui->cbPreMonitor->currentText(), -1);
 
     DatabaseProxy::instance().addMonitor(_monitor, _parentId);
 

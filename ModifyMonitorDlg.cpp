@@ -1,4 +1,4 @@
-#include "ModifyMonitorDlg.h"
+﻿#include "ModifyMonitorDlg.h"
 #include "ui_ModifyMonitorDlg.h"
 
 ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
@@ -22,7 +22,9 @@ ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
                     foreach (auto o5, o4->lst) {
                         foreach (auto o6, o5->lst) {
                             foreach (auto o7, o6->lst) {
-                                _map.insert(o7->id, o7->name);
+                                if (o7 != _o) {
+                                    _map.insert(o7->id, o7->name);
+                                }
                             }
                         }
                     }
@@ -31,6 +33,7 @@ ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
         }
     }
 
+    _map.insert(-1, QStringLiteral("空"));
     ui->cbPreMonitor->addItems(_map.values());
 }
 
