@@ -266,6 +266,8 @@ public:
 	int GetDatabyTerminalAddr(vector<DATA> &v, int ConAddr, int TerminalAddr);//获得数据-通过集中器地址与终端地址
 	 //小帅用//通过一条记录找到上一个监测点相同类型的终端的同时刻记录。返回说明 1,返回成功、-1前面没有监测点、0未知错误
 	int GetPreDatabyData(DATA &dest, DATA src);
+	//小帅用//通过一条记录找到下一个监测点相同类型的终端的同时刻记录。返回说明 1,返回成功、-1前面没有监测点、0未知错误
+	int GetNextDatabyData(DATA &dest, DATA src);
 	 //用时间确定返回的数据
 	int GetDatabyTerminalAddrAndDate(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end);
 	//通过终端地址和时间来寻找当前的数据

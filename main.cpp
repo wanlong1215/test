@@ -6,11 +6,58 @@
 #include "Elec.h"
 #include "DatabaseProxy.h"
 #include <QDebug>
+#include <QMutex>
+
+void MessageOutput(QtMsgType type,const QMessageLogContext& context,const QString& msg)
+{
+    QString txtMessage;
+    QMutex mutex;
+    //加锁
+    mutex.lock();
+    //设置log输出格式
+    txtMessage += QString("[%1][%2][%3]")
+            .arg(QTime::currentTime().toString("hh:mm:ss"))
+            .arg(context.file)
+            .arg(context.function);
+    switch (type) {
+    case QtDebugMsg:
+        txtMessage += QString("[Debug] %1").arg(msg);
+        break;
+    case QtWarningMsg:
+        txtMessage += QString("[Warning] %1").arg(msg);
+        break;
+    case QtCriticalMsg:
+        txtMessage += QString("[Critical] %1").arg(msg);
+        break;
+    case QtFatalMsg:
+        txtMessage += QString("[Fatal] %1").arg(msg);
+        abort();
+        break;
+    default:
+        txtMessage += QString("[UnKnown] %1").arg(msg);
+        break;
+    }
+    txtMessage += QString(",{%1}").arg(context.line);
+    txtMessage += QString("\r\n");
+
+    QFile file("debug.log");
+    if(file.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QTextStream out(&file);
+        out<<txtMessage;
+    }
+    file.flush();
+    file.close();
+
+    // 解锁
+    mutex.unlock();
+}
 
 int main(int argc, char *argv[])
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
+    qInstallMessageHandler(MessageOutput);
 	QApplication a(argc, argv);
 
     //QString fileName = ":/resource/css/blue.css";

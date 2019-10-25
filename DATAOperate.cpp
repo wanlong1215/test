@@ -2736,6 +2736,96 @@ int CDATAOperate::GetUserLever(int id)
 	return 0;
 }
 
+//小帅用//通过一条记录找到下一个监测点相同类型的终端的同时刻记录。返回说明 1,返回成功、-1前面没有监测点、0未知错误
+int CDATAOperate::GetNextDatabyData(DATA &dest, DATA src)
+{
+	try
+	{
+
+		int iMonitorID = -1;
+		int curMonitorAddr = -1;
+		int nextMonitorID = -1;
+		int preTerminalAddr = -1;
+		string strType;
+		//根据一条记录中的终端地址找到其所属监测点ID，并获取终端类型
+		PreparedStatement st(m_conn);
+		const char *sql = "select MonitorID,TerminalTYPE from BR_TERMINAL where TerminalAddr = ?";
+		st.prepare(sql);
+		st.set_long(0, src.TerminalAddr);
+		ADO_WRAPPER::ResultSet rs = st.execute();
+		while( !rs.db_eof() )
+		{
+			iMonitorID =  rs.get_long(0);
+			strType = rs.get_string(1);
+			break;
+		}
+		rs.close();
+
+		//根据当前监测点ID获得下一监测点ID
+		PreparedStatement st1(m_conn);
+		const char *sql1 = "select MonitorID from BR_MONITOR where PreMonitorID = ?";
+		st1.prepare(sql1);
+		st1.set_long(0, iMonitorID);
+		ADO_WRAPPER::ResultSet rs1 = st1.execute();
+		while( !rs1.db_eof() )
+		{
+			nextMonitorID =  rs1.get_long(0);
+			break;
+		}
+		rs1.close();
+		if (nextMonitorID < 0)
+		{
+			return -1;
+		}
+
+		//根据前一个监测点ID找到对应的同类型终端地址
+		PreparedStatement st3(m_conn);
+		const char *sql3 = "select TerminalAddr from BR_TERMINAL where MonitorID = ? and TerminalTYPE = ?";
+		st3.prepare(sql3);
+		st3.set_long(0, nextMonitorID);
+		st3.set_string(1, strType);
+		ADO_WRAPPER::ResultSet rs3 = st3.execute();
+		while( !rs3.db_eof() )
+		{
+			preTerminalAddr =  rs3.get_long(0);
+			break;
+		}
+		rs3.close();
+		//最后根据终端地址和时间找到最终要找的数据
+		PreparedStatement st4(m_conn);
+		const char *sql4 = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue from BR_DATA where TerminalAddr = ? and CollectTime = ?";
+		st4.prepare(sql4);
+		st4.set_long(0, preTerminalAddr);
+		st4.set_bigInt(1, src.CollectTime);
+		ADO_WRAPPER::ResultSet rs4 = st4.execute();
+		while( !rs4.db_eof() )
+		{
+			dest.DataID = rs4.get_long(0);
+			dest.TerminalAddr = rs4.get_long(1);
+			dest.ConcentratorAddr = rs4.get_long(2);
+			dest.CollectTime = rs4.get_bigInt(3);
+			dest.relaycnt = rs4.get_long(4);
+			dest.relayPosition = rs4.get_long(5);
+			dest.GetherUnitAddr = rs4.get_long(6);
+			dest.vValue = rs4.get_float(7);
+			dest.vAngValue = rs4.get_float(8);
+			dest.iValue = rs4.get_float(9);
+			dest.iAngValue = rs4.get_float(10);
+			return 1;
+		}
+		rs4.close();
+	}
+	catch (_com_error& e)
+	{
+		char pLog[2048] = {0};
+		sprintf(pLog, "GetNextDatabyData 失败！ %s\n", (char*)e.Description());
+		WriteLog(pLog);
+		OutputDebugString(e.Description());
+		return 0;
+	}
+	return 0;
+}
+
 int CDATAOperate::GetPreDatabyData(DATA &dest, DATA src)
 {
 	try

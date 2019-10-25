@@ -416,16 +416,21 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
 
     if (NULL == itemO->parent())
     {
+        auto id = itemO->id();
         if (1 == itemO->_level)
         {
-            if (DatabaseProxy::instance().delCompany(itemO->id()))
+            auto res = DatabaseProxy::instance().delCompany(id);
+            qDebug() << QString("delete company, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 ui->trwOrganization->takeTopLevelItem(ui->trwOrganization->indexOfTopLevelItem(itemO));
             }
         }
         if (8 == itemO->_level)
         {
-            if (DatabaseProxy::instance().delTerminal(itemO->id()))
+            auto res = DatabaseProxy::instance().delTerminal(id);
+            qDebug() << QString("delete terminal, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 ui->trwDetail->takeTopLevelItem(ui->trwDetail->indexOfTopLevelItem(itemO));
             }
@@ -436,35 +441,50 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
         switch (itemO->_level)
         {
         case 2: {
-            if (DatabaseProxy::instance().delSubCompany(itemO->id()))
+            auto id = itemO->id();
+            auto res = DatabaseProxy::instance().delSubCompany(id);
+            qDebug() << QString("delete subCompany, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 itemO->parent()->removeChild(itemO);
             }
         }
         break;
         case 3: {
-            if (DatabaseProxy::instance().delAmso(itemO->id()))
+            auto id = itemO->id();
+            auto res = DatabaseProxy::instance().delAmso(id);
+            qDebug() << QString("delete amso, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 itemO->parent()->removeChild(itemO);
             }
         }
         break;
         case 4: {
-            if (DatabaseProxy::instance().delRoute(itemO->id()))
+            auto id = itemO->id();
+            auto res = DatabaseProxy::instance().delRoute(id);
+            qDebug() << QString("delete route, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 itemO->parent()->removeChild(itemO);
             }
         }
         break;
         case 5: {
-            if (DatabaseProxy::instance().delConcentrator(itemO->id()))
+            auto id = itemO->id();
+            auto res = DatabaseProxy::instance().delConcentrator(id);
+            qDebug() << QString("delete concentrator, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 itemO->parent()->removeChild(itemO);
             }
         }
         break;
         case 6: {
-            if (DatabaseProxy::instance().delLine(itemO->id()))
+            auto id = itemO->id();
+            auto res = DatabaseProxy::instance().delLine(id);
+            qDebug() << QString("delete line, id: %1, res: %2").arg(id).arg(res);
+            if (res)
             {
                 itemO->parent()->removeChild(itemO);
             }
@@ -474,12 +494,17 @@ void CenterWidget::delItem(QTreeWidgetItem * item)
             for (int i = 0; i < ui->trwDetail->topLevelItemCount(); i++) {
                 auto itemDetail = ui->trwDetail->topLevelItem(i);
                 auto itemDetailO = dynamic_cast<OrganizationTreeWidgetItem *>(itemDetail);
-                DatabaseProxy::instance().delTerminal(itemDetailO->id());
+                auto id = itemDetailO->id();
+                auto res = DatabaseProxy::instance().delTerminal(id);
+                qDebug() << QString("delete monitor's terminal, id: %1, result: %2").arg(id).arg(res);
             }
 
             ui->trwDetail->clear();
 
-            if (DatabaseProxy::instance().delMonitor(itemO->id()))
+            auto mid = itemO->id();
+            bool res = DatabaseProxy::instance().delMonitor(mid);
+            qDebug() << QString("delete monitor, id: %1, result: %2").arg(mid).arg(res);
+            if (res)
             {
                 itemO->parent()->removeChild(itemO);
             }
