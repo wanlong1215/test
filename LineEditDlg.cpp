@@ -98,6 +98,7 @@ void LineEditDlg::init()
         ui->cbPreLine->setCurrentText(_mapLine.value(_o->preAddr.toInt()));
         ui->cbWorker->setCurrentText(_map.value(_o->workerID));
         ui->leRatio->setText(QString::number(_o->Ratio));
+        on_cbType_currentIndexChanged(_o->type);
     }
     else
     {
