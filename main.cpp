@@ -24,7 +24,7 @@ void MessageOutput(QtMsgType type,const QMessageLogContext& context,const QStrin
         txtMessage += QString("[Debug] %1").arg(msg);
         break;
     case QtWarningMsg:
-        txtMessage += QString("[Warning] %1").arg(msg);
+        //txtMessage += QString("[Warning] %1").arg(msg);
         break;
     case QtCriticalMsg:
         txtMessage += QString("[Critical] %1").arg(msg);

@@ -21,6 +21,9 @@ ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
                 foreach (auto o4, o3->lst) {
                     foreach (auto o5, o4->lst) {
                         foreach (auto o6, o5->lst) {
+                            if (o6->id != _o->parent->id) {
+                                continue;
+                            }
                             foreach (auto o7, o6->lst) {
                                 if (o7 != _o) {
                                     _map.insert(o7->id, o7->name);
@@ -35,6 +38,7 @@ ModifyMonitorDlg::ModifyMonitorDlg(proMonitor *o, QWidget *parent) :
 
     _map.insert(-1, QStringLiteral("空"));
     ui->cbPreMonitor->addItems(_map.values());
+    ui->cbPreMonitor->setCurrentText(_map.value(_o->PreMonitorID));
 }
 
 ModifyMonitorDlg::~ModifyMonitorDlg()

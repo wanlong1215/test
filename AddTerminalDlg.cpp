@@ -55,6 +55,9 @@ void AddTerminalDlg::init()
                 foreach (auto o4, o3->lst) {
                     foreach (auto o5, o4->lst) {
                         foreach (auto o6, o5->lst) {
+                            if (o6->id != _parentId) {
+                                continue;
+                            }
                             foreach (auto o7, o6->lst) {
                                 lstName.append(o7->name);
                                 _map.insert(o7->id, o7->name);

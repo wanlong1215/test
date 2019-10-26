@@ -35,7 +35,10 @@ void SummaryWidget::init()
     ui->wgtHistoryGraphics->init(nullptr);
     ui->wgtGraphics->init(nullptr);
 
+    auto beginTime = QDateTime::currentDateTime();
+    qDebug() << "begin getOrganizations";
     QList<proCompany *> lstCompany = DatabaseProxy::instance().getOrganizations();
+    qDebug() << QString("end getOrganizations, cost time: %1 ms").arg(beginTime.msecsTo(QDateTime::currentDateTime()));
 
     // add company, level=1
     foreach(proCompany * o1, lstCompany) {
@@ -203,7 +206,10 @@ void SummaryWidget::onHistoryQuery()
 
     QList<showData> lst;
     if (ui->rbAutoQuery->isChecked()) {
+        auto beginTime = QDateTime::currentDateTime();
+        qDebug() << "begin query history data";
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr);
+        qDebug() << QString("end query history data, cost time: %1 ms").arg(beginTime.msecsTo(QDateTime::currentDateTime()));
     } else if (ui->rbQuickQuery->isChecked()) {
         qint64 beginTime = 0;
         qint64 endTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
