@@ -52,13 +52,24 @@ void MessageOutput(QtMsgType type,const QMessageLogContext& context,const QStrin
     // 解锁
     mutex.unlock();
 }
-
+#include <QDateTime>
 int main(int argc, char *argv[])
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     qInstallMessageHandler(MessageOutput);
 	QApplication a(argc, argv);
+
+
+//    QList<showData> lst;
+//    DatabaseProxy::instance().connectDB("127.0.0.1", "Administrator", "123");
+//    DatabaseProxy::instance().getOrganizations();
+//    auto beginTime = QDateTime::currentDateTime();
+//    qDebug() << "begin query history data";
+//    DatabaseProxy::instance().historyDataByTime(lst, 2);
+//    qDebug() << QString("end query history data, cost time: %1 ms").arg(beginTime.msecsTo(QDateTime::currentDateTime()));
+
+//    return a.exec();
 
     //QString fileName = ":/resource/css/blue.css";
     QString fileName = ":/resource/css/flatwhite.css";

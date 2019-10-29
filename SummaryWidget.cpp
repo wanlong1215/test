@@ -190,13 +190,13 @@ void SummaryWidget::onHistoryQuery()
 {
     if (NULL == _currentConcentrator)
     {
-        ui->scrollAreaWidgetContents_2->setFixedWidth(ui->scrollArea_2->width());
+        ui->scrollAreaWidgetContents_2->setFixedSize(ui->scrollArea_2->size());
         ui->wgtHistoryGraphics->init(_currentConcentrator);
     }
     else
     {
         ui->wgtHistoryGraphics->init(_currentConcentrator);
-        ui->scrollAreaWidgetContents_2->setFixedWidth(ui->wgtHistoryGraphics->width());
+        ui->scrollAreaWidgetContents_2->setFixedSize(ui->wgtHistoryGraphics->size());
     }
 
     if (NULL == _currentConcentrator)
