@@ -31,30 +31,6 @@ void TerminalGraphicsWidget::init(proConcentrator *o)
         buildLine();
         this->resize(graphSize());
         this->move(0, 0);
-
-//        int monitorNum = 0;
-//        int connectNum = 0;
-//        for (int i = 0; i < _o->lst.count(); i++)
-//        {
-//            proLine *line = _o->lst.at(i);
-//            if (line->type != 2)
-//            {
-//                monitorNum += line->lst.count();
-//                connectNum += line->lst.count() - 1;
-//            }
-//            else
-//            {
-//                connectNum++;
-//            }
-
-//            if (i != _o->lst.count() - 1)
-//            {
-//                connectNum++;
-//            }
-//        }
-
-//        this->resize(monitorNum * MonitorSize.width() + connectNum * ConnSize.width() + Margin * 2, parentWidget()->height());
-//        this->move(0, 0);
     }
 
     update();
@@ -80,85 +56,7 @@ void TerminalGraphicsWidget::paintEvent(QPaintEvent *)
         foreach (auto node, _rootLine) {
             totalWidth = Margin;
             node->drawGraph(&painter, totalWidth, totalHeight);
-//            auto line = node->line;
-//            // 高压或者低压
-//            if (line->type != 2)
-//            {
-//                for (int j = 0; j < line->lst.count(); j++)
-//                {
-//                    proMonitor *monitor = line->lst.at(j);
-//                    if (!monitor->lst.isEmpty())
-//                    {
-//                        QRect rect(totalWidth, 30, MonitorSize.width(), MonitorSize.height());
-//                        totalWidth += MonitorSize.width();
-
-//                        drawSimpleLine(&painter, rect, monitor);
-//                    }
-
-//                    // connect line
-//                    if (j != line->lst.count() - 1)
-//                    {
-//                        QRect rect(totalWidth, 30, ConnSize.width(), ConnSize.height());
-//                        totalWidth += ConnSize.width();
-//                        drawConnectLine(&painter, rect);
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                QRect rect(totalWidth, 30, ConnSize.width(), ConnSize.height());
-//                totalWidth += ConnSize.width();
-
-//                drawConnectorPath(&painter, rect);
-//            }
-
         }
-
-//        int totalWidth = Margin;
-//        QList<proLine *> lst = _o->getSortLine();
-//        for (int i = 0; i < lst.count(); i++)
-//        {
-//            proLine *line = lst.at(i);
-
-//            // 高压或者低压
-//            if (line->type != 2)
-//            {
-//                for (int j = 0; j < line->lst.count(); j++)
-//                {
-//                    proMonitor *monitor = line->lst.at(j);
-//                    if (!monitor->lst.isEmpty())
-//                    {
-//                        QRect rect(totalWidth, 30, MonitorSize.width(), MonitorSize.height());
-//                        totalWidth += MonitorSize.width();
-
-//                        drawSimpleLine(&painter, rect, monitor);
-//                    }
-
-//                    // connect line
-//                    if (j != line->lst.count() - 1)
-//                    {
-//                        QRect rect(totalWidth, 30, ConnSize.width(), ConnSize.height());
-//                        totalWidth += ConnSize.width();
-//                        drawConnectLine(&painter, rect);
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                QRect rect(totalWidth, 30, ConnSize.width(), ConnSize.height());
-//                totalWidth += ConnSize.width();
-
-//                drawConnectorPath(&painter, rect);
-//            }
-
-//            // connect line
-//            if (i != lst.count() - 1)
-//            {
-//                QRect rect(totalWidth, 30, ConnSize.width(), ConnSize.height());
-//                totalWidth += ConnSize.width();
-//                drawConnectLine(&painter, rect);
-//            }
-//        }
     }
 }
 
@@ -167,8 +65,8 @@ void lineTree::drawConnectorPath(QPainter *p, QRect rect)
     QPainterPath path;
 
     double width = rect.width() * 2.0 / 3;
-    path.addEllipse(QRectF(rect.left(), rect.top() + rect.height() *0.7 - width/2, width, width));
-    path.addEllipse(QRectF(rect.left() + width / 2, rect.top() + rect.height() *0.7 - width/2, width, width));
+    path.addEllipse(QRectF(rect.left(), rect.top() + rect.height() *0.6 - width/2, width, width));
+    path.addEllipse(QRectF(rect.left() + width / 2, rect.top() + rect.height() *0.6 - width/2, width, width));
 
     p->setPen(QPen(Qt::black));
     p->setBrush(QBrush(Qt::transparent));
@@ -180,6 +78,9 @@ void TerminalGraphicsWidget::buildLine()
     foreach (auto line, _o->lst) {
         if (line->preAddr == QString::number(-1) || line->preAddr == QString::number(0)) {
             auto lineNode = new lineTree(line);
+            lineNode->parent = nullptr;
+            lineNode->preNode = _rootLine.isEmpty() ? nullptr : _rootLine.last();
+            sortMonitor(lineNode->line);
             addChildLine(lineNode);
             _rootLine.append(lineNode);
         }
@@ -191,8 +92,43 @@ void TerminalGraphicsWidget::addChildLine(lineTree *node)
     foreach (auto line, _o->lst) {
         if (line->preAddr == QString::number(node->line->id)) {
             auto child = new lineTree(line);
+            child->parent = node;
+            child->preNode = node->children.isEmpty() ? nullptr : node->children.last();
+            sortMonitor(child->line);
             addChildLine(child);
             node->children.append(child);
+        }
+    }
+}
+
+void TerminalGraphicsWidget::sortMonitor(proLine *line)
+{
+    if (line == nullptr || line->lst.count() < 2) {
+        return;
+    }
+
+    // find first one, maybe many Node, set last one
+    bool existHeader = false;
+    foreach (auto mo, line->lst) {
+        if (-1 == mo->PreMonitorID || 0 == mo->PreMonitorID) {
+            line->lst.swap(line->lst.indexOf(mo), 0);
+            existHeader = true;
+            break;
+        }
+    }
+
+    if (!existHeader) {
+        return;
+    }
+
+    for (int i = 0; i < line->lst.count(); i++) {
+        for (int j = 1; j < line->lst.count(); j++) {
+            if (line->lst.at(i)->id == line->lst.at(j)->PreMonitorID) {
+                if (i+1 < line->lst.count() && i+1 != j) {
+                    line->lst.swap(i+1, j);
+                }
+                break;
+            }
         }
     }
 }
@@ -313,6 +249,14 @@ int lineTree::maxVerticalCount()
 
 void lineTree::drawGraph(QPainter *p, int &totalWidth, int &totalHeight)
 {
+    // ver offset
+    if (parent == nullptr && preNode != nullptr) {
+        totalHeight += MonitorSize.height();
+    }
+    if (parent != nullptr && 0 != parent->children.indexOf(this)) {
+        totalHeight += MonitorSize.height();
+    }
+
     if (line->type != 2)
     {
         for (int j = 0; j < line->lst.count(); j++)
@@ -340,11 +284,11 @@ void lineTree::drawGraph(QPainter *p, int &totalWidth, int &totalHeight)
     {
         QRect rect(totalWidth, totalHeight, ConnSize.width(), ConnSize.height());
         totalWidth += ConnSize.width();
-        totalHeight += ConnSize.height();
 
         drawConnectorPath(p, rect);
     }
 
+    // lst node pos
     if (!children.isEmpty()) {
         QRect rect(totalWidth, totalHeight, ConnSize.width(), ConnSize.height());
         totalWidth += ConnSize.width();
@@ -352,12 +296,20 @@ void lineTree::drawGraph(QPainter *p, int &totalWidth, int &totalHeight)
         drawConnectLine(p, rect);
     }
 
+    int lastPos = totalWidth;
     foreach (auto child, children) {
-        child->drawGraph(p, totalWidth, totalHeight);
+        if (0 != children.indexOf(child)) {
+            totalWidth = lastPos;
+            p->setPen(QPen(Qt::black));
+            p->setBrush(QBrush(Qt::black));
 
-        if (!child->line->lst.isEmpty()) {
-            totalHeight += MonitorSize.height();
+            // hor
+            p->drawLine(QPoint(totalWidth-ConnSize.width(), totalHeight+MonitorSize.height()*1.6), QPoint(totalWidth, totalHeight+MonitorSize.height()*1.6));
+            // ver
+            p->drawLine(QPoint(totalWidth-ConnSize.width(), totalHeight+MonitorSize.height()), QPoint(totalWidth-ConnSize.width(), totalHeight+MonitorSize.height()*1.6));
         }
+
+        child->drawGraph(p, totalWidth, totalHeight);
     }
 }
 

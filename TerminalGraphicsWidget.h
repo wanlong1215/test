@@ -21,6 +21,8 @@ public:
     // line style, delete later
     void drawConnectorPath(QPainter *p, QRect rect);
 
+    lineTree *parent;
+    lineTree *preNode;
     proLine *line;
     QList<lineTree *> children;
 };
@@ -42,14 +44,10 @@ protected:
 
     void drawDefaultText(QPainter *p);
 
-//    void drawSimpleLine(QPainter *p, QRect rect, proMonitor *monitor);
-//    void drawConnectLine(QPainter *p, QRect rect);
-
-//    // line style, delete later
-//    void drawConnectorPath(QPainter *p, QRect rect);
-
     void buildLine();
     void addChildLine(lineTree *node);
+
+    void sortMonitor(proLine *line);
 
     QSize graphSize();
 private:
