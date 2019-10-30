@@ -53,8 +53,6 @@ protected:
 private:
     proConcentrator *_o;
     QList<lineTree *> _rootLine;
-
-    bool _isHistory;
 };
 
 #endif // TERMINALGRAPHICSWIDGET_H

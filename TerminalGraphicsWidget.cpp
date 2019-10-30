@@ -5,13 +5,15 @@
 #define MonitorSize QSize(30, 150)
 #define ConnSize QSize(50, 150)
 
+bool g_history = false;
+
 TerminalGraphicsWidget::TerminalGraphicsWidget(QWidget *parent) : QWidget(parent), _o(NULL)
 {
 }
 
 void TerminalGraphicsWidget::setType(bool isHistory)
 {
-    _isHistory = isHistory;
+    g_history = isHistory;
 }
 
 void TerminalGraphicsWidget::init(proConcentrator *o)
@@ -181,8 +183,7 @@ void lineTree::drawSimpleLine(QPainter *p, QRect rect, proMonitor *monitor)
 
     p->setPen(QPen(Qt::red));
     p->setBrush(QBrush(Qt::red));
-    //if (_isHistory) {
-    if (true) {
+    if (g_history) {
         p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.2), monitor->pressureValueA());
         p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.3), monitor->pressureValueB());
         p->drawText(QPoint(rect.left(), rect.top() + rect.height() * 0.4), monitor->pressureValueC());

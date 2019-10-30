@@ -299,13 +299,13 @@ void SummaryWidget::onRealtimeQuery()
 {
     if (NULL == _currentConcentrator)
     {
-        ui->scrollAreaWidgetContents->setFixedWidth(ui->scrollArea->width());
+        ui->scrollAreaWidgetContents->setFixedSize(ui->scrollArea->size());
         ui->wgtGraphics->init(_currentConcentrator);
     }
     else
     {
         ui->wgtGraphics->init(_currentConcentrator);
-        ui->scrollAreaWidgetContents->setFixedWidth(ui->wgtGraphics->width());
+        ui->scrollAreaWidgetContents->setFixedSize(ui->wgtGraphics->size());
     }
 
     if (NULL == _currentConcentrator)
