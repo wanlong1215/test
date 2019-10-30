@@ -105,6 +105,8 @@ void SummaryWidget::init()
         conNames.append(child);
     }
     conNames.prepend(QStringLiteral("全部"));
+    disconnect(ui->cbSubCompany, SIGNAL(currentIndexChanged(int)), this, SLOT(onSubCompayChanged()));
+    disconnect(ui->cbConcentrator, SIGNAL(currentIndexChanged(int)), this, SLOT(onHistoryQuery()));
     ui->cbSubCompany->clear();
     ui->cbConcentrator->clear();
     ui->cbSubCompany->addItems(subNames);
