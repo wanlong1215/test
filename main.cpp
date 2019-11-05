@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 //    DatabaseProxy::instance().getOrganizations();
 //    auto beginTime = QDateTime::currentDateTime();
 //    qDebug() << "begin query history data";
-//    DatabaseProxy::instance().historyDataByTime(lst, 2);
+//    DatabaseProxy::instance().historyDataByTime(lst, 0);
 //    qDebug() << QString("end query history data, cost time: %1 ms").arg(beginTime.msecsTo(QDateTime::currentDateTime()));
 
 //    return a.exec();

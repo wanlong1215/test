@@ -1902,7 +1902,7 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v)
 	try
 	{
 		PreparedStatement st(m_conn);
-		const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr group by a.MonitorID, b.CollectTime order by b.CollectTime";
+        const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr group by a.MonitorID, b.CollectTime order by b.CollectTime fetch first 50 rows only";
 		st.prepare(sql);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if (rs.db_eof())
@@ -2117,7 +2117,83 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
 		OutputDebugString(e.Description());
 		return 0;
 	}
-	return 0;
+    return 0;
+}
+
+int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &dataA, DATA &dataB, DATA &dataC, int TerminalAddrA, int TerminalAddrB, int TerminalAddrC, INT64 time)
+{
+    try
+    {
+        PreparedStatement st(m_conn);
+        const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue,intRev1 from BR_DATA where ivalue <> 0 and TerminalAddr IN (?, ?, ?) and CollectTime = ?";
+        st.prepare(sql);
+        st.set_long( 0, TerminalAddrA );
+        st.set_long( 1, TerminalAddrB );
+        st.set_long( 2, TerminalAddrC );
+        st.set_bigInt( 3, time );
+        ADO_WRAPPER::ResultSet rs = st.execute();
+        if (rs.db_eof())
+        {
+            return 0 ;
+        }
+
+        while( !rs.db_eof() )
+        {
+            if (rs.get_long(1) == TerminalAddrA) {
+                dataA.DataID = rs.get_long(0);
+                dataA.TerminalAddr = rs.get_long(1);
+                dataA.ConcentratorAddr = rs.get_long(2);
+                dataA.CollectTime = rs.get_bigInt(3);
+                dataA.relaycnt = rs.get_long(4);
+                dataA.relayPosition = rs.get_long(5);
+                dataA.GetherUnitAddr = rs.get_long(6);
+                dataA.vValue = rs.get_float(7);
+                dataA.vAngValue = rs.get_float(8);
+                dataA.iValue = rs.get_float(9);
+                dataA.iAngValue = rs.get_float(10);
+                dataA.intRev1 = rs.get_long(11);
+            } else if (rs.get_long(1) == TerminalAddrB) {
+                dataB.DataID = rs.get_long(0);
+                dataB.TerminalAddr = rs.get_long(1);
+                dataB.ConcentratorAddr = rs.get_long(2);
+                dataB.CollectTime = rs.get_bigInt(3);
+                dataB.relaycnt = rs.get_long(4);
+                dataB.relayPosition = rs.get_long(5);
+                dataB.GetherUnitAddr = rs.get_long(6);
+                dataB.vValue = rs.get_float(7);
+                dataB.vAngValue = rs.get_float(8);
+                dataB.iValue = rs.get_float(9);
+                dataB.iAngValue = rs.get_float(10);
+                dataB.intRev1 = rs.get_long(11);
+            } else if (rs.get_long(1) == TerminalAddrC) {
+                dataC.DataID = rs.get_long(0);
+                dataC.TerminalAddr = rs.get_long(1);
+                dataC.ConcentratorAddr = rs.get_long(2);
+                dataC.CollectTime = rs.get_bigInt(3);
+                dataC.relaycnt = rs.get_long(4);
+                dataC.relayPosition = rs.get_long(5);
+                dataC.GetherUnitAddr = rs.get_long(6);
+                dataC.vValue = rs.get_float(7);
+                dataC.vAngValue = rs.get_float(8);
+                dataC.iValue = rs.get_float(9);
+                dataC.iAngValue = rs.get_float(10);
+                dataC.intRev1 = rs.get_long(11);
+            }
+
+            rs.move_next();
+        }
+        rs.close();
+        return 1;
+    }
+    catch (_com_error& e)
+    {
+        char pLog[2048] = {0};
+        sprintf(pLog, "GetDatabyTerminalAddrAndTime 3 PARA Ê§°Ü£¡ %s\n", (char*)e.Description());
+        WriteLog(pLog);
+        OutputDebugString(e.Description());
+        return 0;
+    }
+    return 0;
 }
 
 int CDATAOperate::GetDatabyTerminalAddrAndDate(vector<DATA> &v, int ConAddr, int TerminalAddr, INT64 begin, INT64 end)

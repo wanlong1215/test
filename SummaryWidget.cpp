@@ -18,6 +18,19 @@ SummaryWidget::SummaryWidget(QWidget *parent) :
     _currentConcentrator = NULL;
     ui->trwOrganization->setHeaderHidden(true);
     ui->trwOrganization->viewport()->installEventFilter(this);
+
+    _groupButton = new QButtonGroup(this);
+    _groupButton->addButton(ui->rbAutoQuery, 0);
+    _groupButton->addButton(ui->rbQuickQuery, 1);
+    _groupButton->addButton(ui->rbAbsoluteQuery, 2);
+
+    connect(_groupButton, SIGNAL(buttonClicked(int)), SLOT(onRadioButtonClicked(int)));
+
+
+//    connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
+//    connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
+//    connect(ui->rbAbsoluteQuery, SIGNAL(toggled(bool)), this, SLOT(onAbsoluteQueryToggled(bool)));
+    connect(ui->btnQuery, &QPushButton::clicked, this, &SummaryWidget::onHistoryQuery);
 }
 
 SummaryWidget::~SummaryWidget()
@@ -27,13 +40,16 @@ SummaryWidget::~SummaryWidget()
 
 void SummaryWidget::init()
 {
+    static bool first = true;
+    if (first) {
+        ui->tawHistoryDetail->clear();
+        ui->tawRealTimeDetail->clear();
+        ui->wgtHistoryGraphics->init(nullptr);
+        ui->wgtGraphics->init(nullptr);
+    }
     // clear first
     _map.clear();
     ui->trwOrganization->clear();
-    ui->tawHistoryDetail->clear();
-    ui->tawRealTimeDetail->clear();
-    ui->wgtHistoryGraphics->init(nullptr);
-    ui->wgtGraphics->init(nullptr);
 
     auto beginTime = QDateTime::currentDateTime();
     qDebug() << "begin getOrganizations";
@@ -89,10 +105,6 @@ void SummaryWidget::init()
     _timer = new QTimer(this);
     _timer->setInterval(5*1000);
     connect(_timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
-    connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
-    connect(ui->rbAbsoluteQuery, SIGNAL(toggled(bool)), this, SLOT(onAbsoluteQueryToggled(bool)));
-    connect(ui->btnQuery, &QPushButton::clicked, this, &SummaryWidget::onHistoryQuery);
 
     ui->dteBegin->setDateTime(QDateTime::currentDateTime().addSecs(-60 * 60));
     ui->dteEnd->setDateTime(QDateTime::currentDateTime());
@@ -143,13 +155,18 @@ void SummaryWidget::init()
     ui->wgtGraphics->setType(false);
     _currentConcentrator = DatabaseProxy::instance().firstConcentrator();
 
-    onAutoQueryToggled(true);
+    if (first) {
+        onRadioButtonClicked(0);
+        //onAutoQueryToggled(true);
+        first = false;
+    }
 }
-void SummaryWidget::onAutoQueryToggled(bool b)
+
+void SummaryWidget::onRadioButtonClicked(int id)
 {
-    ui->cbQuickCycle->setEnabled(!b);
-    ui->dteBegin->setEnabled(!b);
-    ui->dteEnd->setEnabled(!b);
+    ui->cbQuickCycle->setEnabled(id == 1);
+    ui->dteBegin->setEnabled(id == 2);
+    ui->dteEnd->setEnabled(id == 2);
 
     // clear data, show first concentrator
     while (0 != ui->tawHistoryDetail->rowCount())
@@ -159,34 +176,48 @@ void SummaryWidget::onAutoQueryToggled(bool b)
 
     onHistoryQuery();
 }
-void SummaryWidget::onQuickQueryToggled(bool b)
-{
-    ui->cbQuickCycle->setEnabled(b);
-    ui->dteBegin->setEnabled(!b);
-    ui->dteEnd->setEnabled(!b);
+//void SummaryWidget::onAutoQueryToggled(bool b)
+//{
+//    ui->cbQuickCycle->setEnabled(!b);
+//    ui->dteBegin->setEnabled(!b);
+//    ui->dteEnd->setEnabled(!b);
 
-    // clear data
-    while (0 != ui->tawHistoryDetail->rowCount())
-    {
-        ui->tawHistoryDetail->removeRow(0);
-    }
+//    // clear data, show first concentrator
+//    while (0 != ui->tawHistoryDetail->rowCount())
+//    {
+//        ui->tawHistoryDetail->removeRow(0);
+//    }
 
-    onHistoryQuery();
-}
-void SummaryWidget::onAbsoluteQueryToggled(bool b)
-{
-    ui->cbQuickCycle->setEnabled(!b);
-    ui->dteBegin->setEnabled(b);
-    ui->dteEnd->setEnabled(b);
+//    onHistoryQuery();
+//}
+//void SummaryWidget::onQuickQueryToggled(bool b)
+//{
+//    ui->cbQuickCycle->setEnabled(b);
+//    ui->dteBegin->setEnabled(!b);
+//    ui->dteEnd->setEnabled(!b);
 
-    // clear data
-    while (0 != ui->tawHistoryDetail->rowCount())
-    {
-        ui->tawHistoryDetail->removeRow(0);
-    }
+//    // clear data
+//    while (0 != ui->tawHistoryDetail->rowCount())
+//    {
+//        ui->tawHistoryDetail->removeRow(0);
+//    }
 
-    onHistoryQuery();
-}
+//    onHistoryQuery();
+//}
+//void SummaryWidget::onAbsoluteQueryToggled(bool b)
+//{
+//    ui->cbQuickCycle->setEnabled(!b);
+//    ui->dteBegin->setEnabled(b);
+//    ui->dteEnd->setEnabled(b);
+
+//    // clear data
+//    while (0 != ui->tawHistoryDetail->rowCount())
+//    {
+//        ui->tawHistoryDetail->removeRow(0);
+//    }
+
+//    onHistoryQuery();
+//}
 
 void SummaryWidget::onHistoryQuery()
 {
@@ -429,8 +460,11 @@ bool SummaryWidget::eventFilter(QObject*obj, QEvent*e)
                 }
             }
 
-            onHistoryQuery();
-            onRealtimeQuery();
+            if (ui->tabWidget->currentIndex() == 0) {
+                onHistoryQuery();
+            } else {
+                onRealtimeQuery();
+            }
         }
     }
 

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMap>
+#include <QButtonGroup>
 
 namespace Ui {
 class SummaryWidget;
@@ -20,9 +21,10 @@ public:
     void init();
 
 private slots:
-    void onAutoQueryToggled(bool b);
-    void onQuickQueryToggled(bool b);
-    void onAbsoluteQueryToggled(bool b);
+    void onRadioButtonClicked(int id);
+//    void onAutoQueryToggled(bool b);
+//    void onQuickQueryToggled(bool b);
+//    void onAbsoluteQueryToggled(bool b);
     void onHistoryQuery();
     void onRealtimeQuery();
 
@@ -45,6 +47,7 @@ private:
     proConcentrator *_currentConcentrator;
     QTimer *_timer;
     QMap<QString, QStringList> _map; // subCompany concentrator
+    QButtonGroup *_groupButton;
 };
 
 #endif // SUMMARYWIDGET_H
