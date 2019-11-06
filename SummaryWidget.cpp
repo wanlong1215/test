@@ -8,6 +8,7 @@
 #include "AppSession.h"
 #include <QFileDialog>
 #include <xlsxdocument.h>
+#include <QtConcurrent>
 
 SummaryWidget::SummaryWidget(QWidget *parent) :
     QWidget(parent),
@@ -25,11 +26,6 @@ SummaryWidget::SummaryWidget(QWidget *parent) :
     _groupButton->addButton(ui->rbAbsoluteQuery, 2);
 
     connect(_groupButton, SIGNAL(buttonClicked(int)), SLOT(onRadioButtonClicked(int)));
-
-
-//    connect(ui->rbAutoQuery, SIGNAL(toggled(bool)), this, SLOT(onAutoQueryToggled(bool)));
-//    connect(ui->rbQuickQuery, SIGNAL(toggled(bool)), this, SLOT(onQuickQueryToggled(bool)));
-//    connect(ui->rbAbsoluteQuery, SIGNAL(toggled(bool)), this, SLOT(onAbsoluteQueryToggled(bool)));
     connect(ui->btnQuery, &QPushButton::clicked, this, &SummaryWidget::onHistoryQuery);
 }
 
@@ -157,7 +153,6 @@ void SummaryWidget::init()
 
     if (first) {
         onRadioButtonClicked(0);
-        //onAutoQueryToggled(true);
         first = false;
     }
 }
@@ -176,50 +171,18 @@ void SummaryWidget::onRadioButtonClicked(int id)
 
     onHistoryQuery();
 }
-//void SummaryWidget::onAutoQueryToggled(bool b)
-//{
-//    ui->cbQuickCycle->setEnabled(!b);
-//    ui->dteBegin->setEnabled(!b);
-//    ui->dteEnd->setEnabled(!b);
-
-//    // clear data, show first concentrator
-//    while (0 != ui->tawHistoryDetail->rowCount())
-//    {
-//        ui->tawHistoryDetail->removeRow(0);
-//    }
-
-//    onHistoryQuery();
-//}
-//void SummaryWidget::onQuickQueryToggled(bool b)
-//{
-//    ui->cbQuickCycle->setEnabled(b);
-//    ui->dteBegin->setEnabled(!b);
-//    ui->dteEnd->setEnabled(!b);
-
-//    // clear data
-//    while (0 != ui->tawHistoryDetail->rowCount())
-//    {
-//        ui->tawHistoryDetail->removeRow(0);
-//    }
-
-//    onHistoryQuery();
-//}
-//void SummaryWidget::onAbsoluteQueryToggled(bool b)
-//{
-//    ui->cbQuickCycle->setEnabled(!b);
-//    ui->dteBegin->setEnabled(b);
-//    ui->dteEnd->setEnabled(b);
-
-//    // clear data
-//    while (0 != ui->tawHistoryDetail->rowCount())
-//    {
-//        ui->tawHistoryDetail->removeRow(0);
-//    }
-
-//    onHistoryQuery();
-//}
 
 void SummaryWidget::onHistoryQuery()
+{
+    QtConcurrent::run(this, &SummaryWidget::onHistoryQueryExec);
+}
+
+void SummaryWidget::onRealtimeQuery()
+{
+    QtConcurrent::run(this, &SummaryWidget::onRealtimeQueryExec);
+}
+
+void SummaryWidget::onHistoryQueryExec()
 {
     if (NULL == _currentConcentrator)
     {
@@ -328,7 +291,7 @@ void SummaryWidget::onHistoryQuery()
     ui->tawHistoryDetail->setRowCount(realCount);
 }
 
-void SummaryWidget::onRealtimeQuery()
+void SummaryWidget::onRealtimeQueryExec()
 {
     if (NULL == _currentConcentrator)
     {

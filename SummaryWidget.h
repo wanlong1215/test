@@ -22,20 +22,16 @@ public:
 
 private slots:
     void onRadioButtonClicked(int id);
-//    void onAutoQueryToggled(bool b);
-//    void onQuickQueryToggled(bool b);
-//    void onAbsoluteQueryToggled(bool b);
     void onHistoryQuery();
     void onRealtimeQuery();
+    void onHistoryQueryExec();
+    void onRealtimeQueryExec();
 
     void onTimeout();
 
     void on_btnReadRealtime_clicked();
-
     void on_btnStopRead_clicked();
-
     void on_btnExport_clicked();
-
     void onSubCompayChanged();
 
 private:
