@@ -7,6 +7,7 @@
 #include "DatabaseProxy.h"
 #include <QDebug>
 #include <QMutex>
+#include "AppSession.h"
 
 void MessageOutput(QtMsgType type,const QMessageLogContext& context,const QString& msg)
 {
@@ -58,7 +59,16 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     qInstallMessageHandler(MessageOutput);
-	QApplication a(argc, argv);
+    QApplication a(argc, argv);
+
+//    qint64 t = 132174840000000000;
+
+//    qDebug() << AppSession::instance().toQDateTime(t);
+//    t = 132174190111470000;
+//    qDebug() << AppSession::instance().toQDateTime(t);
+//    t = 132175954111470000;
+//    qDebug() << AppSession::instance().toQDateTime(t);
+//    return a.exec();
 
 
 //    QList<showData> lst;

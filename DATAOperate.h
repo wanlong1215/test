@@ -293,6 +293,7 @@ public:
 	int GetCommand(vector<COMMAND> &v);
 	//获得数据表中的时间，并以集中器分组
 	int GetCollectTimeAndMoniterID(vector<TIME_ID> &v);
+    int GetCollectTimeAndMoniterID(vector<TIME_ID> &v, INT64 begin, INT64 end);
 	//获得数据表中的时间，并以集中器分组
 	int GetDataByCollectTimeAndMonitorID(DATA &A, DATA &B, DATA &C, TIME_ID ti);
 

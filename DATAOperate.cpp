@@ -1930,7 +1930,45 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v)
 		OutputDebugString(e.Description());
 		return 0;
 	}
-	return 0;
+    return 0;
+}
+
+int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, INT64 begin, INT64 end)
+{
+    try
+    {
+        PreparedStatement st(m_conn);
+        const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr and b.CollectTime > ? and b.CollectTime < ? group by a.MonitorID, b.CollectTime order by b.CollectTime";
+        st.prepare(sql);
+        st.set_bigInt(0, begin);
+        st.set_bigInt(1, end);
+        ADO_WRAPPER::ResultSet rs = st.execute();
+        if (rs.db_eof())
+        {
+            rs.close();
+            return -1;
+        }
+
+        while( !rs.db_eof() )
+        {
+            TIME_ID time_id;
+            time_id.MonitorID = rs.get_long(0);
+            time_id.CollectTime = rs.get_bigInt(1);
+            v.push_back(time_id);
+            rs.move_next();
+        }
+        rs.close();
+        return 1;
+    }
+    catch (_com_error& e)
+    {
+        char pLog[2048] = {0};
+        sprintf(pLog, "GetCollectTimeAndMoniterID 失败！ %s\n", (char*)e.Description());
+        WriteLog(pLog);
+        OutputDebugString(e.Description());
+        return 0;
+    }
+    return 0;
 }
 
 //获得实时指令
