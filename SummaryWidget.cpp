@@ -174,18 +174,9 @@ void SummaryWidget::onRadioButtonClicked(int id)
 
 void SummaryWidget::onHistoryQuery()
 {
-    QtConcurrent::run(this, &SummaryWidget::onHistoryQueryExec);
-}
-
-void SummaryWidget::onRealtimeQuery()
-{
-    QtConcurrent::run(this, &SummaryWidget::onRealtimeQueryExec);
-}
-
-void SummaryWidget::onHistoryQueryExec()
-{
     if (NULL == _currentConcentrator)
     {
+        qDebug() << ui->scrollAreaWidgetContents_2 << ui->scrollArea_2->size();
         ui->scrollAreaWidgetContents_2->setFixedSize(ui->scrollArea_2->size());
         ui->wgtHistoryGraphics->init(_currentConcentrator);
     }
@@ -195,6 +186,27 @@ void SummaryWidget::onHistoryQueryExec()
         ui->scrollAreaWidgetContents_2->setFixedSize(ui->wgtHistoryGraphics->size());
     }
 
+    QtConcurrent::run(this, &SummaryWidget::onHistoryQueryExec);
+}
+
+void SummaryWidget::onRealtimeQuery()
+{
+    if (NULL == _currentConcentrator)
+    {
+        ui->scrollAreaWidgetContents->setFixedSize(ui->scrollArea->size());
+        ui->wgtGraphics->init(_currentConcentrator);
+    }
+    else
+    {
+        ui->wgtGraphics->init(_currentConcentrator);
+        ui->scrollAreaWidgetContents->setFixedSize(ui->wgtGraphics->size());
+    }
+
+    QtConcurrent::run(this, &SummaryWidget::onRealtimeQueryExec);
+}
+
+void SummaryWidget::onHistoryQueryExec()
+{
     if (NULL == _currentConcentrator)
     {
         return;
@@ -293,17 +305,6 @@ void SummaryWidget::onHistoryQueryExec()
 
 void SummaryWidget::onRealtimeQueryExec()
 {
-    if (NULL == _currentConcentrator)
-    {
-        ui->scrollAreaWidgetContents->setFixedSize(ui->scrollArea->size());
-        ui->wgtGraphics->init(_currentConcentrator);
-    }
-    else
-    {
-        ui->wgtGraphics->init(_currentConcentrator);
-        ui->scrollAreaWidgetContents->setFixedSize(ui->wgtGraphics->size());
-    }
-
     if (NULL == _currentConcentrator)
     {
         return;

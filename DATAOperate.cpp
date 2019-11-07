@@ -1897,13 +1897,19 @@ int CDATAOperate::GetDataByCollectTimeAndMonitorID(DATA &A, DATA &B, DATA &C, TI
 }
 
 //获得数据表中的时间，并以集中器分组
-int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v)
+int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, int ConcentratorAddr)
 {
 	try
 	{
 		PreparedStatement st(m_conn);
-        const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr group by a.MonitorID, b.CollectTime order by b.CollectTime fetch first 50 rows only";
-		st.prepare(sql);
+        //const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr group by a.MonitorID, b.CollectTime order by b.CollectTime fetch first 50 rows only";
+        const char *sql = "select b.MonitorID, a.CollectTime "
+                        "from br_data a, br_terminal b, br_monitor c, br_line d, br_concentrator e "
+                        "where a.terminaladdr = b.terminaladdr "
+                        "and b.monitorid = c.monitorid and c.lineid = d.lineid and d.concentratorid = e.concentratorid and e.concentratoraddr=? "
+                        "group by b.MonitorID, a.CollectTime order by a.CollectTime";
+        st.prepare(sql);
+        st.set_long(0, ConcentratorAddr);
 		ADO_WRAPPER::ResultSet rs = st.execute();
 		if (rs.db_eof())
 		{
@@ -1933,15 +1939,22 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v)
     return 0;
 }
 
-int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, INT64 begin, INT64 end)
+int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, int ConcentratorAddr, INT64 begin, INT64 end)
 {
     try
     {
         PreparedStatement st(m_conn);
-        const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr and b.CollectTime > ? and b.CollectTime < ? group by a.MonitorID, b.CollectTime order by b.CollectTime";
+        //const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr and b.CollectTime > ? and b.CollectTime < ? group by a.MonitorID, b.CollectTime order by b.CollectTime";
+        const char *sql = "select b.MonitorID, a.CollectTime "
+                        "from br_data a, br_terminal b, br_monitor c, br_line d, br_concentrator e "
+                        "where a.terminaladdr = b.terminaladdr "
+                        "and b.monitorid = c.monitorid and c.lineid = d.lineid and d.concentratorid = e.concentratorid and e.concentratoraddr=? "
+                        "and a.CollectTime > ? and a.CollectTime < ? "
+                        "group by b.MonitorID, a.CollectTime order by a.CollectTime";
         st.prepare(sql);
-        st.set_bigInt(0, begin);
-        st.set_bigInt(1, end);
+        st.set_long(0, ConcentratorAddr);
+        st.set_bigInt(1, begin);
+        st.set_bigInt(2, end);
         ADO_WRAPPER::ResultSet rs = st.execute();
         if (rs.db_eof())
         {

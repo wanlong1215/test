@@ -1878,7 +1878,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 		return false;
 	}
 	vector<TIME_ID> vTime;
-	m_db2.GetCollectTimeAndMoniterID(vTime);
+    m_db2.GetCollectTimeAndMoniterID(vTime, ConcentratorAddr);
 	for (int i = 0; i < vTime.size(); i++)
 	{
 		proMonitor *mo = monitor(vTime[i].MonitorID);
@@ -1920,7 +1920,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 		return false;
 	}
 	vector<TIME_ID> vTime;
-    m_db2.GetCollectTimeAndMoniterID(vTime, begin, end);
+    m_db2.GetCollectTimeAndMoniterID(vTime, ConcentratorAddr, begin, end);
 	for (int i = 0; i < vTime.size(); i++)
     {
 		proMonitor *mo = monitor(vTime[i].MonitorID);
