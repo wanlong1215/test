@@ -1,5 +1,6 @@
 #include "DatabaseProxy.h"
 #include <QDateTime>
+#include <QDebug>
 
 DatabaseProxy::DatabaseProxy()
 {
@@ -543,6 +544,9 @@ bool DatabaseProxy::addCommand(proCommand *o)
     cmd.ConcentratorAddr = o->ConcentratorAddr;
     cmd.TerminalAddr = o->TerminalAddr;
 	cmd.Commandtype = o->Commandtype;
+
+    qDebug() << QString("send command, user: %1, concentratorAddr: %2, terminalAddr: %3, commandType: %4")
+                .arg(cmd.UserID).arg(cmd.ConcentratorAddr).arg(cmd.TerminalAddr).arg(cmd.Commandtype);
 	m_db2.InsertCommand(cmd);
 	return true;
 }
@@ -1838,6 +1842,7 @@ void DatabaseProxy::GetShowDataInfoByConcentratorAddr(showData &sData, int Conce
 bool DatabaseProxy::realTimeData(vector<DATA> &v)
 {
 	m_db2.GetRealData(v);
+    qDebug() << QString("read realTime data by timer, count: %1").arg(v.size());
 	return true;
 }
 

@@ -2,6 +2,7 @@
 #include "ui_AlarmConfigDlg.h"
 #include "DatabaseProxy.h"
 #include "AppSession.h"
+#include <QDebug>
 
 AlarmConfigDlg::AlarmConfigDlg(QWidget *parent) :
     QDialog(parent),
@@ -117,6 +118,8 @@ void AlarmConfigDlg::onQuery()
         return;
     }
 
+    qDebug() << QString("get source warning data, count: %1").arg(datas.count());
+
     ui->tableWidget->setRowCount( datas.count() );
 
     // 如果是空直接返回
@@ -132,6 +135,7 @@ void AlarmConfigDlg::onQuery()
     foreach (auto data, datas) {
         QString subCompany, asmoName, lineName;
         if (!getName(data.WarningLine, subCompany, asmoName, lineName)) {
+            qDebug() << QString("warning data getName err, continue, warning line: %1").arg(data.WarningLine);
             continue;
         }
 
