@@ -192,11 +192,6 @@
            </property>
            <item>
             <property name="text">
-             <string>一小时</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>三小时</string>
             </property>
            </item>
@@ -422,7 +417,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>993</width>
+            <width>98</width>
             <height>181</height>
            </rect>
           </property>

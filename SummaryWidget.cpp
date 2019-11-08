@@ -215,9 +215,8 @@ void SummaryWidget::onHistoryQueryExec()
     QList<showData> lst;
     if (ui->rbAutoQuery->isChecked()) {
         auto beginTime = QDateTime::currentDateTime();
-        qDebug() << "begin query history data";
+        qDebug() << QString("Query auto");
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr);
-        qDebug() << QString("end query history data, cost time: %1 ms").arg(beginTime.msecsTo(QDateTime::currentDateTime()));
     } else if (ui->rbQuickQuery->isChecked()) {
         qint64 beginTime = 0;
         qint64 endTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
@@ -248,11 +247,17 @@ void SummaryWidget::onHistoryQueryExec()
             break;
         }
 
+        qDebug() << QString("Query quick, begin: %1, end: %2")
+                    .arg(AppSession::instance().toQDateTime(beginTime).toString("yyyy-MM-dd hh:mm:ss:z"))
+                    .arg(AppSession::instance().toQDateTime(endTime).toString("yyyy-MM-dd hh:mm:ss:z"));
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     } else if (ui->rbAbsoluteQuery->isChecked()) {
         qint64 beginTime = AppSession::instance().toInt64Time(ui->dteBegin->dateTime());
         qint64 endTime = AppSession::instance().toInt64Time(ui->dteEnd->dateTime());
 
+        qDebug() << QString("Query absolute, begin: %1, end: %2")
+                    .arg(AppSession::instance().toQDateTime(beginTime).toString("yyyy-MM-dd hh:mm:ss:z"))
+                    .arg(AppSession::instance().toQDateTime(endTime).toString("yyyy-MM-dd hh:mm:ss:z"));
         DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
     }
 

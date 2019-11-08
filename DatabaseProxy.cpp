@@ -1,6 +1,7 @@
 #include "DatabaseProxy.h"
 #include <QDateTime>
 #include <QDebug>
+#include "AppSession.h"
 
 DatabaseProxy::DatabaseProxy()
 {
@@ -1924,6 +1925,9 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 	{
 		return false;
 	}
+    qDebug() << QString("get history data by time, begin: %1(%2), end: %3(%4")
+                .arg(begin).arg(AppSession::instance().toQDateTime(begin).toString("yyyy-MM-dd hh:mm:ss:z"))
+                .arg(end).arg(AppSession::instance().toQDateTime(end).toString("yyyy-MM-dd hh:mm:ss:z"));
 	vector<TIME_ID> vTime;
     m_db2.GetCollectTimeAndMoniterID(vTime, ConcentratorAddr, begin, end);
 	for (int i = 0; i < vTime.size(); i++)
