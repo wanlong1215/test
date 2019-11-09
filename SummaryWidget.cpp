@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <xlsxdocument.h>
 #include <QtConcurrent>
+#include <QMovie>
 
 SummaryWidget::SummaryWidget(QWidget *parent) :
     QWidget(parent),
@@ -27,6 +28,7 @@ SummaryWidget::SummaryWidget(QWidget *parent) :
 
     connect(_groupButton, SIGNAL(buttonClicked(int)), SLOT(onRadioButtonClicked(int)));
     connect(ui->btnQuery, &QPushButton::clicked, this, &SummaryWidget::onHistoryQuery);
+    connect(this, SIGNAL(sigLoadingControl(bool)), this, SLOT(onLoadingControl(bool)), Qt::QueuedConnection);
 }
 
 SummaryWidget::~SummaryWidget()
@@ -93,6 +95,7 @@ void SummaryWidget::init()
 
             i2->setExpanded(true);
             _map.insert(o2->name, lstConcentrator);
+            lstConcentrator.clear();
         }
 
         i1->setExpanded(true);
@@ -155,6 +158,14 @@ void SummaryWidget::init()
         onRadioButtonClicked(0);
         first = false;
     }
+
+    // init loading
+    auto movie = new QMovie(":/resource/loading.gif");
+    movie->setSpeed(200);
+    _historyLoading = new QLabel(this);
+    _historyLoading->setAlignment(Qt::AlignCenter);
+    _historyLoading->setMovie(movie);
+    _historyLoading->hide();
 }
 
 void SummaryWidget::onRadioButtonClicked(int id)
@@ -163,20 +174,22 @@ void SummaryWidget::onRadioButtonClicked(int id)
     ui->dteBegin->setEnabled(id == 2);
     ui->dteEnd->setEnabled(id == 2);
 
-    // clear data, show first concentrator
-    while (0 != ui->tawHistoryDetail->rowCount())
-    {
-        ui->tawHistoryDetail->removeRow(0);
-    }
-
     onHistoryQuery();
 }
 
 void SummaryWidget::onHistoryQuery()
 {
+    // clear data
+    while (0 != ui->tawHistoryDetail->rowCount())
+    {
+        ui->tawHistoryDetail->removeRow(0);
+    }
+
+    _historyDatas.clear();
+
+    // resize
     if (NULL == _currentConcentrator)
     {
-        qDebug() << ui->scrollAreaWidgetContents_2 << ui->scrollArea_2->size();
         ui->scrollAreaWidgetContents_2->setFixedSize(ui->scrollArea_2->size());
         ui->wgtHistoryGraphics->init(_currentConcentrator);
     }
@@ -186,11 +199,82 @@ void SummaryWidget::onHistoryQuery()
         ui->scrollAreaWidgetContents_2->setFixedSize(ui->wgtHistoryGraphics->size());
     }
 
-    QtConcurrent::run(this, &SummaryWidget::onHistoryQueryExec);
+    if (NULL == _currentConcentrator)
+    {
+        return;
+    }
+
+    // move to thread
+    emit sigLoadingControl(true);
+    QFuture<void> future = QtConcurrent::run(this, &SummaryWidget::onHistoryQueryExec);
+
+    auto futureWatcher = new QFutureWatcher<void>(this);
+    connect(futureWatcher, &QFutureWatcher<bool>::finished, this, [ this ] {
+        int realCount = 0;
+        ui->tawHistoryDetail->setRowCount(_historyDatas.count());
+        ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        for (int i = 0; i < _historyDatas.count(); i++)
+        {
+            showData data = _historyDatas.at(i);
+
+            if (ui->cbSubCompany->currentIndex() == 0) {
+                //
+            } else if (ui->cbSubCompany->currentText() != data.subCompany) {
+                continue;
+            }
+
+            // filter concentrator
+            if (ui->cbConcentrator->currentIndex() == 0) {
+                //
+            } else if (ui->cbConcentrator->currentText() != data.concentrator) {
+                continue;
+            }
+
+            ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(QString::number(realCount+1)));
+            ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.company));
+            ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.subCompany));
+            ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.amso));
+            ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.route));
+            ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.concentrator));
+            ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.line));
+            ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(data.monitor));
+            ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueA.iValue)));
+            ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueB.iValue)));
+            ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QString::number(data.valueC.iValue)));
+            qint64 showTime = data.valueA.CollectTime;
+            showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
+            showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
+            ui->tawHistoryDetail->setItem(i, 11, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
+
+            if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
+                for (int j = 0; j < 10; j++) {
+                    ui->tawHistoryDetail->item(i, j)->setBackgroundColor(QColor(255, 105, 180));
+                }
+            }
+
+            realCount++;
+            if (realCount > 200) {
+                break;
+            }
+        }
+        ui->tawHistoryDetail->setRowCount(realCount);
+
+        // stop loading
+        emit sigLoadingControl(false);
+    }
+    );
+
+    futureWatcher->setFuture(future);
 }
 
 void SummaryWidget::onRealtimeQuery()
 {
+    // clear data
+    while (0 != ui->tawRealTimeDetail->rowCount())
+    {
+        ui->tawRealTimeDetail->removeRow(0);
+    }
+
     if (NULL == _currentConcentrator)
     {
         ui->scrollAreaWidgetContents->setFixedSize(ui->scrollArea->size());
@@ -202,21 +286,19 @@ void SummaryWidget::onRealtimeQuery()
         ui->scrollAreaWidgetContents->setFixedSize(ui->wgtGraphics->size());
     }
 
-    QtConcurrent::run(this, &SummaryWidget::onRealtimeQueryExec);
-}
-
-void SummaryWidget::onHistoryQueryExec()
-{
     if (NULL == _currentConcentrator)
     {
         return;
     }
 
-    QList<showData> lst;
+    QtConcurrent::run(this, &SummaryWidget::onRealtimeQueryExec);
+}
+
+void SummaryWidget::onHistoryQueryExec()
+{
     if (ui->rbAutoQuery->isChecked()) {
-        auto beginTime = QDateTime::currentDateTime();
         qDebug() << QString("Query auto");
-        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr);
+        DatabaseProxy::instance().historyDataByTime(_historyDatas, _currentConcentrator->concentratorAddr);
     } else if (ui->rbQuickQuery->isChecked()) {
         qint64 beginTime = 0;
         qint64 endTime = AppSession::instance().toInt64Time(QDateTime::currentDateTime());
@@ -250,7 +332,7 @@ void SummaryWidget::onHistoryQueryExec()
         qDebug() << QString("Query quick, begin: %1, end: %2")
                     .arg(AppSession::instance().toQDateTime(beginTime).toString("yyyy-MM-dd hh:mm:ss:z"))
                     .arg(AppSession::instance().toQDateTime(endTime).toString("yyyy-MM-dd hh:mm:ss:z"));
-        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
+        DatabaseProxy::instance().historyDataByTime(_historyDatas, _currentConcentrator->concentratorAddr, beginTime, endTime);
     } else if (ui->rbAbsoluteQuery->isChecked()) {
         qint64 beginTime = AppSession::instance().toInt64Time(ui->dteBegin->dateTime());
         qint64 endTime = AppSession::instance().toInt64Time(ui->dteEnd->dateTime());
@@ -258,62 +340,13 @@ void SummaryWidget::onHistoryQueryExec()
         qDebug() << QString("Query absolute, begin: %1, end: %2")
                     .arg(AppSession::instance().toQDateTime(beginTime).toString("yyyy-MM-dd hh:mm:ss:z"))
                     .arg(AppSession::instance().toQDateTime(endTime).toString("yyyy-MM-dd hh:mm:ss:z"));
-        DatabaseProxy::instance().historyDataByTime(lst, _currentConcentrator->concentratorAddr, beginTime, endTime);
+        DatabaseProxy::instance().historyDataByTime(_historyDatas, _currentConcentrator->concentratorAddr, beginTime, endTime);
     }
-
-    int realCount = 0;
-    ui->tawHistoryDetail->setRowCount(lst.count());
-    ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    for (int i = 0; i < lst.count(); i++)
-    {
-        showData data = lst.at(i);
-
-        if (ui->cbSubCompany->currentIndex() == 0) {
-            //
-        } else if (ui->cbSubCompany->currentText() != data.subCompany) {
-            continue;
-        }
-
-        // filter concentrator
-        if (ui->cbConcentrator->currentIndex() == 0) {
-            //
-        } else if (ui->cbConcentrator->currentText() != data.concentrator) {
-            continue;
-        }
-
-        ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(QString::number(realCount+1)));
-        ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.company));
-        ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.subCompany));
-        ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.amso));
-        ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.route));
-        ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.concentrator));
-        ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.line));
-        ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(data.monitor));
-        ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueA.iValue)));
-        ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueB.iValue)));
-        ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QString::number(data.valueC.iValue)));
-        qint64 showTime = data.valueA.CollectTime;
-        showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
-        showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
-        ui->tawHistoryDetail->setItem(i, 11, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
-
-        if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
-            for (int j = 0; j < 10; j++) {
-                ui->tawHistoryDetail->item(i, j)->setBackgroundColor(QColor(255, 105, 180));
-            }
-        }
-
-        realCount++;
-    }
-    ui->tawHistoryDetail->setRowCount(realCount);
 }
 
 void SummaryWidget::onRealtimeQueryExec()
 {
-    if (NULL == _currentConcentrator)
-    {
-        return;
-    }
+    emit SummaryWidget::sigLoadingControl(true);
 
     int routCount = 0;
     foreach(auto o, _currentConcentrator->lst) {
@@ -352,6 +385,8 @@ void SummaryWidget::onRealtimeQueryExec()
             i++;
         }
     }
+
+    emit SummaryWidget::sigLoadingControl(false);
 }
 
 void SummaryWidget::onTimeout()
@@ -438,6 +473,13 @@ bool SummaryWidget::eventFilter(QObject*obj, QEvent*e)
     }
 
     return QWidget::eventFilter(obj, e);
+}
+
+void SummaryWidget::resizeEvent(QResizeEvent *e)
+{
+    if (nullptr != _historyLoading) {
+        _historyLoading->resize(e->size());
+    }
 }
 
 void SummaryWidget::on_btnReadRealtime_clicked()
@@ -542,7 +584,7 @@ void SummaryWidget::on_btnExport_clicked()
 
         // 设置excel任务标题
         QStringList lstTitle;
-        lstTitle << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+        lstTitle << QStringLiteral("序号") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
 
         for (int i = 0; i < lstTitle.size(); i++)
         {
@@ -582,4 +624,35 @@ void SummaryWidget::onSubCompayChanged()
     }
 
     onHistoryQuery();
+}
+
+void SummaryWidget::onLoadingControl(bool power)
+{
+    qDebug() << QString("summary loading control, power: %1").arg(power);
+    if (power) {
+        if (QMovie::Running != _historyLoading->movie()->state()) {
+            _historyLoading->movie()->start();
+        }
+    } else {
+        if (QMovie::Running == _historyLoading->movie()->state()) {
+            _historyLoading->movie()->stop();
+        }
+    }
+    _historyLoading->setVisible(power);
+}
+
+void SummaryWidget::on_btnSelectAll_clicked()
+{
+    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
+        auto item = ui->tawRealTimeDetail->item(i, 0);
+        item->setCheckState(Qt::Checked);
+    }
+}
+
+void SummaryWidget::on_btnUnSelectAll_clicked()
+{
+    for (int i = 0; i < ui->tawRealTimeDetail->rowCount(); i++) {
+        auto item = ui->tawRealTimeDetail->item(i, 0);
+        item->setCheckState(Qt::Unchecked);
+    }
 }

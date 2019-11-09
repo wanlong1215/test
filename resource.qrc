@@ -60,5 +60,6 @@
         <file>resource/css/lightblue/radiobutton_checked_disable.png</file>
         <file>resource/css/lightblue/radiobutton_unchecked.png</file>
         <file>resource/css/lightblue/radiobutton_unchecked_disable.png</file>
+        <file>resource/loading.gif</file>
     </qresource>
 </RCC>

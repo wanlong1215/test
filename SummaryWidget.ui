@@ -417,7 +417,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
+            <width>993</width>
             <height>181</height>
            </rect>
           </property>
@@ -436,6 +436,32 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="btnSelectAll">
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>全选</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnUnSelectAll">
+           <property name="font">
+            <font>
+             <family>微软雅黑</family>
+             <pointsize>18</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>全不选</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <spacer name="horizontalSpacer_2">
            <property name="orientation">

@@ -1904,10 +1904,9 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, int Concentrato
 		PreparedStatement st(m_conn);
         //const char *sql = "select a.MonitorID, b.CollectTime from br_terminal a, br_data b where a.terminaladdr = b.terminaladdr group by a.MonitorID, b.CollectTime order by b.CollectTime fetch first 50 rows only";
         const char *sql = "select b.MonitorID, a.CollectTime "
-                        "from br_data a, br_terminal b, br_monitor c, br_line d, br_concentrator e "
-                        "where a.terminaladdr = b.terminaladdr "
-                        "and b.monitorid = c.monitorid and c.lineid = d.lineid and d.concentratorid = e.concentratorid and e.concentratoraddr=? "
-                        "group by b.MonitorID, a.CollectTime order by a.CollectTime";
+                        "from br_data a, br_terminal b "
+                        "where a.terminaladdr = b.terminaladdr and a.concentratoraddr=? "
+                        "group by b.MonitorID, a.CollectTime ";
         st.prepare(sql);
         st.set_long(0, ConcentratorAddr);
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -2171,17 +2170,25 @@ int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &data, int TerminalAddr, INT
     return 0;
 }
 
-int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &dataA, DATA &dataB, DATA &dataC, int TerminalAddrA, int TerminalAddrB, int TerminalAddrC, INT64 time)
+int CDATAOperate::GetDatabyTerminalAddrAndTime(DATA &dataA, DATA &dataB, DATA &dataC, int TerminalAddrA, int TerminalAddrB, int TerminalAddrC, INT64 time, int conAddr)
 {
     try
     {
         PreparedStatement st(m_conn);
-        const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue,intRev1 from BR_DATA where ivalue <> 0 and TerminalAddr IN (?, ?, ?) and CollectTime = ?";
+        //const char *sql = "select DataID,TerminalAddr,ConcentratorAddr,CollectTime,relaycnt,relayPosition,GetherUnitAddr,vValue,vAngValue,iValue,iAngValue,intRev1 from BR_DATA where ivalue <> 0 and TerminalAddr IN (?, ?, ?) and CollectTime = ?";
+        const char *sql = "select a.DataID, a.TerminalAddr, a.ConcentratorAddr, a.CollectTime, a.relaycnt, a.relayPosition, "
+                          "a.GetherUnitAddr, a.vValue, a.vAngValue, a.iValue, a.iAngValue, a.intRev1 "
+                        "from br_data a, br_terminal b, br_monitor c, br_line d, br_concentrator e "
+                        "where a.terminaladdr = b.terminaladdr "
+                        "and b.monitorid = c.monitorid and c.lineid = d.lineid and d.concentratorid = e.concentratorid and e.concentratoraddr=? "
+                        "and a.ivalue <> 0 and a.TerminalAddr IN (?, ?, ?) and a.CollectTime = ?";
+
         st.prepare(sql);
-        st.set_long( 0, TerminalAddrA );
-        st.set_long( 1, TerminalAddrB );
-        st.set_long( 2, TerminalAddrC );
-        st.set_bigInt( 3, time );
+        st.set_long(0, conAddr);
+        st.set_long(1, TerminalAddrA );
+        st.set_long(2, TerminalAddrB );
+        st.set_long(3, TerminalAddrC );
+        st.set_bigInt(4, time );
         ADO_WRAPPER::ResultSet rs = st.execute();
         if (rs.db_eof())
         {

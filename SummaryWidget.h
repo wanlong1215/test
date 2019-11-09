@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QMap>
 #include <QButtonGroup>
+#include <QLabel>
+#include "DatabaseProxy.h"
 
 namespace Ui {
 class SummaryWidget;
@@ -20,6 +22,9 @@ public:
 
     void init();
 
+signals:
+    void sigLoadingControl(bool power);
+
 private slots:
     void onRadioButtonClicked(int id);
     void onHistoryQuery();
@@ -34,9 +39,15 @@ private slots:
     void on_btnExport_clicked();
     void onSubCompayChanged();
 
+    void onLoadingControl(bool power);
+
+    void on_btnSelectAll_clicked();
+
+    void on_btnUnSelectAll_clicked();
+
 private:
     bool eventFilter(QObject *obj, QEvent *e);
-
+    void resizeEvent(QResizeEvent *e);
 private:
     Ui::SummaryWidget *ui;
 
@@ -44,6 +55,11 @@ private:
     QTimer *_timer;
     QMap<QString, QStringList> _map; // subCompany concentrator
     QButtonGroup *_groupButton;
+
+    bool _isRunning{false};
+    QLabel *_historyLoading{nullptr};
+
+    QList<showData> _historyDatas;
 };
 
 #endif // SUMMARYWIDGET_H

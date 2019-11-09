@@ -1902,7 +1902,7 @@ bool DatabaseProxy::historyDataByTime(QList<showData> &pDatalist, int Concentrat
 		memset(&sData.valueB, 0, sizeof(DATA));
 		memset(&sData.valueC, 0, sizeof(DATA));
 		//获得A数据
-        m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, sData.valueB, sData.valueC, pTerminalA->addr, pTerminalB->addr, pTerminalC->addr, vTime[i].CollectTime);
+        m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, sData.valueB, sData.valueC, pTerminalA->addr, pTerminalB->addr, pTerminalC->addr, vTime[i].CollectTime, ConcentratorAddr);
 
 //        m_db2.GetDatabyTerminalAddrAndTime(sData.valueA, pTerminalA->addr, vTime[i].CollectTime);
 //        m_db2.GetDatabyTerminalAddrAndTime(sData.valueB, pTerminalB->addr, vTime[i].CollectTime);
