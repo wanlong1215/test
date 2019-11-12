@@ -1906,7 +1906,7 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, int Concentrato
         const char *sql = "select b.MonitorID, a.CollectTime "
                         "from br_data a, br_terminal b "
                         "where a.terminaladdr = b.terminaladdr and a.concentratoraddr=? "
-                        "group by b.MonitorID, a.CollectTime ";
+                        "group by b.MonitorID, a.CollectTime order by a.CollectTime desc";
         st.prepare(sql);
         st.set_long(0, ConcentratorAddr);
 		ADO_WRAPPER::ResultSet rs = st.execute();
@@ -1949,7 +1949,7 @@ int CDATAOperate::GetCollectTimeAndMoniterID(vector<TIME_ID> &v, int Concentrato
                         "where a.terminaladdr = b.terminaladdr "
                         "and b.monitorid = c.monitorid and c.lineid = d.lineid and d.concentratorid = e.concentratorid and e.concentratoraddr=? "
                         "and a.CollectTime > ? and a.CollectTime < ? "
-                        "group by b.MonitorID, a.CollectTime order by a.CollectTime";
+                        "group by b.MonitorID, a.CollectTime order by a.CollectTime desc";
         st.prepare(sql);
         st.set_long(0, ConcentratorAddr);
         st.set_bigInt(1, begin);

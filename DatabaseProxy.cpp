@@ -171,6 +171,7 @@ void DatabaseProxy::clearOrganizations()
 QList<proCompany *> DatabaseProxy::getOrganizations()
 {
     if (!_lst.isEmpty()) {
+        sortOrganization();
         return _lst;
     }
 
@@ -303,8 +304,8 @@ QList<proCompany *> DatabaseProxy::getOrganizations()
 		}
 		_lst<<pCompany;
 	}
-	
 
+    sortOrganization();
     return _lst;
 }
 
@@ -2032,22 +2033,6 @@ bool DatabaseProxy::historyWarningNopop(QList<proWarning> &pDatalist)
 	return true;
 }
 
-int DatabaseProxy::createId()
-{
-    for (int i = 0; i < _ids.count() + 1; i++)
-    {
-        if (_ids.contains(i))
-        {
-            continue;
-        }
-
-        _ids.append(i);
-        return i;
-    }
-
-    return 0;
-}
-
 QList<proLine *> proConcentrator::getSortLine()
 {
     // TODO: get sort line
@@ -2111,4 +2096,61 @@ QString DatabaseProxy::ToQString(const string &cstr)
 
     QString qstr = pCodec->toUnicode(cstr.c_str(), cstr.length());
     return qstr;
+}
+
+bool compareCompany(const proCompany &o1, const proCompany &o2)
+{
+    return o1.id < o2.id;
+}
+bool compareSubCompany(const proSubCompany &o1, const proSubCompany &o2)
+{
+    return o1.id < o2.id;
+}
+bool compareAmso(const proAmso &o1, const proAmso &o2)
+{
+    return o1.id < o2.id;
+}
+bool compareRoute(const proRoute &o1, const proRoute &o2)
+{
+    return o1.id < o2.id;
+}
+bool compareConcentrator(const proConcentrator &o1, const proConcentrator &o2)
+{
+    return o1.id < o2.id;
+}
+bool compareLine(const proLine &o1, const proLine &o2)
+{
+    return o1.id < o2.id;
+}
+bool compareMonitor(const proMonitor &o1, const proMonitor &o2)
+{
+    return o1.id < o2.id;
+}
+void DatabaseProxy::sortOrganization()
+{
+    qSort(*_lst.begin(), *_lst.end(), compareCompany);
+
+    foreach(proCompany * o1, _lst) {
+        qSort(*o1->lst.begin(), *o1->lst.end(), compareSubCompany);
+
+        foreach(proSubCompany * o2, o1->lst) {
+            qSort(*o2->lst.begin(), *o2->lst.end(), compareAmso);
+
+            foreach(proAmso * o3, o2->lst) {
+                qSort(*o3->lst.begin(), *o3->lst.end(), compareRoute);
+
+                foreach(proRoute * o4, o3->lst) {
+                    qSort(*o4->lst.begin(), *o4->lst.end(), compareConcentrator);
+
+                    foreach(proConcentrator * o5, o4->lst) {
+                        qSort(*o5->lst.begin(), *o5->lst.end(), compareLine);
+
+                        foreach(proLine * o6, o5->lst) {
+                            qSort(*o6->lst.begin(), *o6->lst.end(), compareMonitor);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

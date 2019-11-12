@@ -378,17 +378,16 @@ public:
 
 	bool realTimeData(vector<DATA> &v);//获得实时数据 注意这里传入的是集中器地址
 
-    int createId();
-
     string ToString(const QString& qstr);
     QString ToQString(const string& cstr);
+
+    void sortOrganization();
 
 private:
     CDATAOperate m_db2;
     bool m_connectState;
 
     QList<proCompany *> _lst;
-    QList<int> _ids;//应该没有用了
 };
 
 #endif // DATABASEPROXY_H

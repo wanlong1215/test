@@ -127,13 +127,13 @@ void SummaryWidget::init()
 
     if (1) {
         QStringList lstHeader;
-        ui->tawHistoryDetail->setColumnCount(12);
-        lstHeader << QStringLiteral("序号") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+        ui->tawHistoryDetail->setColumnCount(11);
+        lstHeader << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
         ui->tawHistoryDetail->setHorizontalHeaderLabels(lstHeader);
         ui->tawHistoryDetail->horizontalHeader()->setStyleSheet("QHeaderView::section{font:20pt '微软雅黑';color: black;};");
         for (int i = 0; i < 11; i++)
         {
-            ui->tawHistoryDetail->setColumnWidth(i, 150);
+            ui->tawHistoryDetail->setColumnWidth(i, i==10 ? 250 : 150);
         }
     }
 
@@ -163,6 +163,7 @@ void SummaryWidget::init()
     auto movie = new QMovie(":/resource/loading.gif");
     movie->setSpeed(200);
     _historyLoading = new QLabel(this);
+    _historyLoading->resize(this->size());
     _historyLoading->setAlignment(Qt::AlignCenter);
     _historyLoading->setMovie(movie);
     _historyLoading->hide();
@@ -230,21 +231,20 @@ void SummaryWidget::onHistoryQuery()
                 continue;
             }
 
-            ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(QString::number(realCount+1)));
-            ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.company));
-            ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.subCompany));
-            ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.amso));
-            ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.route));
-            ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.concentrator));
-            ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.line));
-            ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(data.monitor));
-            ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueA.iValue)));
-            ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueB.iValue)));
-            ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(QString::number(data.valueC.iValue)));
+            ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(data.company));
+            ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.subCompany));
+            ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.amso));
+            ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.route));
+            ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.concentrator));
+            ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.line));
+            ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.monitor));
+            ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.valueA.iValue)));
+            ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueB.iValue)));
+            ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueC.iValue)));
             qint64 showTime = data.valueA.CollectTime;
             showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
             showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
-            ui->tawHistoryDetail->setItem(i, 11, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
+            ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
 
             if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
                 for (int j = 0; j < 10; j++) {
@@ -253,9 +253,6 @@ void SummaryWidget::onHistoryQuery()
             }
 
             realCount++;
-            if (realCount > 200) {
-                break;
-            }
         }
         ui->tawHistoryDetail->setRowCount(realCount);
 
@@ -584,7 +581,7 @@ void SummaryWidget::on_btnExport_clicked()
 
         // 设置excel任务标题
         QStringList lstTitle;
-        lstTitle << QStringLiteral("序号") << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
+        lstTitle << QStringLiteral("公司") << QStringLiteral("供电分公司") << QStringLiteral("供电所") << QStringLiteral("线路") << QStringLiteral("集中器") << QStringLiteral("线段") << QStringLiteral("监测点") << QStringLiteral("A相电流") << QStringLiteral("B相电流") << QStringLiteral("C相电流") << QStringLiteral("采集时间");
 
         for (int i = 0; i < lstTitle.size(); i++)
         {
