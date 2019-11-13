@@ -45,9 +45,15 @@ private slots:
 
     void on_btnUnSelectAll_clicked();
 
+    void on_btnPrePage_clicked();
+
+    void on_btnNextPage_clicked();
+
 private:
     bool eventFilter(QObject *obj, QEvent *e);
     void resizeEvent(QResizeEvent *e);
+
+    void refreshHistoryData();
 private:
     Ui::SummaryWidget *ui;
 
@@ -60,6 +66,10 @@ private:
     QLabel *_historyLoading{nullptr};
 
     QList<showData> _historyDatas;
+
+    // history data
+    int _pageNumber;
+    int _pageCount;
 };
 
 #endif // SUMMARYWIDGET_H

@@ -11,6 +11,8 @@
 #include <QtConcurrent>
 #include <QMovie>
 
+#define RowsPerPage 50
+
 SummaryWidget::SummaryWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SummaryWidget)
@@ -211,9 +213,8 @@ void SummaryWidget::onHistoryQuery()
 
     auto futureWatcher = new QFutureWatcher<void>(this);
     connect(futureWatcher, &QFutureWatcher<bool>::finished, this, [ this ] {
-        int realCount = 0;
-        ui->tawHistoryDetail->setRowCount(_historyDatas.count());
-        ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        _pageNumber = 0;
+        _pageCount = 0;
         for (int i = 0; i < _historyDatas.count(); i++)
         {
             showData data = _historyDatas.at(i);
@@ -231,30 +232,14 @@ void SummaryWidget::onHistoryQuery()
                 continue;
             }
 
-            ui->tawHistoryDetail->setItem(i, 0, new QTableWidgetItem(data.company));
-            ui->tawHistoryDetail->setItem(i, 1, new QTableWidgetItem(data.subCompany));
-            ui->tawHistoryDetail->setItem(i, 2, new QTableWidgetItem(data.amso));
-            ui->tawHistoryDetail->setItem(i, 3, new QTableWidgetItem(data.route));
-            ui->tawHistoryDetail->setItem(i, 4, new QTableWidgetItem(data.concentrator));
-            ui->tawHistoryDetail->setItem(i, 5, new QTableWidgetItem(data.line));
-            ui->tawHistoryDetail->setItem(i, 6, new QTableWidgetItem(data.monitor));
-            ui->tawHistoryDetail->setItem(i, 7, new QTableWidgetItem(QString::number(data.valueA.iValue)));
-            ui->tawHistoryDetail->setItem(i, 8, new QTableWidgetItem(QString::number(data.valueB.iValue)));
-            ui->tawHistoryDetail->setItem(i, 9, new QTableWidgetItem(QString::number(data.valueC.iValue)));
-            qint64 showTime = data.valueA.CollectTime;
-            showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
-            showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
-            ui->tawHistoryDetail->setItem(i, 10, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
-
-            if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
-                for (int j = 0; j < 10; j++) {
-                    ui->tawHistoryDetail->item(i, j)->setBackgroundColor(QColor(255, 105, 180));
-                }
-            }
-
-            realCount++;
+            _pageCount++;
         }
-        ui->tawHistoryDetail->setRowCount(realCount);
+        _pageCount /= RowsPerPage;
+        _pageCount += (0 == _pageCount%RowsPerPage) ? 0 : 1;
+
+        ui->lblPage->setText(QString("%1/%2").arg(0==_pageCount?0:_pageNumber+1).arg(_pageCount));
+
+        refreshHistoryData();
 
         // stop loading
         emit sigLoadingControl(false);
@@ -479,6 +464,58 @@ void SummaryWidget::resizeEvent(QResizeEvent *e)
     }
 }
 
+void SummaryWidget::refreshHistoryData()
+{
+    int realCount = 0;
+    ui->tawHistoryDetail->setRowCount(_historyDatas.count());
+    ui->tawHistoryDetail->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    for (int i = 0; i < _historyDatas.count(); i++)
+    {
+        showData data = _historyDatas.at(i);
+
+        if (ui->cbSubCompany->currentIndex() == 0) {
+            //
+        } else if (ui->cbSubCompany->currentText() != data.subCompany) {
+            continue;
+        }
+
+        // filter concentrator
+        if (ui->cbConcentrator->currentIndex() == 0) {
+            //
+        } else if (ui->cbConcentrator->currentText() != data.concentrator) {
+            continue;
+        }
+
+        if (i >= (1+_pageNumber)*RowsPerPage || i < _pageNumber*RowsPerPage) {
+            continue;
+        }
+
+        ui->tawHistoryDetail->setItem(realCount, 0, new QTableWidgetItem(data.company));
+        ui->tawHistoryDetail->setItem(realCount, 1, new QTableWidgetItem(data.subCompany));
+        ui->tawHistoryDetail->setItem(realCount, 2, new QTableWidgetItem(data.amso));
+        ui->tawHistoryDetail->setItem(realCount, 3, new QTableWidgetItem(data.route));
+        ui->tawHistoryDetail->setItem(realCount, 4, new QTableWidgetItem(data.concentrator));
+        ui->tawHistoryDetail->setItem(realCount, 5, new QTableWidgetItem(data.line));
+        ui->tawHistoryDetail->setItem(realCount, 6, new QTableWidgetItem(data.monitor));
+        ui->tawHistoryDetail->setItem(realCount, 7, new QTableWidgetItem(QString::number(data.valueA.iValue)));
+        ui->tawHistoryDetail->setItem(realCount, 8, new QTableWidgetItem(QString::number(data.valueB.iValue)));
+        ui->tawHistoryDetail->setItem(realCount, 9, new QTableWidgetItem(QString::number(data.valueC.iValue)));
+        qint64 showTime = data.valueA.CollectTime;
+        showTime = (showTime == 0) ? data.valueB.CollectTime : showTime;
+        showTime = (showTime == 0) ? data.valueC.CollectTime : showTime;
+        ui->tawHistoryDetail->setItem(realCount, 10, new QTableWidgetItem(showTime == 0 ? "-" : AppSession::instance().toQDateTime(showTime).toString("yyyy-MM-dd hh:mm")));
+
+        if (data.valueA.intRev1 == 1 || data.valueB.intRev1 == 1 || data.valueC.intRev1 == 1) {
+            for (int j = 0; j < 10; j++) {
+                ui->tawHistoryDetail->item(realCount, j)->setBackgroundColor(QColor(255, 105, 180));
+            }
+        }
+
+        realCount++;
+    }
+    ui->tawHistoryDetail->setRowCount(realCount);
+}
+
 void SummaryWidget::on_btnReadRealtime_clicked()
 {
     // insert read command
@@ -652,4 +689,30 @@ void SummaryWidget::on_btnUnSelectAll_clicked()
         auto item = ui->tawRealTimeDetail->item(i, 0);
         item->setCheckState(Qt::Unchecked);
     }
+}
+
+void SummaryWidget::on_btnPrePage_clicked()
+{
+    if (_pageNumber == 0) {
+        return;
+    }
+
+    _pageNumber--;
+
+    ui->lblPage->setText(QString("%1/%2").arg(_pageNumber+1).arg(_pageCount));
+
+    refreshHistoryData();
+}
+
+void SummaryWidget::on_btnNextPage_clicked()
+{
+    if (_pageNumber >= _pageCount-1) {
+        return;
+    }
+
+    _pageNumber++;
+
+    ui->lblPage->setText(QString("%1/%2").arg(_pageNumber+1).arg(_pageCount));
+
+    refreshHistoryData();
 }
