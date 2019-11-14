@@ -383,6 +383,13 @@ public:
 
     void sortOrganization();
 
+    static bool compareCompany(const proCompany *o1, const proCompany *o2);
+    static bool compareSubCompany(const proSubCompany *o1, const proSubCompany *o2);
+    static bool compareAmso(const proAmso *o1, const proAmso *o2);
+    static bool compareRoute(const proRoute *o1, const proRoute *o2);
+    static bool compareConcentrator(const proConcentrator *o1, const proConcentrator *o2);
+    static bool compareLine(const proLine *o1, const proLine *o2);
+    static bool compareMonitor(const proMonitor *o1, const proMonitor *o2);
 private:
     CDATAOperate m_db2;
     bool m_connectState;

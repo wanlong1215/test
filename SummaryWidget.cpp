@@ -40,6 +40,7 @@ SummaryWidget::~SummaryWidget()
 
 void SummaryWidget::init()
 {
+    qDebug() << "SummaryWidget::init";
     static bool first = true;
     if (first) {
         ui->tawHistoryDetail->clear();
@@ -118,14 +119,19 @@ void SummaryWidget::init()
         conNames.append(child);
     }
     conNames.prepend(QStringLiteral("全部"));
-    disconnect(ui->cbSubCompany, SIGNAL(currentIndexChanged(int)), this, SLOT(onSubCompayChanged()));
-    disconnect(ui->cbConcentrator, SIGNAL(currentIndexChanged(int)), this, SLOT(onHistoryQuery()));
-    ui->cbSubCompany->clear();
-    ui->cbConcentrator->clear();
-    ui->cbSubCompany->addItems(subNames);
-    ui->cbConcentrator->addItems(conNames);
-    connect(ui->cbSubCompany, SIGNAL(currentIndexChanged(int)), this, SLOT(onSubCompayChanged()));
-    connect(ui->cbConcentrator, SIGNAL(currentIndexChanged(int)), this, SLOT(onHistoryQuery()));
+
+    ui->label_4->setVisible(false);
+    ui->label_5->setVisible(false);
+    ui->cbSubCompany->setVisible(false);
+    ui->cbConcentrator->setVisible(false);
+//    disconnect(ui->cbSubCompany, SIGNAL(currentIndexChanged(int)), this, SLOT(onSubCompayChanged()));
+//    disconnect(ui->cbConcentrator, SIGNAL(currentIndexChanged(int)), this, SLOT(onHistoryQuery()));
+//    ui->cbSubCompany->clear();
+//    ui->cbConcentrator->clear();
+//    ui->cbSubCompany->addItems(subNames);
+//    ui->cbConcentrator->addItems(conNames);
+//    connect(ui->cbSubCompany, SIGNAL(currentIndexChanged(int)), this, SLOT(onSubCompayChanged()));
+//    connect(ui->cbConcentrator, SIGNAL(currentIndexChanged(int)), this, SLOT(onHistoryQuery()));
 
     if (1) {
         QStringList lstHeader;
@@ -219,18 +225,18 @@ void SummaryWidget::onHistoryQuery()
         {
             showData data = _historyDatas.at(i);
 
-            if (ui->cbSubCompany->currentIndex() == 0) {
-                //
-            } else if (ui->cbSubCompany->currentText() != data.subCompany) {
-                continue;
-            }
+//            if (ui->cbSubCompany->currentIndex() == 0) {
+//                //
+//            } else if (ui->cbSubCompany->currentText() != data.subCompany) {
+//                continue;
+//            }
 
-            // filter concentrator
-            if (ui->cbConcentrator->currentIndex() == 0) {
-                //
-            } else if (ui->cbConcentrator->currentText() != data.concentrator) {
-                continue;
-            }
+//            // filter concentrator
+//            if (ui->cbConcentrator->currentIndex() == 0) {
+//                //
+//            } else if (ui->cbConcentrator->currentText() != data.concentrator) {
+//                continue;
+//            }
 
             _pageCount++;
         }
@@ -473,18 +479,18 @@ void SummaryWidget::refreshHistoryData()
     {
         showData data = _historyDatas.at(i);
 
-        if (ui->cbSubCompany->currentIndex() == 0) {
-            //
-        } else if (ui->cbSubCompany->currentText() != data.subCompany) {
-            continue;
-        }
+//        if (ui->cbSubCompany->currentIndex() == 0) {
+//            //
+//        } else if (ui->cbSubCompany->currentText() != data.subCompany) {
+//            continue;
+//        }
 
-        // filter concentrator
-        if (ui->cbConcentrator->currentIndex() == 0) {
-            //
-        } else if (ui->cbConcentrator->currentText() != data.concentrator) {
-            continue;
-        }
+//        // filter concentrator
+//        if (ui->cbConcentrator->currentIndex() == 0) {
+//            //
+//        } else if (ui->cbConcentrator->currentText() != data.concentrator) {
+//            continue;
+//        }
 
         if (i >= (1+_pageNumber)*RowsPerPage || i < _pageNumber*RowsPerPage) {
             continue;
@@ -644,20 +650,20 @@ void SummaryWidget::on_btnExport_clicked()
 
 void SummaryWidget::onSubCompayChanged()
 {
-    ui->cbConcentrator->clear();
-    if (0 == ui->cbSubCompany->currentIndex()) {
-        QStringList conNames;
-        foreach (auto child, _map.values()) {
-            conNames.append(child);
-        }
-        conNames.prepend(QStringLiteral("全部"));
-    } else {
-        QStringList conNames = _map.value(ui->cbSubCompany->currentText());
-        conNames.prepend(QStringLiteral("全部"));
-        ui->cbConcentrator->addItems(conNames);
-    }
+//    ui->cbConcentrator->clear();
+//    if (0 == ui->cbSubCompany->currentIndex()) {
+//        QStringList conNames;
+//        foreach (auto child, _map.values()) {
+//            conNames.append(child);
+//        }
+//        conNames.prepend(QStringLiteral("全部"));
+//    } else {
+//        QStringList conNames = _map.value(ui->cbSubCompany->currentText());
+//        conNames.prepend(QStringLiteral("全部"));
+//        ui->cbConcentrator->addItems(conNames);
+//    }
 
-    onHistoryQuery();
+//    onHistoryQuery();
 }
 
 void SummaryWidget::onLoadingControl(bool power)
